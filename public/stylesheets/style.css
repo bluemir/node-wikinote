@@ -1,0 +1,44 @@
+#wapper {
+	max-width : 800px;
+	margin : auto;
+	min-width : 666px;
+	border : 1px solid black;
+	border-radius : 15px;
+}
+header {
+	display : fixed;
+	border-bottom : 1px solid gray;
+	position : relative;
+}
+header ul{
+	position : absolute;
+	display : inline;
+	margin : 0px;
+	padding : 0px;
+	list-style : none;
+	right : 0px;
+	bottom : 0px;
+	padding-bottom : 8px;
+}
+header li {
+	margin : 3px;
+	display : inline;
+}
+header li a {
+	color : blue;
+	text-decoration : none;
+	padding : 5px 8px;
+	border-radius: 5px;
+}
+header li a:hover{
+	background : #eee;
+}
+img {
+	max-width : 100%;
+}
+article {
+	padding : 10px;
+}
+article a{
+	color : blue;
+}

@@ -1,0 +1,8 @@
+extends layout
+
+block content
+	ul
+		each file in files
+			li #{file}
+	form(action="#{path}?action=attach", enctype="multipart/form-data", method="post")
+		input(type="file", name="upload", onchange="forms[0].submit()");
