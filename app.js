@@ -5,9 +5,10 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , wiki = require("./routes/wiki")
   , http = require('http')
   , path = require('path');
+  
+var wikiapp = require("./routes/wiki.node.js");
 
 var app = express();
 
@@ -19,6 +20,10 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(function(req, res, next){
+    res.locals.path = req.path;
+    next();
+  });
   app.use(app.router);
   //app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -28,15 +33,11 @@ app.configure('development', function(){
 });
 
 app.get('/', function(req, res){
-	res.redirect("/FrontPage");
+  res.redirect("/FrontPage");
 });
-app.get(/^\/!public\/.*$/, function(req, res){
-	res.sendfile(req.path.substring(2));
-});
-app.get(/^.*\/[^.\/]+(\.[^.\/]+)+$/, wiki.staticFiles);
-app.get(/^.*\/[^.\/]+$/, wiki.onRequest);
 
-app.post(/^.*\/[^.\/]+$/, wiki.onPost);
+wikiapp.init(app);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

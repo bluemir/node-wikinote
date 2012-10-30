@@ -10,14 +10,15 @@ header {
 	border-bottom : 1px solid gray;
 	position : relative;
 }
+header > div {
+  margin : 10px;
+}
 header ul{
-	position : absolute;
+  float : right;
 	display : inline;
 	margin : 0px;
 	padding : 0px;
 	list-style : none;
-	right : 0px;
-	bottom : 0px;
 	padding-bottom : 8px;
 }
 header li {
@@ -30,7 +31,7 @@ header li a {
 	padding : 5px 8px;
 	border-radius: 5px;
 }
-header li a:hover{
+header li a:hover {
 	background : #eee;
 }
 img {

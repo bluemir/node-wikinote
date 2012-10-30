@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	form(action="#{path}", method="post")
-		textarea(name="contents", cols="80", rows="25")
-			!= wikidata
+	form(method="post")
+		textarea(name="data", cols="80", rows="25")
+			!= wikiData
 		input(type="submit", value="저장");

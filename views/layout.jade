@@ -1,17 +1,21 @@
 doctype 5
 html
-	head
-		title= title
-		link(rel='stylesheet', href='/!public/stylesheets/style.css')
-	body
-		div#wapper
-			header
-				a(href="/")
-					img(src="/!public/images/logo.png")
-				ul
-					li: a(href="#{path}") View
-					li: a(href="#{path}?action=edit") Edit
-					li: a(href="#{path}?action=delete") Delete
-					li: a(href="#{path}?action=attach") Attach
-			article
-				block content
+  head
+    title= title
+    link(rel='stylesheet', href='/!public/stylesheets/style.css')
+  body
+    div#wapper
+      header
+        a(href="/")
+          img(src="/!public/images/logo.png")
+        div
+          ul
+            li: a(href="#{path}") View
+            li: a(href="#{path}?edit") Edit
+            li: a(href="#{path}?move") Move
+            li: a(href="#{path}?delete") Delete
+            li: a(href="#{path}?attach") Attach
+          div 
+            = "vi > info > text"
+      article
+        block content
