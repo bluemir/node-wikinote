@@ -34,6 +34,13 @@ header li a {
 header li a:hover {
 	background : #eee;
 }
+#breadcrumbs a {
+  text-decoration : none;
+  color : blue;
+}
+#breadcrumbs a:hover {
+  text-decoration : underline;
+}
 img {
 	max-width : 100%;
 }
@@ -41,5 +48,9 @@ article {
 	padding : 10px;
 }
 article a{
+  text-decoration : none;
 	color : blue;
+}
+article a:hover {
+  text-decoration : underline;
 }
