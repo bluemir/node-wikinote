@@ -63,6 +63,7 @@ wikiApp.view = function(req, res){
   var path  = req.path;
   wikiFS.readWiki(path, function(err, data){
     if(err) {
+      console.log(err);
       data = null;
     } else {
       data = markdown.parse(data);

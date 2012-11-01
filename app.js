@@ -22,6 +22,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(function(req, res, next){
     res.locals.path = req.path;
+    res.locals.bread = req.path.split("/").slice(1);
     next();
   });
   app.use(app.router);
@@ -37,7 +38,6 @@ app.get('/', function(req, res){
 });
 
 wikiapp.init(app);
-
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

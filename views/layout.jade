@@ -16,6 +16,8 @@ html
             li: a(href="#{path}?delete") Delete
             li: a(href="#{path}?attach") Attach
           div 
-            = "vi > info > text"
+            - for(var i = 0; i < bread.length; i++)
+              = "/"
+              a(href="/#{bread.slice(0, i+1).join("/")}") #{bread[i]}
       article
         block content
