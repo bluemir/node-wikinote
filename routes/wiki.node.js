@@ -3,6 +3,7 @@ var markdown = require("markdown");
 var config = require("../config.json");
 
 exports.init = function(app){
+  //app.get("!list", listAll);
   app.get(/^\/!public\/.*$/, publicfile);
   app.get(/^.*\.[^.\/]+$/, wikiApp.staticFiles);
   app.get(/^.*\/[^.\/]+$/, wikiGetRoute);
@@ -17,7 +18,7 @@ function wikiGetRoute(req, res){
   } else if ("attach" in req.query){
     wikiApp.attach(req, res);
   } else if ("move" in req.query){
-    //wikiApp.
+    wikiApp.moveForm(req, res);
   } else {
     wikiApp.view(req, res);
   }
@@ -44,9 +45,14 @@ wikiFS.readWiki = function(path, callback){
   });
 }
 wikiFS.writeWiki = function(path, data, callback){
-  fs.writeFile(saveDir + decodeURIComponent(path) + ".md", data, "utf8", function(err){
-    callback(err);
-  });
+  //TODO 만약 폴더가 없으면 만드는 기능이 있어야 한다.
+  var decodedPath  = decodeURIComponent(path);
+  decodedPath.substr(0, decodedPath.lastIndexOf("/"));//TODO 올바르게 작동하는 지 확인 할것 
+  fs.mkdir(saveDir + decodedPath.substr(0, decodedPath.lastIndexOf("/")), function (){
+    fs.writeFile(saveDir + decodedPath  + ".md", data, "utf8", function(err){
+      callback(err);
+    });
+  })
 }
 wikiFS.fileList = function(path, callback){
   fs.readdir(saveDir + decodeURIComponent(path), callback);
@@ -68,13 +74,13 @@ wikiApp.view = function(req, res){
     } else {
       data = markdown.parse(data);
     }
-    res.render("view", {title : "Personal Wiki", wikiData: data});
+    res.render("view", {title : "Wiki Note", wikiData: data});
   });
 }
 wikiApp.edit = function(req, res){
   var path  = req.path;
   wikiFS.readWiki(path, function(err, data){
-    res.render("edit", {title : "Personal Wiki::edit", wikiData: data});
+    res.render("edit", {title : "Wiki Note::edit", wikiData: data});
   });
 }
 wikiApp.save = function(req, res){
@@ -84,10 +90,13 @@ wikiApp.save = function(req, res){
     res.redirect(path); 
   });
 }
+wikiApp.moveForm = function(req, res){
+  res.render("move", {title : "Wiki Note::move"});
+}
 wikiApp.attach = function(req, res){
   var path = req.path;
   wikiFS.fileList(path, function(err, files){
-    res.render("attach", {title : "Personal Wiki::attach", files: files || []});
+    res.render("attach", {title : "Wiki Note::attach", files: files || []});
   });
 }
 wikiApp.upload = function(req, res){

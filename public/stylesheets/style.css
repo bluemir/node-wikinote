@@ -5,6 +5,9 @@
 	border : 1px solid black;
 	border-radius : 15px;
 }
+header img {
+  margin : 10px;
+}
 header {
 	display : fixed;
 	border-bottom : 1px solid gray;
@@ -41,7 +44,7 @@ header li a:hover {
 #breadcrumbs a:hover {
   text-decoration : underline;
 }
-img {
+article img {
 	max-width : 100%;
 }
 article {

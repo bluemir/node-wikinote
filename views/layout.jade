@@ -18,6 +18,6 @@ html
           div(id="breadcrumbs") 
             - for(var i = 0; i < bread.length; i++)
               = "/"
-              a(href="/#{bread.slice(0, i+1).join("/")}") #{bread[i]}
+              a(href="/#{bread.slice(0, i+1).join("/")}") #{decodeURIComponent(bread[i])}
       article
         block content
