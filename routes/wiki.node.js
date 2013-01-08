@@ -1,5 +1,6 @@
 var fs = require("fs");
-var markdown = require("markdown");
+var pagedown = require("pagedown");
+var converter = new pagedown.Converter();
 var config = require("../config.json");
 
 exports.init = function(app){
@@ -28,11 +29,14 @@ function wikiPostRoute(req, res){
     wikiApp.save(req, res);
   } else if ("attach" in req.query){
     wikiApp.upload(req, res);
+  } else if ("move" in req.query){
+    wikiApp.move(req, res);
   }
 }
 function publicfile(req, res){
   res.sendfile(req.path.substring(2));
 }
+
 var wikiFS = {};
 
 wikiFS.readWiki = function(path, callback){
@@ -62,6 +66,14 @@ wikiFS.acceptFile  = function(srcPath, path, name, callback){
     fs.rename(srcPath, saveDir + decodeURIComponent(path) + "/" + name, callback);
   });
 }
+wikiFS.move = function(srcPath, targetPath, callback){
+  console.log(targetPath);
+  var decodeSrcPath  = saveDir + decodeURIComponent(srcPath);
+  var decodeTargetPath = saveDir + decodeURIComponent(targetPath);
+  fs.rename(decodeSrcPath, decodeTargetPath);
+  fs.rename(decodeSrcPath + ".md", decodeTargetPath + ".md");
+  callback(null);
+}
 
 var wikiApp = {};
 
@@ -72,7 +84,7 @@ wikiApp.view = function(req, res){
       console.log(err);
       data = null;
     } else {
-      data = markdown.parse(data);
+      data = converter.makeHtml(data);
     }
     res.render("view", {title : "Wiki Note", wikiData: data});
   });
@@ -92,6 +104,11 @@ wikiApp.save = function(req, res){
 }
 wikiApp.moveForm = function(req, res){
   res.render("move", {title : "Wiki Note::move"});
+}
+wikiApp.move = function(req, res){
+  wikiFS.move(req.path, req.param("target"), function(){
+      res.redirect(req.param("target"));
+  });
 }
 wikiApp.attach = function(req, res){
   var path = req.path;
