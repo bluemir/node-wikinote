@@ -33,10 +33,6 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', function(req, res){
-  res.redirect("/FrontPage");
-});
-
 wikiapp.init(app);
 
 http.createServer(app).listen(app.get('port'), function(){

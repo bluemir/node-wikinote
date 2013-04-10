@@ -1,3 +1,4 @@
 {
-  "wikiDir" : "~/문서/wiki"
+  "frontPage" : "FrontPage",
+  "wikiDir" : "/home/bluemir/문서/wiki"
 }
