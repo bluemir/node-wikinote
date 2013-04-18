@@ -57,3 +57,73 @@ article a{
 article a:hover {
   text-decoration : underline;
 }
+
+article h1, article h2, article h3, article h4, article h5, article h6 {
+	margin : 0em;
+	margin-top : 1em;
+}
+article h1{	
+	margin-top : 0em;
+	font-size: 2.0em;
+}
+article h2{
+	font-size: 1.8em;
+}
+article h3{
+	font-size: 1.5em;
+}
+article h4{
+	font-size: 1.3em;
+}
+article h5{
+	font-size: 1.2em;
+}
+article h6{
+	font-size: 1.1em;
+}
+article dt{
+	font-style: italic;
+}
+article blockquote{
+    font-style : italic;
+    margin-left : 0px;
+    padding-top : 20px;
+    overflow : hidden;
+    line-height : 100%;
+    color : #454545;
+}
+article blockquote:before {
+    display : block;
+    float : left;
+    content : open-quote;
+    color : #bababa;
+    font-size : 100px;
+    margin : 10px 15px 0px 0px;
+    text-shadow : 0 1px 1px #909090;
+}
+article blockquote:after {
+    display : block;
+    float : right;
+    content : close-quote;
+    color : #bababa;
+    font-size : 100px;
+    margin : 10px 15px 0px 0px;
+    text-shadow : 0 1px 1px #909090;
+}
+article blockquote :first-child {
+    margin-top : 0px;
+}
+article blockquote :last-child {
+    margin-bottom : 0px;
+}
+article blockquote * {
+    margin-left : 100px;
+    margin-right : 80px;
+}
+article table {
+    border-collapse : collapse;
+}
+article th, article td {
+    border : 1px solid gray;
+    padding : 5px;
+}
