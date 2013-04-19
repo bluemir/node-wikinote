@@ -1,4 +1,5 @@
 (function(){
+
   document.body.addEventListener("keydown", function(e) {
     if(navigator.platform.match("Mac") ? e.metaKey : e. ctrlKey){
       if(e.keyCode == "E".charCodeAt(0)){
@@ -11,6 +12,11 @@
         goViewPage();
         e.preventDefault();
       } else if(e.keyCode == "S".charCodeAt(0)){
+        saveDataWithAjax();
+        e.preventDefault();
+      }
+    } else if(e.altKey){
+      if(e.keyCode == "S".charCodeAt(0)){
         saveData();
         e.preventDefault();
       }
@@ -39,5 +45,15 @@
   }
   function getUrl(){
     return location.pathname;
+  }
+
+
+  function saveDataWithAjax(data){
+    if(textarea){
+      var ajax = new XMLHttpRequest();
+      ajax.open("POST", getUrl() + "?edit");
+      ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+      ajax.send("data=" + encodeURIComponent(textarea.value));
+    }
   }
 })();
