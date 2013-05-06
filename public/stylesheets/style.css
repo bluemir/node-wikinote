@@ -127,3 +127,6 @@ article th, article td {
     border : 1px solid gray;
     padding : 5px;
 }
+textarea {
+    tab-size : 4;
+}

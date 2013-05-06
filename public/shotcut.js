@@ -19,12 +19,24 @@
       if(e.keyCode == "S".charCodeAt(0)){
         saveData();
         e.preventDefault();
+      } else if (e.keyCode =="P".charCodeAt(0)) {
+        goPresentation();
+        e.preventDefault();
       }
     }
   }, false);
 
   var textarea = document.getElementsByTagName("textarea")[0];
   if(textarea){
+    textarea.addEventListener("keydown", function(e) {
+      if(e.keyCode == "\t".charCodeAt(0)){
+        e.preventDefault();
+        var start = this.selectionStart;
+        var end  = this.selectionEnd;
+        this.value = this.value.substring(0,start) + "\t" + this.value.substring(end);
+        this.selectionEnd = start+1;
+      }
+    });
     textarea.focus();
   }
   
@@ -55,5 +67,8 @@
       ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
       ajax.send("data=" + encodeURIComponent(textarea.value));
     }
+  }
+  function goPresentation(){
+    location.href = getUrl() + "?presentation";
   }
 })();

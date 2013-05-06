@@ -32,6 +32,8 @@ function wikiGetRoute(req, res){
     wikiApp.attach(req, res);
   } else if ("move" in req.query){
     wikiApp.moveForm(req, res);
+  } else if ("presentation" in req.query){
+    wikiApp.presentation(req, res);
   } else {
     wikiApp.view(req, res);
   }
@@ -101,4 +103,11 @@ wikiApp.upload = function(req, res){
 }
 wikiApp.staticFiles = function(req, res){
   res.sendfile(saveDir + decodeURIComponent(req.path));
+}
+wikiApp.presentation = function(req, res){
+  var path = decodeURIComponent(req.path);
+  var name = path.substr(path.lastIndexOf("/"));
+  wikiFS.readWiki(path, function(err, data){
+    res.render("presentation", {title : "Wiki Note::" + name, wikiData: data});
+  });
 }
