@@ -12,10 +12,13 @@ html
           ul
             li: a(href="#{path}") View
             li: a(href="#{path}?edit") Edit
-            li: a(href="#{path}?move") Move
-            li: a(href="#{path}?delete") Delete
-            li: a(href="#{path}?attach") Attach
-            li: a(href="#{path}?presentation") Presentation
+            li
+              a(href="#") More
+              ul
+                li: a(href="#{path}?delete") Delete
+                li: a(href="#{path}?attach") Attach
+                li: a(href="#{path}?move") Move
+                li: a(href="#{path}?presentation") Presentation
           div(id="breadcrumbs") 
             - for(var i = 0; i < bread.length; i++)
               = "/"
