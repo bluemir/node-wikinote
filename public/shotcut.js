@@ -23,6 +23,8 @@
         goPresentation();
         e.preventDefault();
       }
+    } else if(e.keyCode == 122) {//F11
+      goPresentation();
     }
   }, false);
 
