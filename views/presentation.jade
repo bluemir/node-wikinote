@@ -6,8 +6,8 @@ html
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     style
       @import url("/!public/reveal.js/css/reveal.css");
-      @import url("/!public/reveal.js/css/theme/default.css");
       @import url("/!public/reveal.js/lib/css/zenburn.css");
+    link(rel="stylesheet", href="/!public/reveal.js/css/theme/default.css", id="theme")
     //if lt IE 9
       script(src="/!public/reveal.js/lib/js/html5shiv.js")
   body
@@ -25,8 +25,11 @@ html
         history: true,
         center: true,
       
-        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        theme: "#{option.theme}",
+        //|| Reveal.getQueryHash().theme, // available themes are in /css/theme
+
+        transition: "#{option.transition || "default"}",
+        //|| Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
        
         // Optional libraries used to extend on reveal.js
         dependencies: [
@@ -49,7 +52,8 @@ html
           },
           { 
             src: '/!public/reveal.js/plugin/zoom-js/zoom.js', 
-            async: true, condition: function() { return !!document.body.classList; }
+            async: true,
+            condition: function() { return !!document.body.classList; }
           },
           { 
             src: '/!public/reveal.js/plugin/notes/notes.js', 

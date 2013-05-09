@@ -108,6 +108,11 @@ wikiApp.presentation = function(req, res){
   var path = decodeURIComponent(req.path);
   var name = path.substr(path.lastIndexOf("/"));
   wikiFS.readWiki(path, function(err, data){
-    res.render("presentation", {title : "Wiki Note::" + name, wikiData: data});
+    var option = {}; 
+    try {
+      option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
+    } catch (e){
+    }
+    res.render("presentation", {title : "Wiki Note::" + name, wikiData: data, option : option});
   });
 }
