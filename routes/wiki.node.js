@@ -1,6 +1,7 @@
 var fs = require("fs");
 var config = require("../config.json");
 var wikiFS = require("./wikiFS.node.js");
+var exec = require("child_process").exec;
 
 var marked = require("./marked.js");
 marked.setOptions({
@@ -23,7 +24,11 @@ exports.init = function(app){
 
 var saveDir = config.wikiDir;
 function redirectToFront(req, res){
-  res.redirect("/" + config.frontPage);
+  if("find" in req.query){
+    wikiApp.find(req, res);
+  } else {
+    res.redirect("/" + config.frontPage);
+  }
 }
 function wikiGetRoute(req, res){
   if("edit" in req.query){
@@ -34,6 +39,8 @@ function wikiGetRoute(req, res){
     wikiApp.moveForm(req, res);
   } else if ("presentation" in req.query){
     wikiApp.presentation(req, res);
+  } else if("find" in req.query){
+	wikiApp.find(req, res);
   } else {
     wikiApp.view(req, res);
   }
@@ -70,7 +77,7 @@ wikiApp.view = function(req, res){
 wikiApp.edit = function(req, res){
   var path  = decodeURIComponent(req.path);
   wikiFS.readWiki(path, function(err, data){
-    res.render("edit", {title : "Wiki Note::edit", wikiData: data});
+    res.render("edit", {title : "Wiki Note::Edit", wikiData: data});
   });
 }
 wikiApp.save = function(req, res){
@@ -81,7 +88,7 @@ wikiApp.save = function(req, res){
   });
 }
 wikiApp.moveForm = function(req, res){
-  res.render("move", {title : "Wiki Note::move"});
+  res.render("move", {title : "Wiki Note::Move"});
 }
 wikiApp.move = function(req, res){
   wikiFS.move(decodeURIComponent(req.path), decodeURIComponent(req.param("target")), function(){
@@ -91,7 +98,7 @@ wikiApp.move = function(req, res){
 wikiApp.attach = function(req, res){
   var path = decodeURIComponent(req.path);
   wikiFS.fileList(path, function(err, files){
-    res.render("attach", {title : "Wiki Note::attach", files: files || []});
+    res.render("attach", {title : "Wiki Note::Attach", files: files || []});
   });
 }
 wikiApp.upload = function(req, res){
@@ -106,13 +113,21 @@ wikiApp.staticFiles = function(req, res){
 }
 wikiApp.presentation = function(req, res){
   var path = decodeURIComponent(req.path);
-  var name = path.substr(path.lastIndexOf("/"));
   wikiFS.readWiki(path, function(err, data){
     var option = {}; 
     try {
       option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
     } catch (e){
     }
-    res.render("presentation", {title : "Wiki Note::" + name, wikiData: data, option : option});
+    res.render("presentation", {title : "Wiki Note::Presentation", wikiData: data, option : option});
+  });
+}
+wikiApp.find= function(req, res){
+  var word = '"' + req.param("find") + '"';
+  exec('grep -r ' + word + ' --exclude-dir=".*"', {cwd : saveDir},  function(e, stdout, stderr){
+    if(word != '""')
+      res.render("find", {title : "Wiki Note::Find", finddata : stdout});
+	else
+	  res.render("find", {title : "Wiki Note::Find", finddata : null});
   });
 }

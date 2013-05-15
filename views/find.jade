@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	p 현재페이지와 하위 페이지를 검색합니다 
+	form()
+		input(type="search", name="find")
+		input(type="submit", value="검색")
+
+	p 
+		만약 모든 페이지 중에 검색하고 싶다면 
+		a(href = "/?find") 전체검색
+		을 누르세요
+	- if ( finddata != null)
+		pre
+			!=finddata

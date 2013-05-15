@@ -123,6 +123,8 @@ article h1{
 }
 article h2{
     font-size: 1.8em;
+	border-bottom : 1px solid gray;
+	padding-bottom : 5px;
 }
 article h3{
     font-size: 1.5em;
@@ -182,6 +184,25 @@ article th, article td {
     border : 1px solid gray;
     padding : 5px;
 }
+article code{
+	display : block;
+	background : black;
+	color : white;
+	padding : 10px;
+	border : 1px solid gray;
+	border-radius : 3px;
+}
+article code:before {
+	content : "code";
+	display : block;
+	color : green;
+	margin-bottom : 10px;
+	border-bottom : 1px solid green;
+	padding : 2px;
+}
+
 textarea {
     tab-size : 4;
+	width : 100%;
+	box-sizing: border-box;
 }
