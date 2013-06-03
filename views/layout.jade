@@ -1,29 +1,29 @@
 doctype 5
 html
-  head
-    title #{notename}::#{title}
-    link(rel='stylesheet', href='/!public/stylesheets/style.css')
-  body
-    div#wapper
-      header
-        a(href="/")
-          img(src="/!public/images/logo.png")
-        div
-          ul
-            li: a(href="#{path}") View
-            li: a(href="#{path}?edit") Edit
-            li
-              a(href="#") More
-              ul
-                li: a(href="#{path}?delete") Delete
-                li: a(href="#{path}?attach") Attach
-                li: a(href="#{path}?move") Move
-                li: a(href="#{path}?find") Find
-                li: a(href="#{path}?presentation") Presentation
-          div(id="breadcrumbs") 
-            - for(var i = 0; i < bread.length; i++)
-              = "/"
-              a(href="/#{bread.slice(0, i+1).join("/")}") #{decodeURIComponent(bread[i])}
-      article
-        block content
-    script(src="/!public/shotcut.js")
+	head
+		title #{notename}::#{title}
+		link(rel='stylesheet', href='/!public/stylesheets/style.css')
+	body
+		div#wapper
+			header
+				a(href="/")
+					img(src="/!public/images/logo.png")
+				div
+					ul
+						li: a(href="#{path}") View
+						li: a(href="#{path}?edit") Edit
+						li
+							a(href="#") More
+							ul
+								li: a(href="#{path}?delete") Delete
+								li: a(href="#{path}?attach") Attach
+								li: a(href="#{path}?move") Move
+								li: a(href="#{path}?find") Find
+								li: a(href="#{path}?presentation") Presentation
+					div(id="breadcrumbs") 
+						- for(var i = 0; i < bread.length; i++)
+							= "/"
+							a(href="/#{bread.slice(0, i+1).join("/")}") #{decodeURIComponent(bread[i])}
+			article
+				block content
+		script(src="/!public/shotcut.js")

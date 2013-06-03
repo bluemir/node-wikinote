@@ -1,75 +1,74 @@
 doctype 5
 html
-  head
-    meta(charset="utf-8")
-    title #{notename}::#{title}
-    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-    style
-      @import url("/!public/reveal.js/css/reveal.css");
-      @import url("/!public/reveal.js/lib/css/zenburn.css");
-    link(rel="stylesheet", href="/!public/reveal.js/css/theme/default.css", id="theme")
-    //if lt IE 9
-      script(src="/!public/reveal.js/lib/js/html5shiv.js")
-  body
-    div.reveal
-      div.slides !{wikiData}
-    script(src="/!public/shotcut.js")
-    script(src="/!public/reveal.js/lib/js/head.min.js")
-    script(src="/!public/reveal.js/js/reveal.js")
-    script
-      // Full list of configuration options available here:
-      // https://github.com/hakimel/reveal.js#configuration
-      Reveal.initialize({
-        controls: true,
-        progress: true,
-        history: true,
-        center: true,
-      
-        theme: "#{option.theme}",
-        //|| Reveal.getQueryHash().theme, // available themes are in /css/theme
+	head
+		meta(charset="utf-8")
+		title #{notename}::#{title}
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+		style
+			@import url("/!public/reveal.js/css/reveal.css");
+			@import url("/!public/reveal.js/lib/css/zenburn.css");
+		link(rel="stylesheet", href="/!public/reveal.js/css/theme/default.css", id="theme")
+		//if lt IE 9
+			script(src="/!public/reveal.js/lib/js/html5shiv.js")
+	body
+		div.reveal
+			div.slides !{wikiData}
+		script(src="/!public/shotcut.js")
+		script(src="/!public/reveal.js/lib/js/head.min.js")
+		script(src="/!public/reveal.js/js/reveal.js")
+		script
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+			
+				theme: "#{option.theme}",
+				//|| Reveal.getQueryHash().theme, // available themes are in /css/theme
 
-        transition: "#{option.transition || "default"}",
-        //|| Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
-       
-        // Optional libraries used to extend on reveal.js
-        dependencies: [
-          { 
-            src: '/!public/reveal.js/lib/js/classList.js', 
-            condition: function() { return !document.body.classList; } 
-          },
-          { 
-            src: '/!public/reveal.js/plugin/markdown/showdown.js', 
-            condition: function() { return !!document.querySelector( '[data-markdown]' );}
-          },
-          { 
-            src: '/!public/reveal.js/plugin/markdown/markdown.js', 
-            condition: function() { return !!document.querySelector( '[data-markdown]' );}
-          },
-          { 
-            src: '/!public/reveal.js/plugin/highlight/highlight.js', 
-            async: true, 
-            callback: function() { hljs.initHighlightingOnLoad(); }
-          },
-          { 
-            src: '/!public/reveal.js/plugin/zoom-js/zoom.js', 
-            async: true,
-            condition: function() { return !!document.body.classList; }
-          },
-          { 
-            src: '/!public/reveal.js/plugin/notes/notes.js', 
-            async: true, condition: function() { return !!document.body.classList; }
-          }
-          /*
-          { 
-            src: '/!public/reveal.js/plugin/search/search.js', 
-            async: true, 
-            condition: function() { return !!document.body.classList; }
-          }
-          { 
-            src: '/!public/reveal.js/plugin/remotes/remotes.js', 
-            async: true, 
-            condition: function() { return !!document.body.classList; }
-          }*/
-        ]
-      });
+				transition: "#{option.transition || "default"}",
+				//|| Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ 
+						src: '/!public/reveal.js/lib/js/classList.js', 
+						condition: function() { return !document.body.classList; } 
+					},
+					{ 
+						src: '/!public/reveal.js/plugin/markdown/showdown.js', 
+						condition: function() { return !!document.querySelector( '[data-markdown]' );}
+					},
+					{ 
+						src: '/!public/reveal.js/plugin/markdown/markdown.js', 
+						condition: function() { return !!document.querySelector( '[data-markdown]' );}
+					},
+					{ 
+						src: '/!public/reveal.js/plugin/highlight/highlight.js', 
+						async: true, 
+						callback: function() { hljs.initHighlightingOnLoad(); }
+					},
+					{ 
+						src: '/!public/reveal.js/plugin/zoom-js/zoom.js', 
+						async: true,
+						condition: function() { return !!document.body.classList; }
+					},
+					{ 
+						src: '/!public/reveal.js/plugin/notes/notes.js', 
+						async: true, condition: function() { return !!document.body.classList; }
+					}
+					/*
+					{ 
+						src: '/!public/reveal.js/plugin/search/search.js', 
+						async: true, 
+						condition: function() { return !!document.body.classList; }
+					}
+					{ 
+						src: '/!public/reveal.js/plugin/remotes/remotes.js', 
+						async: true, 
+						condition: function() { return !!document.body.classList; }
+					}*/
+				]
+			});
 

@@ -211,7 +211,6 @@ article code.lang-pic{
 article code.lang-pic:before {
 	content : none;
 	display : none;
-
 }
 
 textarea {
