@@ -10,6 +10,9 @@ html
 		link(rel="stylesheet", href="/!public/reveal.js/css/theme/default.css", id="theme")
 		//if lt IE 9
 			script(src="/!public/reveal.js/lib/js/html5shiv.js")
+		script
+			document.write( '<link rel="stylesheet" href="/!public/reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+
 	body
 		div.reveal
 			div.slides !{wikiData}

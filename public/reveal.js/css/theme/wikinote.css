@@ -151,3 +151,12 @@ body {
 .reveal dd {
   margin-left : 4em;
 }
+.reveal pre {
+}
+.reveal pre code {
+  tab-size : 4;
+  overflow-x : hidden;
+}
+.reveal table {
+	margin : auto;
+}
