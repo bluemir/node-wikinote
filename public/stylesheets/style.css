@@ -1,189 +1,189 @@
 #wapper {
-    max-width : 800px;
-    margin : auto;
-    min-width : 666px;
-    border : 1px solid black;
-    border-radius : 15px;
+	max-width : 800px;
+	margin : auto;
+	min-width : 666px;
+	border : 1px solid black;
+	border-radius : 15px;
 }
 header img {
-    margin : 10px;
+	margin : 10px;
 }
 header {
-    display : fixed;
-    border-bottom : 1px solid gray;
-    position : relative;
+	display : fixed;
+	border-bottom : 1px solid gray;
+	position : relative;
 }
 header > div {
-    margin : 10px;
+	margin : 10px;
 }
 header div > ul {
-    float : right;
-    margin: 0;
-    list-style: none;  
-    margin-bottom : 10px;
+	float : right;
+	margin: 0;
+	list-style: none;  
+	margin-bottom : 10px;
 }
 
 header div > ul li{
-    float: left;
-    padding: 0 0 10px 0;
-    position: relative;
+	float: left;
+	padding: 0 0 10px 0;
+	position: relative;
 }
 
 header div > ul a{
-    color :blue;
-    float: left;
-    padding: 3px 8px;
-    text-decoration: none;
-    border-radius : 5px;
+	color :blue;
+	float: left;
+	padding: 3px 8px;
+	text-decoration: none;
+	border-radius : 5px;
 }
 
 header div > ul li:hover > a{
-    background : #eee;
+	background : #eee;
 }
 
 header div > ul li:hover > ul{
-    display: block;
+	display: block;
 }
 
 /* Sub-menu */
 
 header div > ul ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;    
-    display: none;
-    position: absolute;
-    top: 2em;
-    right: 0;
-    z-index: 99999;    
-    background: #fff;
-    border-radius: 5px;
-    border : 1px solid gray;
+	list-style: none;
+	margin: 0;
+	padding: 0;    
+	display: none;
+	position: absolute;
+	top: 2em;
+	right: 0;
+	z-index: 99999;    
+	background: #fff;
+	border-radius: 5px;
+	border : 1px solid gray;
 }
 
 header div > ul ul li{
-    float: none;
-    margin: 0;
-    padding: 0;
-    display: block;  
+	float: none;
+	margin: 0;
+	padding: 0;
+	display: block;  
 }
 
 header div > ul ul a{    
-    padding: 10px;
-    height: auto;
-    line-height: 1;
-    display: block;
-    white-space: nowrap;
-    float: none;
-    text-transform: none;
+	padding: 10px;
+	height: auto;
+	line-height: 1;
+	display: block;
+	white-space: nowrap;
+	float: none;
+	text-transform: none;
 }
 
 header div > ul ul a:hover {
-     background: #eee;
+	background: #eee;
 }
 
 /* Clear floated elements */
 header div > ul:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
 }
 
 #breadcrumbs a {
-    text-decoration : none;
-    color : blue;
+	text-decoration : none;
+	color : blue;
 }
 #breadcrumbs a:hover {
-    text-decoration : underline;
+	text-decoration : underline;
 }
 article img {
-    max-width : 100%;
+	max-width : 100%;
 }
 article {
-    padding : 10px;
+	padding : 10px;
 }
 article a{
-    text-decoration : none;
-    color : blue;
+	text-decoration : none;
+	color : blue;
 }
 article a:hover {
-    text-decoration : underline;
+	text-decoration : underline;
 }
 
 article h1, article h2, article h3, article h4, article h5, article h6 {
-    margin : 0em;
-    margin-top : 1em;
+	margin : 0em;
+	margin-top : 1em;
 }
 article h1{	
-    margin-top : 0em;
-    font-size: 2.5em;
+	margin-top : 0em;
+	font-size: 2.5em;
 	font-style : italic;
 }
 article h2{
-    font-size: 1.8em;
+	font-size: 1.8em;
 	border-bottom : 1px solid gray;
 	padding-bottom : 5px;
 }
 article h3{
-    font-size: 1.5em;
+	font-size: 1.5em;
 }
 article h4{
-    font-size: 1.3em;
+	font-size: 1.3em;
 }
 article h5{
-    font-size: 1.2em;
+	font-size: 1.2em;
 }
 article h6{
-    font-size: 1.1em;
+	font-size: 1.1em;
 }
 article dt{
-    font-style: italic;
+	font-style: italic;
 }
 article blockquote{
-    font-style : italic;
-    margin-left : 0px;
-    padding-top : 20px;
-    overflow : hidden;
-    line-height : 100%;
-    color : #454545;
+	font-style : italic;
+	margin-left : 0px;
+	padding-top : 20px;
+	overflow : hidden;
+	line-height : 100%;
+	color : #454545;
 }
 article blockquote:before {
-    display : block;
-    float : left;
-    content : open-quote;
-    color : #bababa;
-    font-size : 100px;
-    margin : 10px 15px 0px 0px;
-    text-shadow : 0 1px 1px #909090;
+	display : block;
+	float : left;
+	content : open-quote;
+	color : #bababa;
+	font-size : 100px;
+	margin : 10px 15px 0px 0px;
+	text-shadow : 0 1px 1px #909090;
 }
 article blockquote:after {
-    display : block;
-    float : right;
-    content : close-quote;
-    color : #bababa;
-    font-size : 100px;
-    margin : 10px 15px 0px 0px;
-    text-shadow : 0 1px 1px #909090;
+	display : block;
+	float : right;
+	content : close-quote;
+	color : #bababa;
+	font-size : 100px;
+	margin : 10px 15px 0px 0px;
+	text-shadow : 0 1px 1px #909090;
 }
 article blockquote :first-child {
-    margin-top : 0px;
+	margin-top : 0px;
 }
 article blockquote :last-child {
-    margin-bottom : 0px;
+	margin-bottom : 0px;
 }
 article blockquote * {
-    margin-left : 100px;
-    margin-right : 80px;
+	margin-left : 100px;
+	margin-right : 80px;
 }
 article table {
-    border-collapse : collapse;
+	border-collapse : collapse;
 }
 article th, article td {
-    border : 1px solid gray;
-    padding : 5px;
+	border : 1px solid gray;
+	padding : 5px;
 }
 article code{
 	display : block;
@@ -192,6 +192,7 @@ article code{
 	padding : 10px;
 	border : 1px solid gray;
 	border-radius : 3px;
+	word-wrap : break-word;
 }
 article code:before {
 	content : "code";
@@ -207,6 +208,7 @@ article code.lang-pic{
 	padding : 0px;
 	border : none;
 	display : inline;
+	font-size : 1.1em;
 }
 article code.lang-pic:before {
 	content : none;
@@ -214,7 +216,7 @@ article code.lang-pic:before {
 }
 
 textarea {
-    tab-size : 4;
+	tab-size : 4;
 	width : 100%;
 	box-sizing: border-box;
 	overflow-x : hidden;

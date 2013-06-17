@@ -71,8 +71,8 @@ wikiApp.view = function(req, res){
 			data = marked(data);
 			//data = converter.makeHtml(data);
 		}
-			res.render("view", {title : "Wiki Note", wikiData: data});
-		});
+		res.render("view", {title : "Wiki Note", wikiData: data});
+	});
 }
 wikiApp.edit = function(req, res){
 	var path  = decodeURIComponent(req.path);
