@@ -20,12 +20,7 @@ app.configure(function(){
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
-	app.use(function(req, res, next){
-		res.locals.path = req.path;
-		res.locals.bread = req.path.split("/").slice(1);
-		res.locals.notename = decodeURIComponent(res.locals.bread[res.locals.bread.length - 1]); 
-		next();
-	});
+	app.use(wikiapp.preModule);
 	app.use(app.router);
 	//app.use(express.static(path.join(__dirname, 'public')));
 });

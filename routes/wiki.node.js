@@ -4,6 +4,7 @@ var wikiFS = require("./wikiFS.node.js");
 var exec = require("child_process").exec;
 
 var marked = require("./marked.js");
+
 marked.setOptions({
 	gfm: true,
 	tables: true,
@@ -20,6 +21,14 @@ exports.init = function(app){
 	app.get(/^.*\.[^.\/]+$/, wikiApp.staticFiles);
 	app.get(/^.*\/[^.\/]+$/, wikiGetRoute);
 	app.post(/^.*\/[^.\/]+$/, wikiPostRoute);
+}
+
+exports.preModule = function(req, res, next){
+	req.path = decodeURIComponent(req.path);
+	res.locals.path = req.path;
+	res.locals.bread = req.path.split("/").slice(1);
+	res.locals.notename = res.locals.bread[res.locals.bread.length - 1];
+	next();
 }
 
 var saveDir = config.wikiDir;
@@ -130,4 +139,7 @@ wikiApp.find= function(req, res){
 		else
 			res.render("find", {title : "Wiki Note::Find", finddata : null});
 	});
+}
+wikiApp.decode = function(path){
+	return decodeURIComponent(path);
 }

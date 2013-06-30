@@ -32,7 +32,7 @@ exports.acceptFile  = function(srcPath, path, name, callback){
 	});
 }
 exports.deleteFile = function(path, callback){
-
+	//
 }
 exports.move = function(srcPath, targetPath, callback){
 	readyDir(getDir(targetPath), function(e){
