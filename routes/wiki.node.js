@@ -1,7 +1,6 @@
 var fs = require("fs");
 var config = require("../config.json");
 var wikiFS = require("./wikiFS.node.js");
-var exec = require("child_process").exec;
 
 var marked = require("./marked.js");
 
@@ -133,15 +132,14 @@ wikiApp.presentation = function(req, res){
 		res.render("presentation", {title : "Wiki Note::Presentation", wikiData: data, option : option});
 	});
 }
-wikiApp.find= function(req, res){
-	var word = '"' + req.param("find") + '"';
-	exec('grep -r ' + word + ' --exclude-dir=".*"', {cwd : saveDir},  function(e, stdout, stderr){
-		if(word != '""')
-			res.render("find", {title : "Wiki Note::Find", finddata : stdout});
-		else
-			res.render("find", {title : "Wiki Note::Find", finddata : null});
+wikiApp.find = function(req, res){
+	var word = req.param("find");
+	if(word == ""){
+		res.render("find", {title : "Wiki Note::Find", finddata : null});
+		return;
+	}
+	wikiFS.find(req.wikiPath, word, function(e, data){
+		res.render("find", {title : "Wiki Note::Find", finddata : data});
 	});
-}
-wikiApp.decode = function(path){
-	return decodeURIComponent(path);
+
 }

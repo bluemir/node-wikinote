@@ -1,4 +1,5 @@
 var fs = require("fs");
+var exec = require("child_process").exec;
 var config = require("../config.json");
 
 var saveDir = config.wikiDir;
@@ -41,6 +42,16 @@ exports.move = function(srcPath, targetPath, callback){
 		fs.rename(saveDir + srcPath.full + ".md", saveDir + targetPath.full + ".md", function(e){
 			console.log(e);
 			callback(null);
+		});
+	});
+}
+exports.find = function(path, word, callback){
+	var exclude = ' --exclude-dir=".*" ';
+	var include = ' --include="*.md"  ';
+	//var include ="";
+	exec('grep -r "' + word + '" ' + exclude + include , {cwd : saveDir + path.full},  function(e, stdout, stderr){
+		exec('grep "' + word + '" "' + path.name + '.md"', { cwd : saveDir + path.path}, function( e2, stdout2, stderr2){
+			callback(e || e2, {current : stdout2, subdir: stdout});
 		});
 	});
 }

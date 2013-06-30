@@ -11,5 +11,10 @@ block content
 		a(href = "/?find") 전체검색
 		을 누르세요
 	- if ( finddata != null)
+		h2 현재 페이지
 		pre
-			!=finddata
+			!=finddata.current
+		h2 하위 페이지
+		pre
+			!=finddata.subdir
+
