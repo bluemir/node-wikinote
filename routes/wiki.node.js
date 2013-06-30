@@ -5,6 +5,8 @@ var exec = require("child_process").exec;
 
 var marked = require("./marked.js");
 
+var Path = require("./path.node.js");
+
 marked.setOptions({
 	gfm: true,
 	tables: true,
@@ -24,10 +26,10 @@ exports.init = function(app){
 }
 
 exports.preModule = function(req, res, next){
-	req.path = decodeURIComponent(req.path);
+	req.wikiPath = new Path(req.path);
 	res.locals.path = req.path;
-	res.locals.bread = req.path.split("/").slice(1);
-	res.locals.notename = res.locals.bread[res.locals.bread.length - 1];
+	res.locals.bread = req.wikiPath.toArray();
+	res.locals.notename = req.wikiPath.name;
 	next();
 }
 
@@ -72,7 +74,7 @@ var wikiApp = {};
 
 wikiApp.view = function(req, res){
 	var path  = decodeURIComponent(req.path);
-	wikiFS.readWiki(path, function(err, data){
+	wikiFS.readWiki(req.wikiPath, function(err, data){
 		if(err) {
 			console.log(err);
 			data = null;
@@ -85,14 +87,14 @@ wikiApp.view = function(req, res){
 }
 wikiApp.edit = function(req, res){
 	var path  = decodeURIComponent(req.path);
-	wikiFS.readWiki(path, function(err, data){
+	wikiFS.readWiki(req.wikiPath, function(err, data){
 		res.render("edit", {title : "Wiki Note::Edit", wikiData: data});
 	});
 }
 wikiApp.save = function(req, res){
 	var path = req.path;
 	var data = req.param("data");
-	wikiFS.writeWiki(decodeURIComponent(path), data, function(err){
+	wikiFS.writeWiki(req.wikiPath, data, function(err){
 		res.redirect(path); 
 	});
 }
@@ -100,21 +102,21 @@ wikiApp.moveForm = function(req, res){
 	res.render("move", {title : "Wiki Note::Move"});
 }
 wikiApp.move = function(req, res){
-	wikiFS.move(decodeURIComponent(req.path), decodeURIComponent(req.param("target")), function(){
+	wikiFS.move(req.wikiPath, new Path(req.param("target")), function(){
 		res.redirect(req.param("target"));
 	});
 }
 wikiApp.attach = function(req, res){
 	var path = decodeURIComponent(req.path);
-	wikiFS.fileList(path, function(err, files){
+	wikiFS.fileList(req.wikiPath, function(err, files){
 		res.render("attach", {title : "Wiki Note::Attach", files: files || []});
 	});
 }
 wikiApp.upload = function(req, res){
 	var file = req.files.upload;
-	wikiFS.acceptFile(file.path, decodeURIComponent(req.path), file.name, function(err){
+	wikiFS.acceptFile(file.path, req.wikiPath, file.name, function(err){
 		if(err) {console.log(err); res.send(500); return;}
-		res.redirect(decodeURIComponent(req.path) + "?attach");
+		res.redirect(req.path + "?attach");
 	});
 }
 wikiApp.staticFiles = function(req, res){
@@ -122,7 +124,7 @@ wikiApp.staticFiles = function(req, res){
 }
 wikiApp.presentation = function(req, res){
 	var path = decodeURIComponent(req.path);
-	wikiFS.readWiki(path, function(err, data){
+	wikiFS.readWiki(req.wikiPath, function(err, data){
 		var option = {}; 
 		try {
 			option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);

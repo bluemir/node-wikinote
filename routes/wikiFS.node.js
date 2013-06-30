@@ -4,7 +4,7 @@ var config = require("../config.json");
 var saveDir = config.wikiDir;
 
 exports.readWiki = function(path, callback){
-	fs.readFile(saveDir + path + ".md", "utf8", function(err, data){
+	fs.readFile(saveDir + path.full + ".md", "utf8", function(err, data){
 		if(err){
 			callback(err);
 			return;
@@ -13,21 +13,20 @@ exports.readWiki = function(path, callback){
 	});
 }
 exports.writeWiki = function(path, data, callback){
-	var dirPath = getDir(path);
-	readyDir(dirPath, function (){
-		fs.writeFile(saveDir + path  + ".md", data, "utf8", function(err){
+	readyDir(path.path, function (){
+		fs.writeFile(saveDir + path.full + ".md", data, "utf8", function(err){
 			callback(err);
 		});
 	})
 }
 exports.fileList = function(path, callback){
-	fs.readdir(saveDir + path, callback);
+	fs.readdir(saveDir + path.full, callback);
 }
 exports.acceptFile  = function(srcPath, path, name, callback){
-	readyDir(path, function(){
+	readyDir(path.full, function(){
 		fs.readFile(srcPath, function(e, data){
 			if(e) return callback(e);
-			fs.writeFile(saveDir + path + "/" + name, data, callback);
+			fs.writeFile(saveDir + path.full + "/" + name, data, callback);
 		});
 	});
 }
@@ -35,22 +34,17 @@ exports.deleteFile = function(path, callback){
 	//
 }
 exports.move = function(srcPath, targetPath, callback){
-	readyDir(getDir(targetPath), function(e){
-		fs.rename(saveDir + srcPath, saveDir + targetPath,function(e){
+	readyDir(targetPath.path, function(e){
+		fs.rename(saveDir + srcPath.full, saveDir + targetPath.full,function(e){
 			console.log(e);
 		});
-		fs.rename(saveDir + srcPath + ".md", saveDir + targetPath + ".md", function(e){
+		fs.rename(saveDir + srcPath.full + ".md", saveDir + targetPath.full + ".md", function(e){
 			console.log(e);
 			callback(null);
 		});
 	});
 }
-function getDir(path){
-	var index = path.lastIndexOf("/");
-	if(index == path.length - 1)
-		index = path.lastIndexOf("/", index - 1);  
-	return index == 0 ? "/" : path.substr(0, index);
-}
+
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);
 }
