@@ -68,33 +68,28 @@ function publicfile(req, res){
 	res.sendfile(req.path.substring(2));
 }
 
-
 var wikiApp = {};
 
 wikiApp.view = function(req, res){
-	var path  = decodeURIComponent(req.path);
 	wikiFS.readWiki(req.wikiPath, function(err, data){
 		if(err) {
 			console.log(err);
 			data = null;
 		} else {
 			data = marked(data);
-			//data = converter.makeHtml(data);
 		}
 		res.render("view", {title : "Wiki Note", wikiData: data});
 	});
 }
 wikiApp.edit = function(req, res){
-	var path  = decodeURIComponent(req.path);
 	wikiFS.readWiki(req.wikiPath, function(err, data){
 		res.render("edit", {title : "Wiki Note::Edit", wikiData: data});
 	});
 }
 wikiApp.save = function(req, res){
-	var path = req.path;
 	var data = req.param("data");
 	wikiFS.writeWiki(req.wikiPath, data, function(err){
-		res.redirect(path); 
+		res.redirect(req.path); 
 	});
 }
 wikiApp.moveForm = function(req, res){
@@ -106,7 +101,6 @@ wikiApp.move = function(req, res){
 	});
 }
 wikiApp.attach = function(req, res){
-	var path = decodeURIComponent(req.path);
 	wikiFS.fileList(req.wikiPath, function(err, files){
 		res.render("attach", {title : "Wiki Note::Attach", files: files || []});
 	});
@@ -122,7 +116,6 @@ wikiApp.staticFiles = function(req, res){
 	res.sendfile(saveDir + decodeURIComponent(req.path));
 }
 wikiApp.presentation = function(req, res){
-	var path = decodeURIComponent(req.path);
 	wikiFS.readWiki(req.wikiPath, function(err, data){
 		var option = {}; 
 		try {
@@ -141,5 +134,4 @@ wikiApp.find = function(req, res){
 	wikiFS.find(req.wikiPath, word, function(e, data){
 		res.render("find", {title : "Wiki Note::Find", finddata : data});
 	});
-
 }
