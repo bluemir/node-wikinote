@@ -221,6 +221,10 @@ textarea {
 	box-sizing: border-box;
 	overflow-x : hidden;
 }
+form>img {
+	cursor : pointer;
+	float : right;
+}
 article .right {
 	text-align : right;
 }
