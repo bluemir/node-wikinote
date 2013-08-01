@@ -1,6 +1,6 @@
 var fs = require("fs");
 var exec = require("child_process").exec;
-var config = require("../config.json");
+var config = require("./config.node.js");
 
 var saveDir = config.wikiDir;
 
