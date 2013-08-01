@@ -1,4 +1,5 @@
 {
   "frontPage" : "FrontPage",
-  "wikiDir" : "/home/bluemir/wiki"
+  "wikiDir" : "/home/bluemir/wiki",
+  "autoBackup" : true
 }

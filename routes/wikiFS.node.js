@@ -16,7 +16,10 @@ exports.readWiki = function(path, callback){
 exports.writeWiki = function(path, data, callback){
 	readyDir(path.path, function (){
 		fs.writeFile(saveDir + path.full + ".md", data, "utf8", function(err){
-			callback(err);
+			if(!err)
+				backup(callback);
+			else
+				callback(err);
 		});
 	})
 }
@@ -58,4 +61,15 @@ exports.find = function(path, word, callback){
 
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);
+}
+function backup(callback){
+	if(!config.autoBackup){
+		callback();
+		return;
+	}
+	exec('git add .', {cwd : saveDir}, function(){
+		exec('git commit -m "' + new Date().toLocaleString() + '"', {cwd : saveDir}, function(){
+			callback();			
+		});
+	});
 }
