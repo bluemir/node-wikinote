@@ -15,7 +15,7 @@ exports.init = function(app){
 
 exports.preModule = function(req, res, next){
 	req.wikiPath = new Path(req.path);
-	res.locals.path = req.path;
+	res.locals.path = req.wikiPath;
 	res.locals.bread = req.wikiPath.toArray();
 	res.locals.notename = req.wikiPath.name;
 	next();
