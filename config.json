@@ -1,5 +1,6 @@
 {
   "frontPage" : "FrontPage",
   "wikiDir" : "~/wiki",
-  "autoBackup" : true
+  "autoBackup" : true,
+  "salt" : "123456789"
 }

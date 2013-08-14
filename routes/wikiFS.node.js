@@ -67,7 +67,7 @@ function backup(callback){
 		callback();
 		return;
 	}
-	exec('git add .', {cwd : saveDir}, function(){
+	exec('git add --all .', {cwd : saveDir}, function(){
 		exec('git commit -m "' + new Date().toLocaleString() + '"', {cwd : saveDir}, function(){
 			callback();			
 		});

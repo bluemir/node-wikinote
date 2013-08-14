@@ -4,9 +4,9 @@
 */
 
 var express = require('express')
-	, routes = require('./routes')
-	, http = require('http')
-	, path = require('path');
+var routes = require('./routes')
+var http = require('http')
+var path = require('path');
 
 var wikiapp = require("./routes/wiki.node.js");
 

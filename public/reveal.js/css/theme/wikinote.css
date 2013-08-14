@@ -160,3 +160,15 @@ body {
 .reveal table {
 	margin : auto;
 }
+.reveal .bold {
+	font-weight : bold;
+}
+.reveal .big {
+	font-size : 2em;
+}
+.reveal .bigger {
+	font-size : 3em;
+}
+.reveal .biggest {
+	font-size : 4em;
+}
