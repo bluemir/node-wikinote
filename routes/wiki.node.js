@@ -8,10 +8,10 @@ exports.init = function(app){
 	app.get("/", redirectToFront);
 	app.get("/!logout", logout);
 	app.get(/^\/!public\/.*$/, publicFile);
-	app.get(/^.*\.[^.\/]+$/, staticFile);
-	app.get(/^.*\/[^.\/]+$/, wikiGetRoute);
+	app.get(/^.*\.[^.\/]+$/, user.requireLogin, staticFile);
+	app.get(/^.*\/[^.\/]+$/, user.requireLogin, wikiGetRoute);
 	app.post(/^\/!login$/, login);
-	app.post(/^.*\/[^.\/]+$/, wikiPostRoute);
+	app.post(/^.*\/[^.\/]+$/, user.requireLogin, wikiPostRoute);
 }
 
 exports.preModule = function(req, res, next){

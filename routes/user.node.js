@@ -18,11 +18,7 @@ function getHash(str){
 	shasum.update(str + config.salt);
 	return shasum.digest("base64");
 }
-exports.userHelper = function(req, res, next){
-	if(req.path == "/!login"){
-		next();
-		return;
-	}
+exports.requireLogin = function(req, res, next){
 	if(!config.security){
 		next();
 		return;

@@ -25,7 +25,6 @@ app.configure(function(){
 	app.use(express.cookieSession({ secret: 'wikinote'}));
 	app.use(flash());
 	app.use(wikiapp.preModule);
-	app.use(user.userHelper);
 	app.use(app.router);
 	//app.use(express.static(path.join(__dirname, 'public')));
 });
