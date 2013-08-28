@@ -9,9 +9,22 @@ exports.init = function(app){
 	app.get("/!logout", logout);
 	app.get(/^\/!public\/.*$/, publicFile);
 	app.get(/^.*\.[^.\/]+$/, user.requireLogin, staticFile);
-	app.get(/^.*\/[^.\/]+$/, user.requireLogin, wikiGetRoute);
+
+	var getRouterFactory = new ParamRouterFactory(wikiApp.view);
+	getRouterFactory.register("edit", wikiApp.edit);
+	getRouterFactory.register("attach", wikiApp.attach);
+	getRouterFactory.register("move", wikiApp.moveForm);
+	getRouterFactory.register("presentation", wikiApp.presentation);
+	getRouterFactory.register("find", wikiApp.find);
+	app.get(/^.*\/[^.\/]+$/, user.requireLogin, getRouterFactory.getRouter());
+
 	app.post(/^\/!login$/, login);
-	app.post(/^.*\/[^.\/]+$/, user.requireLogin, wikiPostRoute);
+
+	var postRouterFactory = new ParamRouterFactory();
+	postRouterFactory.register("edit", wikiApp.save);
+	postRouterFactory.register("attach", wikiApp.upload);
+	postRouterFactory.register("move", wikiApp.move);
+	app.post(/^.*\/[^.\/]+$/, user.requireLogin, postRouterFactory.getRouter());
 }
 
 exports.preModule = function(req, res, next){
@@ -34,30 +47,7 @@ function redirectToFront(req, res){
 		res.redirect("/" + config.frontPage);
 	}
 }
-function wikiGetRoute(req, res){
-	if("edit" in req.query){
-		wikiApp.edit(req, res);
-	} else if ("attach" in req.query){
-		wikiApp.attach(req, res);
-	} else if ("move" in req.query){
-		wikiApp.moveForm(req, res);
-	} else if ("presentation" in req.query){
-		wikiApp.presentation(req, res);
-	} else if("find" in req.query){
-		wikiApp.find(req, res);
-	} else {
-		wikiApp.view(req, res);
-	}
-}
-function wikiPostRoute(req, res){
-	if("edit" in req.query){
-		wikiApp.save(req, res);
-	} else if ("attach" in req.query){
-		wikiApp.upload(req, res);
-	} else if ("move" in req.query){
-		wikiApp.move(req, res);
-	}
-}
+
 function publicFile(req, res){
 	res.sendfile(req.path.substring(2));
 }
@@ -79,4 +69,24 @@ function logout(req, res){
 	//TODO must have message level
 	req.flash('msg', 'Logout successfully!');
 	res.redirect(decodeURIComponent(req.param("redirect")));
+}
+
+function ParamRouterFactory(defaultFunc){
+	this.defaultFunc = defaultFunc;
+	this.map = {};
+}
+ParamRouterFactory.prototype.register = function(key, func){
+	this.map[key] = func;
+}
+ParamRouterFactory.prototype.getRouter = function(){
+	var that = this;
+	return function router(req, res){
+		for(var key in that.map){
+			if(key in req.query){
+				return that.map[key](req, res);
+			}
+		}
+		console.log(that.defaultFunc);
+		return that.defaultFunc && that.defaultFunc(req, res);
+	}
 }
