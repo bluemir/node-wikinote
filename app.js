@@ -7,8 +7,9 @@ var express = require('express')
 var routes = require('./routes')
 var http = require('http')
 var path = require('path');
-
+var user = require('./routes/user.node.js');
 var wikiapp = require("./routes/wiki.node.js");
+var flash = require("connect-flash");
 
 var app = express();
 
@@ -20,7 +21,11 @@ app.configure(function(){
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
+	app.use(express.cookieParser());
+	app.use(express.cookieSession({ secret: 'wikinote'}));
+	app.use(flash());
 	app.use(wikiapp.preModule);
+	app.use(user.userHelper);
 	app.use(app.router);
 	//app.use(express.static(path.join(__dirname, 'public')));
 });

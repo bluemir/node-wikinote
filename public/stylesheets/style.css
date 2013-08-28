@@ -13,6 +13,16 @@ header {
 	border-bottom : 1px solid gray;
 	position : relative;
 }
+/* login */
+#user {
+	display : inline-block;
+	float : right;
+	margin : 10px;
+}
+#user input[type="text"], #user input[type="password"]{
+	width : 100px;
+}
+
 header > div {
 	margin : 10px;
 }
@@ -90,6 +100,16 @@ header div > ul:after {
 	content: " ";
 	clear: both;
 	height: 0;
+}
+
+/* message */
+header p.msg {
+	margin : 10px;
+	padding : 10px;
+	border-radius : 10px;
+	background : #f2dede;
+	color : #b94a48;
+	border-color : #eed3d7;
 }
 
 #breadcrumbs a {

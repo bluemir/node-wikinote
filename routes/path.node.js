@@ -16,6 +16,9 @@ wikiPath.prototype.toString = function(){
 wikiPath.prototype.toArray = function(){
 	return this.full.split("/").slice(1);
 }
+wikiPath.prototype.encode = function(){
+	return encodeURIComponent(this.full);
+}
 function nomalizePath(path){
 	if(path[path.length -1] == "/"){
 		return path.substr(0, path.length -2);

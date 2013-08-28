@@ -1,15 +1,16 @@
 var config = require("./config.node.js");
-
 var wikiApp = require("./wikiApp.node.js")
-
 var Path = require("./path.node.js");
+var user = require("./user.node.js");
 
 exports.init = function(app){
 	//app.get("!list", listAll);
 	app.get("/", redirectToFront);
+	app.get("/!logout", logout);
 	app.get(/^\/!public\/.*$/, publicFile);
 	app.get(/^.*\.[^.\/]+$/, staticFile);
 	app.get(/^.*\/[^.\/]+$/, wikiGetRoute);
+	app.post(/^\/!login$/, login);
 	app.post(/^.*\/[^.\/]+$/, wikiPostRoute);
 }
 
@@ -18,6 +19,9 @@ exports.preModule = function(req, res, next){
 	res.locals.path = req.wikiPath;
 	res.locals.bread = req.wikiPath.toArray();
 	res.locals.notename = req.wikiPath.name;
+	res.locals.config = config;
+	res.locals.session = req.session;
+	res.locals.msg = req.flash('msg');
 	next();
 }
 
@@ -59,4 +63,20 @@ function publicFile(req, res){
 }
 function staticFile(req, res){
 	res.sendfile(saveDir + decodeURIComponent(req.path));
+}
+function login(req, res){
+	var id = req.param("id");
+	var password = req.param("password");
+	if(user.login(id, password)){
+		req.session.user = id;
+	} else {
+		req.flash('msg', 'Login Fail! Check your Id or Password');
+	}
+	res.redirect(decodeURIComponent(req.param("redirect")));
+}
+function logout(req, res){
+	delete req.session.user;
+	//TODO must have message level
+	req.flash('msg', 'Logout successfully!');
+	res.redirect(decodeURIComponent(req.param("redirect")));
 }

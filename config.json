@@ -2,5 +2,9 @@
   "frontPage" : "FrontPage",
   "wikiDir" : "~/wiki",
   "autoBackup" : true,
-  "salt" : "123456789"
+  "salt" : "123456789",
+  "security" : {
+	  "admin" : "bluemir",
+	  "permission" : "rw-rw-r--"
+  }
 }
