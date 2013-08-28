@@ -18,7 +18,7 @@ function getHash(str){
 	shasum.update(str + config.salt);
 	return shasum.digest("base64");
 }
-exports.requireLogin = function(req, res, next){
+exports.checkPermission = function(req, res, next){
 	if(!config.security){
 		next();
 		return;

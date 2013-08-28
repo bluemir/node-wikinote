@@ -8,7 +8,7 @@ exports.init = function(app){
 	app.get("/", redirectToFront);
 	app.get("/!logout", logout);
 	app.get(/^\/!public\/.*$/, publicFile);
-	app.get(/^.*\.[^.\/]+$/, user.requireLogin, staticFile);
+	app.get(/^.*\.[^.\/]+$/, user.checkPermission, staticFile);
 
 	var getRouterFactory = new ParamRouterFactory(wikiApp.view);
 	getRouterFactory.register("edit", wikiApp.edit);
@@ -16,7 +16,7 @@ exports.init = function(app){
 	getRouterFactory.register("move", wikiApp.moveForm);
 	getRouterFactory.register("presentation", wikiApp.presentation);
 	getRouterFactory.register("find", wikiApp.find);
-	app.get(/^.*\/[^.\/]+$/, user.requireLogin, getRouterFactory.getRouter());
+	app.get(/^.*\/[^.\/]+$/, user.checkPermission, getRouterFactory.getRouter());
 
 	app.post(/^\/!login$/, login);
 
@@ -24,7 +24,7 @@ exports.init = function(app){
 	postRouterFactory.register("edit", wikiApp.save);
 	postRouterFactory.register("attach", wikiApp.upload);
 	postRouterFactory.register("move", wikiApp.move);
-	app.post(/^.*\/[^.\/]+$/, user.requireLogin, postRouterFactory.getRouter());
+	app.post(/^.*\/[^.\/]+$/, user.checkPermission, postRouterFactory.getRouter());
 }
 
 exports.preModule = function(req, res, next){
