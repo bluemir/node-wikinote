@@ -5,13 +5,16 @@ var crypto = require('crypto');
 
 exports.login = function(id, password){
 	var users = require("../users.json");
-	console.log(getHash(password));
 	return users[id] == getHash(password);
 }
 exports.register = function(id, password, callback) {
 	var users = require("../users.json");
+	if(users[id]) {
+		callback("exsit id");
+		return;
+	}
 	users[id] = getHash(password);
-	fs.writeFile("../users.json", JSON.stringify(users, null, 4), {encode : "utf8"}, callback);
+	fs.writeFile("./users.json", JSON.stringify(users, null, 4), {encode : "utf8"}, callback);
 }
 function getHash(str){
 	var shasum = crypto.createHash('sha512');

@@ -103,13 +103,21 @@ header div > ul:after {
 }
 
 /* message */
-header p.msg {
+header p.msg-warn {
 	margin : 10px;
 	padding : 10px;
 	border-radius : 10px;
 	background : #f2dede;
 	color : #b94a48;
 	border-color : #eed3d7;
+}
+header p.msg-info {
+	margin : 10px;
+	padding : 10px;
+	border-radius : 10px;
+	background : #d9edf7;
+	color : #3a87ad;
+	border-color : #bce8f1;
 }
 
 #breadcrumbs a {

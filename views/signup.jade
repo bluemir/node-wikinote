@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    form(method="post", id="signup")
+        dl
+            dt ID
+            dd
+                input(type="text", placeholder="id", name="id")
+            dt Password
+            dd
+                input(type="password", placeholder="password", name="password")
+            dt Password confirm
+            dd
+                input(type="password", placeholder="password confirm")
+        p
+            input(type="submit", value="signup")
+
+block scripts
+    script(src="/!public/signup.js")

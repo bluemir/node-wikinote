@@ -6,7 +6,11 @@ var user = require("./user.node.js");
 exports.init = function(app){
 	//app.get("!list", listAll);
 	app.get("/", redirectToFront);
-	app.get("/!logout", logout);
+	app.get("/!logout", disableMenu, logout);
+	app.get("/!signup", disableMenu, signupForm);
+	app.post("/!login", disableMenu, login);
+	app.post("/!signup", disableMenu, signup);
+
 	app.get(/^\/!public\/.*$/, publicFile);
 	app.get(/^.*\.[^.\/]+$/, user.checkPermission, staticFile);
 
@@ -17,8 +21,6 @@ exports.init = function(app){
 	getRouterFactory.register("presentation", wikiApp.presentation);
 	getRouterFactory.register("find", wikiApp.find);
 	app.get(/^.*\/[^.\/]+$/, user.checkPermission, getRouterFactory.getRouter());
-
-	app.post(/^\/!login$/, login);
 
 	var postRouterFactory = new ParamRouterFactory();
 	postRouterFactory.register("edit", wikiApp.save);
@@ -35,6 +37,10 @@ exports.preModule = function(req, res, next){
 	res.locals.config = config;
 	res.locals.session = req.session;
 	res.locals.msg = req.flash('msg');
+	res.locals.msg = { 
+		info : req.flash("info"),
+		warn : req.flash('warn')
+	};
 	next();
 }
 
@@ -60,16 +66,37 @@ function login(req, res){
 	if(user.login(id, password)){
 		req.session.user = id;
 	} else {
-		req.flash('msg', 'Login Fail! Check your Id or Password');
+		req.flash('warn', 'Login Fail! Check your Id or Password');
 	}
 	res.redirect(decodeURIComponent(req.param("redirect")));
 }
 function logout(req, res){
 	delete req.session.user;
-	//TODO must have message level
-	req.flash('msg', 'Logout successfully!');
+	req.flash('info', 'Logout successfully!');
 	res.redirect(decodeURIComponent(req.param("redirect")));
 }
+function signupForm(req, res){
+	res.render("signup", {title : "signup"});
+}
+function signup(req, res){
+	user.register(req.param("id"), req.param("password"), function(e){
+		if(e){
+			//fail
+			req.flash("warn", "already registered id. please try another one.");
+			res.render("signup", {title : "signup"});
+			return;
+		}
+		req.flash("info", "Welcome " + req.param("id") + "!");
+		req.session.user = req.param("id");
+		res.redirect(decodeURIComponent(req.param("redirect")));
+	});
+}
+
+function disableMenu(req, res, next) {
+	res.locals.disableMenu = true;
+	next();
+}
+
 
 function ParamRouterFactory(defaultFunc){
 	this.defaultFunc = defaultFunc;
@@ -86,7 +113,6 @@ ParamRouterFactory.prototype.getRouter = function(){
 				return that.map[key](req, res);
 			}
 		}
-		console.log(that.defaultFunc);
 		return that.defaultFunc && that.defaultFunc(req, res);
 	}
 }
