@@ -22,7 +22,40 @@ header {
 #user input[type="text"], #user input[type="password"]{
 	width : 100px;
 }
+#user a, #user input[type="submit"] {
+	display : inline-block;
 
+	padding : 1px 6px;
+	margin : 2px;
+	font-size : 0.9em;
+	line-height : 20px;
+	text-align : center;
+	vertical-align : middle;
+	cursor: pointer;
+	color : #333333;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	background-color : #f5f5f5;
+	background-image : linear-gradient(to bottom, #ffffff, #e6e6e6);
+	background-repeat: repeat-x;
+	border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+
+	border: 1px solid #cccccc;
+	border-radius : 5px;
+	box-shadow : inset 0 1px 0 rgba(255, 255, 255, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.05);
+	text-decoration : none;
+}
+#user a:hover, #user input[type="submit"]:hover,
+#user a:focus, #user input[type="submit"]:focus {
+	color: #333333;
+	background-color: #e6e6e6;
+	background-position: 0 -15px;
+}
+
+#user a:active, #user input[type="submit"]:active{
+	background-image : none;
+	box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0px 1px 2px rgba(0,0,0,0.05);
+}
 header > div {
 	margin : 10px;
 }
@@ -76,6 +109,10 @@ header div > ul ul li{
 	margin: 0;
 	padding: 0;
 	display: block;  
+}
+
+header div > ul ul li.seperater {
+	border-bottom : 1px solid gray;
 }
 
 header div > ul ul a{    
