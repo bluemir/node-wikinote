@@ -78,5 +78,29 @@ wikiApp.find = function(req, res){
 		res.render("find", {title : "Wiki Note::Find", finddata : data});
 	});
 }
+wikiApp.deleteForm = function(req, res){
+	res.render("delete", {title : "Wiki Note::Delete"});
+}
+wikiApp.deleteComfirm = function(req, res){
+	wikiFS.deleteFile(req.wikiPath, function(e){
+		if(e) {
+			console.log(e);
+			req.flash("fail to delete");
+			res.redirect(req.wikiPath);
+		} else {
+			req.flash("delete!");
+			res.redirect("/");
+		}
+	});
+}
+wikiApp.history = function(req, res){
+	wikiFS.history(req.wikiPath, function(e, stdout, stderr){
+		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
+			var tmp = log.split("\01");
+			return { date : tmp[0], subject : tmp[1]};
+		});
+		res.render("history", {title : "Wiki Note::History", logs : logs});
+	});
+}
 
 module.exports = wikiApp;

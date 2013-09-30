@@ -1,7 +1,9 @@
 extends layout
 
 block content
-	form(method="post")
-		textarea(name="data", cols="80", rows="25")
-			!= wikiData
-		input(type="submit", value="저장");
+  h1 Warring!
+  p 한번 삭제한 페이지는 다시 복구하기 어렵습니다.
+  p 정말 삭제하시겠습니까?
+  form(method="post")
+    input(type="submit" value="Yes")
+    button No

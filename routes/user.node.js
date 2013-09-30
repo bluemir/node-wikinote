@@ -39,7 +39,7 @@ exports.checkPermission = function(req, res, next){
 	if(req.method.toUpperCase() == "GET" && permission.charAt(0) == "r") {
 		next();
 		return;
-	} else if(req.method.toUpperCase() == "POST" && permission.charAt(0) == "w") {
+	} else if(req.method.toUpperCase() == "POST" && permission.charAt(1) == "w") {
 		next();
 		return;
 	}

@@ -290,12 +290,22 @@ form>img {
 	cursor : pointer;
 	float : right;
 }
+article p, article li{
+	line-height : 1.2em;
+}
 article .right {
 	text-align : right;
 }
 article .center {
 	text-align : center;
 }
+article p.history-date {
+	color : blue;
+}
+article p.history-subject {
+	text-indent : 3em;
+}
+
 @media print {
 	header{
 		display : none;

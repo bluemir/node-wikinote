@@ -20,12 +20,15 @@ exports.init = function(app){
 	getRouterFactory.register("move", wikiApp.moveForm);
 	getRouterFactory.register("presentation", wikiApp.presentation);
 	getRouterFactory.register("find", wikiApp.find);
+	getRouterFactory.register("delete", wikiApp.deleteForm);
+	getRouterFactory.register("history", wikiApp.history);
 	app.get(/^.*\/[^.\/]+$/, user.checkPermission, getRouterFactory.getRouter());
 
 	var postRouterFactory = new ParamRouterFactory();
 	postRouterFactory.register("edit", wikiApp.save);
 	postRouterFactory.register("attach", wikiApp.upload);
 	postRouterFactory.register("move", wikiApp.move);
+	postRouterFactory.register("delete", wikiApp.deleteComfirm);
 	app.post(/^.*\/[^.\/]+$/, user.checkPermission, postRouterFactory.getRouter());
 }
 
@@ -81,7 +84,6 @@ function signupForm(req, res){
 function signup(req, res){
 	user.register(req.param("id"), req.param("password"), function(e){
 		if(e){
-			//fail
 			req.flash("warn", "already registered id. please try another one.");
 			res.render("signup", {title : "signup"});
 			return;

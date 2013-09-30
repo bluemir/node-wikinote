@@ -35,7 +35,10 @@ exports.acceptFile  = function(srcPath, path, name, callback){
 	});
 }
 exports.deleteFile = function(path, callback){
-	//
+	fs.unlink(saveDir + path, function(e){
+		console.log(e);
+		fs.unlink(saveDir + path + ".md", callback);
+	});
 }
 exports.move = function(srcPath, targetPath, callback){
 	readyDir(targetPath.path, function(e){
@@ -58,7 +61,9 @@ exports.find = function(path, word, callback){
 		});
 	});
 }
-
+exports.history = function(path, callback){
+	exec("git log '--pretty=tformat:%ci\01%s' -- " + saveDir + path + ".md", {cwd : saveDir}, callback);
+} 
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);
 }
@@ -73,3 +78,4 @@ function backup(callback){
 		});
 	});
 }
+
