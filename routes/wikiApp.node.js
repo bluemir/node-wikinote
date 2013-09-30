@@ -1,6 +1,7 @@
 var wikiFS = require("./wikiFS.node.js");
 var marked = require("./marked.js");
 var Path = require("./path.node.js");
+var config = require("./config.node.js");
 
 marked.setOptions({
 	gfm: true,
@@ -82,14 +83,19 @@ wikiApp.deleteForm = function(req, res){
 	res.render("delete", {title : "Wiki Note::Delete"});
 }
 wikiApp.deleteComfirm = function(req, res){
+	if(req.wikiPath.name != req.param("comfirm")){
+		req.flash("warn","note의 이름이 정확하지 않습니다.");
+		res.redirect(req.wikiPath + "?delete" );
+		return;
+	}
 	wikiFS.deleteFile(req.wikiPath, function(e){
 		if(e) {
 			console.log(e);
-			req.flash("fail to delete");
+			req.flash("warn","fail to delete");
 			res.redirect(req.wikiPath);
 		} else {
-			req.flash("delete!");
-			res.redirect("/");
+			req.flash("info", "delete!");
+			res.redirect("/" + config.frontPage);
 		}
 	});
 }

@@ -1,9 +1,10 @@
 extends layout
 
 block content
-  h1 Warring!
+  h1 Warning!
+  h3 지금 당신은 #{path}와 하위 폴더를 지우려 합니다.
   p 한번 삭제한 페이지는 다시 복구하기 어렵습니다.
-  p 정말 삭제하시겠습니까?
-  form(method="post")
-    input(type="submit" value="Yes")
-    button No
+  p 정말 삭제하시려면 항목의 제목을 아래에 입력해 주세요.
+  form(method="post" id="comfirmForm")
+    input(type="text", id="comfirm", name="comfirm")
+    input(type="submit" value="확인")

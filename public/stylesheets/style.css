@@ -19,6 +19,7 @@ header {
 	float : right;
 	margin : 10px;
 }
+
 #user input[type="text"], #user input[type="password"]{
 	width : 100px;
 }
