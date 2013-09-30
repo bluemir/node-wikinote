@@ -8,3 +8,4 @@ block content
     -for(var i = 0; i < logs.length; i++)
       p.history-date #{logs[i].date}
       p.history-subject #{logs[i].subject}
+      input(type="hidden", value="#{logs[i].id}")

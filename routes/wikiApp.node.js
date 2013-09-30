@@ -97,7 +97,7 @@ wikiApp.history = function(req, res){
 	wikiFS.history(req.wikiPath, function(e, stdout, stderr){
 		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
 			var tmp = log.split("\01");
-			return { date : tmp[0], subject : tmp[1]};
+			return { date : tmp[0], subject : tmp[1], id : tmp[2]};
 		});
 		res.render("history", {title : "Wiki Note::History", logs : logs});
 	});

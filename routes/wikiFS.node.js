@@ -62,7 +62,7 @@ exports.find = function(path, word, callback){
 	});
 }
 exports.history = function(path, callback){
-	exec("git log '--pretty=tformat:%ci\01%s' -- " + saveDir + path + ".md", {cwd : saveDir}, callback);
+	exec("git log '--pretty=tformat:%ci\01%s\01%h' -- " + saveDir + path + ".md", {cwd : saveDir}, callback);
 } 
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);

@@ -99,7 +99,6 @@ function disableMenu(req, res, next) {
 	next();
 }
 
-
 function ParamRouterFactory(defaultFunc){
 	this.defaultFunc = defaultFunc;
 	this.map = {};
