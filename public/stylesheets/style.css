@@ -6,6 +6,7 @@
 	border-radius : 15px;
 }
 header img {
+	border : none;
 	margin : 10px;
 }
 header {
