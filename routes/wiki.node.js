@@ -85,7 +85,7 @@ function signup(req, res){
 	user.register(req.param("id"), req.param("password"), function(e){
 		if(e){
 			req.flash("warn", "already registered id. please try another one.");
-			res.render("signup", {title : "signup"});
+			res.redirect("!signup?redirect=" + req.param("redirect"));
 			return;
 		}
 		req.flash("info", "Welcome " + req.param("id") + "!");

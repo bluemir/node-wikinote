@@ -37,7 +37,7 @@ exports.acceptFile  = function(srcPath, path, name, callback){
 exports.deleteFile = function(path, callback){
 	fs.unlink(saveDir + path, function(e){
 		console.log(e);
-		fs.unlink(saveDir + path + ".md", callback);
+		fs.unlink(saveDir + path + ".md", callback );
 	});
 }
 exports.move = function(srcPath, targetPath, callback){
