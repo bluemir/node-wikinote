@@ -173,6 +173,13 @@ header p.msg-dynamic {
 	border-color : #bce8f1;
 }
 
+header p.msg-dynamic.warn {
+	width : 30em;
+	margin-left : -15em;
+	background : #f2dede;
+	color : #b94a48;
+	border-color : #eed3d7;
+}
 #breadcrumbs a {
 	text-decoration : none;
 	color : blue;

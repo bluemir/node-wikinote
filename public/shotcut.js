@@ -89,6 +89,5 @@
 			else 
 				$msg.style.display = "none";
 		}, 0.5 * 1000);
-
 	}
 })();
