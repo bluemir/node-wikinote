@@ -82,6 +82,16 @@ function signupForm(req, res){
 	res.render("signup", {title : "signup"});
 }
 function signup(req, res){
+	if(req.param("id") == "" || req.param("password") == "" || req.param("confirm") == ""){
+		req.flash("warn", "please fill sign up form.");
+		res.redirect("!signup?redirect=" + req.param("redirect"));
+		return;
+	}
+	if(req.param("password") != req.param("confirm")){
+		req.flash("warn", "password and password confirm are not matched.");
+		res.redirect("!signup?redirect=" + req.param("redirect"));
+		return;
+	}
 	user.register(req.param("id"), req.param("password"), function(e){
 		if(e){
 			req.flash("warn", "already registered id. please try another one.");
