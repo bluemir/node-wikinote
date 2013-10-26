@@ -13,6 +13,7 @@
 				e.preventDefault();
 			} else if(e.keyCode == "S".charCodeAt(0)){
 				saveDataWithAjax();
+				printSaveMsg();
 				e.preventDefault();
 			}
 		} else if(e.altKey){
@@ -72,5 +73,22 @@
 	}
 	function goPresentation(){
 		location.href = getUrl() + "?presentation";
+	}
+	function printSaveMsg(){
+		var $msg = document.getElementById("message");
+		$msg.innerHTML = "Save successful!";
+		$msg.style.display = "block";
+		$msg.style.opacity = 1;
+
+		var op = 1;
+		setTimeout(function loop(){
+			$msg.style.opacity = op;
+			op -= 0.02;
+			if(op > 0)
+				setTimeout(loop, 20);
+			else 
+				$msg.style.display = "none";
+		}, 0.5 * 1000);
+
 	}
 })();

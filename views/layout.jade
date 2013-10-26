@@ -40,8 +40,10 @@ html
                                 a(href="/#{bread.slice(0, i+1).join('/')}") #{bread[i]}
                 -if(msg.warn.length != 0)
                     p.msg-warn #{msg.warn}
-                -if(msg.info.length != 0)
+                -else if(msg.info.length != 0)
                     p.msg-info #{msg.info}
+                -else
+                    p.msg-dynamic#message
             article
                 block content
         script(src="/!public/shotcut.js")

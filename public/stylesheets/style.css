@@ -158,6 +158,20 @@ header p.msg-info {
 	color : #3a87ad;
 	border-color : #bce8f1;
 }
+header p.msg-dynamic {
+	position : fixed;
+	top : 50%;
+	left : 50%;
+	width : 12em;
+	margin-left : -6em;
+	text-align : center;
+	display : none;
+	padding : 10px;
+	border-radius : 10px;
+	background : #d9edf7;
+	color : #3a87ad;
+	border-color : #bce8f1;
+}
 
 #breadcrumbs a {
 	text-decoration : none;
