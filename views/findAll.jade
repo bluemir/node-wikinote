@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	p 전체 페이지를 검색합니다.
+	form
+		input(type="search", name="find")
+		input(type="submit", value="검색")
+	- if ( finddata != null)
+		h2 전체 페이지
+		pre
+			=finddata.subdir
+
