@@ -1,5 +1,5 @@
 #wikinote
-========
+--
 ##What is wikinote
 wikinote는 위키같은 메모장을 사용하고 싶은 마음에서 시작되었습니다.
 철저하게 개인화된 위키를 지향하며 markdown문법을 사용합니다.
