@@ -17,7 +17,7 @@ exports.writeWiki = function(path, data, callback){
 	readyDir(path.path, function (){
 		fs.writeFile(saveDir + path.full + ".md", data, "utf8", function(err){
 			if(!err)
-				backup(callback);
+				backup(path.full, callback);
 			else
 				callback(err);
 		});
@@ -67,13 +67,13 @@ exports.history = function(path, callback){
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);
 }
-function backup(callback){
+function backup(fullname, callback){
 	if(!config.autoBackup){
 		callback();
 		return;
 	}
 	exec('git add --all .', {cwd : saveDir}, function(){
-		exec('git commit -m "' + new Date().toLocaleString() + '"', {cwd : saveDir}, function(){
+		exec('git commit -m "update : ' + fullname + '"', {cwd : saveDir}, function(){
 			callback();			
 		});
 	});
