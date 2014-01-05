@@ -4,6 +4,9 @@ var config = require("./config.node.js");
 
 var saveDir = config.wikiDir;
 
+var SearchEngine = require("./searchEngine.node.js")
+var searchEngine = new SearchEngine(saveDir);
+
 exports.readWiki = function(path, callback){
 	fs.readFile(saveDir + path.full + ".md", "utf8", function(err, data){
 		if(err){
@@ -60,6 +63,10 @@ exports.find = function(path, word, callback){
 			callback(e || e2, {current : stdout2, subdir: stdout});
 		});
 	});
+	searchEngine.search(word, path, function(err, data){
+		console.log(data);
+	})
+	
 }
 exports.history = function(path, callback){
 	exec("git log '--pretty=tformat:%ci\01%s\01%h' -- " + saveDir + path + ".md", {cwd : saveDir}, callback);
