@@ -1,26 +1,27 @@
 extends layout
 
 block content
-	p 하위 페이지를 검색합니다 
-	form()
-		input(type="search", name="find")
-		input(type="submit", value="검색")
-	p 
-		만약 모든 페이지 중에 검색하고 싶다면 
-		a(href = "/?find") 전체검색
-		을 누르세요
-	-if (result != null)
-		h2 하위 페이지 검색결과
-		ul
-			-for(var i = 0; i < result.length; i++)
-				li
-					a(href="#{result[i].path}") #{result[i].name}
-					-if(result[i].lines)
-						table
-							each line in result[i].lines
-								tr
-									td
-										span #{line.num}
-									td
-										span #{line.value}
+	article.find
+		p 하위 페이지를 검색합니다 
+		form()
+			input(type="search", name="find")
+			input(type="submit", value="검색")
+		p 
+			만약 모든 페이지 중에 검색하고 싶다면 
+			a(href = "/?find") 전체검색
+			을 누르세요
+		-if (result != null)
+			h2 하위 페이지 검색결과
+			ul
+				-for(var i = 0; i < result.length; i++)
+					li
+						a(href="#{result[i].path}") #{result[i].name}
+						-if(result[i].lines)
+							table
+								each line in result[i].lines
+									tr
+										td
+											span #{line.num}
+										td
+											span #{line.value}
 							

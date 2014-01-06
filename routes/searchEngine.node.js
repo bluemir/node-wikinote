@@ -41,7 +41,6 @@ SearchEngine.prototype.find = function(regex, wikiPath, callback){
 	});
 	
 	function handleFile(name, callback){
-		
 		if(pathutil.extname(name) == ".md"){
 			//find keyword in file
 			fs.readFile(realpath + "/" +  name, {encoding :"utf8"}, function(err, data){

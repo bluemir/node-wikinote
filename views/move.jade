@@ -1,13 +1,14 @@
 extends layout
 
 block content
-  div(class="alert")
-    |주의 모든 파일및 하위 항목들이 이동합니다. 링크가 깨어질수도 있습니다.
-    |링크가 깨어지는 것이 두렵다면 이 항목을 남겨두고 내용만 이동한다음
-    |링크를 남겨두는 것을 고려하십시오
-    |항상 Root부터 기록해야 합니다.
-    |ex) "/MoveEx"
-  form(method="post")
-    input(type="text", name="target")
-    button(type="submit")
-      이동
+  article.move
+    div(class="alert")
+      |주의 모든 파일및 하위 항목들이 이동합니다. 링크가 깨어질수도 있습니다.
+      |링크가 깨어지는 것이 두렵다면 이 항목을 남겨두고 내용만 이동한다음
+      |링크를 남겨두는 것을 고려하십시오
+      |항상 Root부터 기록해야 합니다.
+      |ex) "/MoveEx"
+    form(method="post")
+      input(type="text", name="target")
+      button(type="submit")
+        이동

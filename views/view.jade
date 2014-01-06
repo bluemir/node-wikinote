@@ -1,8 +1,9 @@
 extends layout
 
 block content
-  - if(wikiData != null)
-      != wikiData
-  - else
-    h2
-      a(href="#{path}?edit") create this page
+  article.view
+    - if(wikiData != null)
+        != wikiData
+    - else
+      h2
+        a(href="#{path}?edit") create this page

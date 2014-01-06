@@ -1,9 +1,10 @@
 extends layout
 
 block content
-	form(method="post")
-		textarea(name="data", cols="80", rows="25")
-			!= wikiData
-		img(src="/!public/Zen-Coding/zc-powered.png", onclick="zen_textarea.showInfo();")
-		input(type="submit", value="저장");
-		script(src="/!public/Zen-Coding/zen_textarea.js")
+	article.edit
+		form(method="post")
+			textarea(name="data", cols="80", rows="25")
+				!= wikiData
+			img(src="/!public/Zen-Coding/zc-powered.png", onclick="zen_textarea.showInfo();")
+			input(type="submit", value="저장");
+			script(src="/!public/Zen-Coding/zen_textarea.js")
