@@ -5,8 +5,19 @@ block content
 	form
 		input(type="search", name="find")
 		input(type="submit", value="검색")
-	- if ( finddata != null)
-		h2 전체 페이지
-		pre
-			=finddata.subdir
+	-if (result != null)
+		h2 전체 페이지 검색결과
+		ul
+			-for(var i = 0; i < result.length; i++)
+				li
+					a(href="#{result[i].path}") #{result[i].name}
+					-if(result[i].lines)
+						table
+							each line in result[i].lines
+								tr
+									td
+										span #{line.num}
+									td
+										span #{line.value}
+							
 

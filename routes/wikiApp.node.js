@@ -72,21 +72,21 @@ wikiApp.presentation = function(req, res){
 wikiApp.find = function(req, res){
 	var word = req.param("find");
 	if(word == ""){
-		res.render("find", {title : "Wiki Note::Find", finddata : null});
+		res.render("find", {title : "Wiki Note::Find", result : null});
 		return;
 	}
 	wikiFS.find(req.wikiPath, word, function(e, data){
-		res.render("find", {title : "Wiki Note::Find", finddata : data});
+		res.render("find", {title : "Wiki Note::Find", result : data});
 	});
 }
 wikiApp.findAll = function(req, res){
 	var word = req.param("find");
 	if(word == ""){
-		res.render("findAll", {title : "Wiki Note::Find", finddata : null});
+		res.render("findAll", {title : "Wiki Note::Find", result : null});
 		return;
 	}
 	wikiFS.find(req.wikiPath, word, function(e, data){
-		res.render("findAll", {title : "Wiki Note::Find", finddata : data});
+		res.render("findAll", {title : "Wiki Note::Find", result : data});
 	});
 
 }

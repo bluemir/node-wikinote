@@ -55,18 +55,7 @@ exports.move = function(srcPath, targetPath, callback){
 	});
 }
 exports.find = function(path, word, callback){
-	var exclude = ' --exclude-dir=".*" ';
-	var include = ' --include="*.md"  ';
-	//var include ="";
-	exec('grep -r "' + word + '" ' + exclude + include , {cwd : saveDir + path.full},  function(e, stdout, stderr){
-		exec('grep "' + word + '" "' + path.name + '.md"', { cwd : saveDir + path.path}, function( e2, stdout2, stderr2){
-			callback(e || e2, {current : stdout2, subdir: stdout});
-		});
-	});
-	searchEngine.search(word, path, function(err, data){
-		console.log(data);
-	})
-	
+	searchEngine.search(word, path, callback);
 }
 exports.history = function(path, callback){
 	exec("git log '--pretty=tformat:%ci\01%s\01%h' -- " + saveDir + path + ".md", {cwd : saveDir}, callback);
