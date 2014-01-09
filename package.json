@@ -3,11 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+	"test" : "nodemon -w routes -w app.js -w config.json app.js"
   },
   "dependencies": {
     "express": "*",
     "jade": "*",
-    "connect-flash" : "*"
+    "connect-flash" : "*",
+	"git-fs" : "*",
+	"marked" : "*"
   }
 }
