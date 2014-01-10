@@ -51,7 +51,7 @@ var saveDir = config.wikiDir;
 
 function redirectToFront(req, res){
 	if("find" in req.query){
-		wikiApp.findAll(req, res);
+		wikiApp.find(req, res);
 	} else {
 		res.redirect("/" + config.frontPage);
 	}

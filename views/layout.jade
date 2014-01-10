@@ -38,6 +38,8 @@ html
                             -for(var i = 0; i < bread.length; i++)
                                 = "/"
                                 a(href="/#{bread.slice(0, i+1).join('/')}") #{bread[i]}
+                            -if(bread.length == 0)
+                                = "/"
                 -if(msg.warn.length != 0)
                     p.msg-warn #{msg.warn}
                 -else if(msg.info.length != 0)

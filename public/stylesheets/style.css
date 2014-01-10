@@ -58,6 +58,8 @@ header {
 	background-image : none;
 	box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0px 1px 2px rgba(0,0,0,0.05);
 }
+
+
 header > div {
 	margin : 10px;
 }
@@ -187,6 +189,7 @@ header p.msg-dynamic.warn {
 #breadcrumbs a:hover {
 	text-decoration : underline;
 }
+/*common style*/
 article img {
 	max-width : 100%;
 }
@@ -230,7 +233,9 @@ article h6{
 article dt{
 	font-style: italic;
 }
-article blockquote{
+
+/* view */
+article.view blockquote{
 	font-style : italic;
 	margin-left : 0px;
 	padding-top : 20px;
@@ -238,7 +243,7 @@ article blockquote{
 	line-height : 100%;
 	color : #454545;
 }
-article blockquote:before {
+article.view blockquote:before {
 	display : block;
 	float : left;
 	content : open-quote;
@@ -247,7 +252,7 @@ article blockquote:before {
 	margin : 10px 15px 0px 0px;
 	text-shadow : 0 1px 1px #909090;
 }
-article blockquote:after {
+article.view blockquote:after {
 	display : block;
 	float : right;
 	content : close-quote;
@@ -256,24 +261,24 @@ article blockquote:after {
 	margin : 10px 15px 0px 0px;
 	text-shadow : 0 1px 1px #909090;
 }
-article blockquote :first-child {
+article.view blockquote :first-child {
 	margin-top : 0px;
 }
-article blockquote :last-child {
+article.view blockquote :last-child {
 	margin-bottom : 0px;
 }
-article blockquote * {
+article.view blockquote * {
 	margin-left : 100px;
 	margin-right : 80px;
 }
-article table {
+article.view table {
 	border-collapse : collapse;
 }
-article th, article td {
+article.view th, article.view td {
 	border : 1px solid gray;
 	padding : 5px;
 }
-article code{
+article.view code{
 	display : block;
 	background : black;
 	color : white;
@@ -282,7 +287,7 @@ article code{
 	border-radius : 3px;
 	word-wrap : break-word;
 }
-article code:before {
+article.view code:before {
 	content : "code";
 	display : block;
 	color : green;
@@ -290,7 +295,7 @@ article code:before {
 	border-bottom : 1px solid green;
 	padding : 2px;
 }
-article code.lang-pic{
+article.view code.lang-pic{
 	background : white;
 	color : black;
 	padding : 0px;
@@ -298,37 +303,56 @@ article code.lang-pic{
 	display : inline;
 	font-size : 1.1em;
 }
-article code.lang-pic:before {
+article.view code.lang-pic:before {
 	content : none;
 	display : none;
 }
+article.view p, article li{
+	line-height : 1.2em;
+}
+article.view .right {
+	text-align : right;
+}
+article.view .center {
+	text-align : center;
+}
 
-textarea {
+/*edit*/
+article.edit textarea {
 	tab-size : 4;
 	width : 100%;
 	box-sizing: border-box;
 	overflow-x : hidden;
 }
-form>img {
+article.edit form>img {
 	cursor : pointer;
 	float : right;
 }
-article p, article li{
-	line-height : 1.2em;
+/* find */
+article.find table{
+	border-collapse : collapse;
+	border : 1px solid gray;
+	display : block;
 }
-article .right {
+article.find th{
+	min-width : 50px;
 	text-align : right;
+	padding-right : 5px;
+	border-right : 1px solid gray;
 }
-article .center {
-	text-align : center;
+article.find td {
+	padding-left : 10px;
 }
-article p.history-date {
+
+/*history*/
+article.history p.history-date {
 	color : blue;
 }
-article p.history-subject {
+article.history p.history-subject {
 	text-indent : 3em;
 }
 
+/*Print*/
 @media print {
 	header{
 		display : none;
@@ -336,7 +360,7 @@ article p.history-subject {
 	#wapper {
 		border : 0px;
 	}
-	article code {
+	article.view code {
 		color : black;
 		background : white;
 	}
