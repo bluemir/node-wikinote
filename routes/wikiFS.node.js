@@ -20,7 +20,7 @@ exports.writeWiki = function(path, data, callback){
 	readyDir(path.path, function (){
 		fs.writeFile(saveDir + path.full + ".md", data, "utf8", function(err){
 			if(!err)
-				backup(path.full, callback);
+				backup("update", path.full, null, callback);
 			else
 				callback(err);
 		});
@@ -58,20 +58,30 @@ exports.find = function(path, word, callback){
 	searchEngine.search(word, path, callback);
 }
 exports.history = function(path, callback){
-	exec("git log '--pretty=tformat:%ci\01%s\01%h' -- " + saveDir + path + ".md", {cwd : saveDir}, callback);
+	exec("git log '--pretty=tformat:%ci\x01%s\x01%h' -- " + saveDir + path + ".md",
+		{cwd : saveDir}, function(e, stdout, stderr){
+		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
+			var tmp = log.split("\x01");
+			return { date : tmp[0], subject : tmp[1], id : tmp[2]};
+		});
+		callback(null, logs);
+	});
+	
 } 
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);
 }
-function backup(fullname, callback){
+function backup(method, fullname, author, callback){
+	var authorStr = author ? author.id + " <" + author.email + ">" : "anomymous <anomymous@wikinote>"
 	if(!config.autoBackup){
 		callback();
 		return;
 	}
-	exec('git add --all .', {cwd : saveDir}, function(){
-		exec('git commit -m "update : ' + fullname + '"', {cwd : saveDir}, function(){
-			callback();			
-		});
+	var command = "git commit -a ";
+	command += "-m " + "'update : " + fullname + "'";
+	command += "--author " + "'" + authorStr + "'";
+
+	exec('git commit -am "update : ' + fullname + '"', {cwd : saveDir}, function(){
+		callback();			
 	});
 }
-

@@ -10,7 +10,6 @@
     "express": "*",
     "jade": "*",
     "connect-flash" : "*",
-	"git-fs" : "*",
 	"marked" : "*"
   }
 }
