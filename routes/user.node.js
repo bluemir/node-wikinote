@@ -2,35 +2,11 @@ var config = require("./config.node.js");
 var fs = require('fs');
 var crypto = require('crypto');
 
-exports.checkPermission = function(req, res, next){
-	if(!config.security){
-		next();
-		return;
-	}
-
-	var permission;
-	if(config.security.admin == req.session.user){
-		permission = config.security.permission.substr(0, 3);
-	} else if(req.session.user){
-		permission = config.security.permission.substr(3, 3);
-	} else {
-		permission = config.security.permission.substr(6, 3);
-	}
-
-	if(req.method.toUpperCase() == "GET" && permission.charAt(0) == "r") {
-		next();
-		return;
-	} else if(req.method.toUpperCase() == "POST" && permission.charAt(1) == "w") {
-		next();
-		return;
-	}
-
-	res.render("noAuth", {title : "Waring"});
-}
 /*
 {
 	password : "",
-	email ; ""
+	email ; "",
+	groups : [""]
 }
 */
 exports.authenticate = function(id, password, callback){

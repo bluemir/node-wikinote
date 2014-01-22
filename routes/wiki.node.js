@@ -1,15 +1,15 @@
 var config = require("./config.node.js");
 var wikiApp = require("./wikiApp.node.js")
 var Path = require("./path.node.js");
-var user = require("./user.node.js");
+var user = require("./userApp.node.js");
 
 exports.init = function(app){
 	//app.get("!list", listAll);
 	app.get("/", redirectToFront);
-	app.get("/!logout", disableMenu, logout);
-	app.get("/!signup", disableMenu, signupForm);
-	app.post("/!login", disableMenu, login);
-	app.post("/!signup", disableMenu, signup);
+	app.get("/!logout", disableMenu, user.logout);
+	app.get("/!signup", disableMenu, user.signupForm);
+	app.post("/!login", disableMenu, user.login);
+	app.post("/!signup", disableMenu, user.signup);
 
 	app.get(/^\/!public\/.*$/, publicFile);
 	app.get(/^.*\.[^.\/]+$/, user.checkPermission, staticFile);
@@ -47,8 +47,6 @@ exports.preModule = function(req, res, next){
 	next();
 }
 
-var saveDir = config.wikiDir;
-
 function redirectToFront(req, res){
 	if("find" in req.query){
 		wikiApp.find(req, res);
@@ -61,55 +59,7 @@ function publicFile(req, res){
 	res.sendfile(req.path.substring(2));
 }
 function staticFile(req, res){
-	res.sendfile(saveDir + decodeURIComponent(req.path));
-}
-function login(req, res){
-	var id = req.param("id");
-	var password = req.param("password");
-	
-	user.authenticate(id, password, function(err, user){
-		if(err) {
-			throw err;
-		}
-		if(!user) {
-			req.flash('warn', 'Login Fail! Check your Id or Password');
-		} else {
-			//TODO save user object
-			req.session.user = id;
-		}
-		res.redirect(decodeURIComponent(req.param("redirect")));
-	})
-}
-function logout(req, res){
-	delete req.session.user;
-	req.flash('info', 'Logout successfully!');
-	res.redirect(decodeURIComponent(req.param("redirect")));
-}
-function signupForm(req, res){
-	res.render("signup", {title : "signup"});
-}
-function signup(req, res){
-	if(req.param("id") == "" || req.param("password") == "" || req.param("confirm") == ""){
-		req.flash("warn", "please fill sign up form.");
-		res.redirect("!signup?redirect=" + req.param("redirect"));
-		return;
-	}
-	if(req.param("password") != req.param("confirm")){
-		req.flash("warn", "password and password confirm are not matched.");
-		res.redirect("!signup?redirect=" + req.param("redirect"));
-		return;
-	}
-	user.register(req.param("id"), req.param("password"), req.param("email"), function(e){
-		if(e){
-			console.log(e)
-			req.flash("warn", "already registered id. please try another one.");
-			res.redirect("!signup?redirect=" + req.param("redirect"));
-			return;
-		}
-		req.flash("info", "Welcome " + req.param("id") + "!");
-		req.session.user = req.param("id");
-		res.redirect(decodeURIComponent(req.param("redirect")));
-	});
+	res.sendfile(config.wikiDir + decodeURIComponent(req.path));
 }
 
 function disableMenu(req, res, next) {
