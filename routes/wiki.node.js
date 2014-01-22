@@ -66,12 +66,19 @@ function staticFile(req, res){
 function login(req, res){
 	var id = req.param("id");
 	var password = req.param("password");
-	if(user.login(id, password)){
-		req.session.user = id;
-	} else {
-		req.flash('warn', 'Login Fail! Check your Id or Password');
-	}
-	res.redirect(decodeURIComponent(req.param("redirect")));
+	
+	user.authenticate(id, password, function(err, user){
+		if(err) {
+			throw err;
+		}
+		if(!user) {
+			req.flash('warn', 'Login Fail! Check your Id or Password');
+		} else {
+			//TODO save user object
+			req.session.user = id;
+		}
+		res.redirect(decodeURIComponent(req.param("redirect")));
+	})
 }
 function logout(req, res){
 	delete req.session.user;
@@ -92,8 +99,9 @@ function signup(req, res){
 		res.redirect("!signup?redirect=" + req.param("redirect"));
 		return;
 	}
-	user.register(req.param("id"), req.param("password"), function(e){
+	user.register(req.param("id"), req.param("password"), req.param("email"), function(e){
 		if(e){
+			console.log(e)
 			req.flash("warn", "already registered id. please try another one.");
 			res.redirect("!signup?redirect=" + req.param("redirect"));
 			return;

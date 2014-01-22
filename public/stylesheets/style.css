@@ -16,9 +16,11 @@ header {
 }
 /* login */
 #user {
-	display : inline-block;
-	float : right;
+	float: right;
 	margin : 10px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
 
 #user input[type="text"], #user input[type="password"]{

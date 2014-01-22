@@ -2,25 +2,6 @@ var config = require("./config.node.js");
 var fs = require('fs');
 var crypto = require('crypto');
 
-
-exports.login = function(id, password){
-	var users = require("../users.json");
-	return users[id] == getHash(password);
-}
-exports.register = function(id, password, callback) {
-	var users = require("../users.json");
-	if(users[id]) {
-		callback("exsit id");
-		return;
-	}
-	users[id] = getHash(password);
-	fs.writeFile("./users.json", JSON.stringify(users, null, 4), {encode : "utf8"}, callback);
-}
-function getHash(str){
-	var shasum = crypto.createHash('sha512');
-	shasum.update(str + config.salt);
-	return shasum.digest("base64");
-}
 exports.checkPermission = function(req, res, next){
 	if(!config.security){
 		next();
@@ -45,4 +26,57 @@ exports.checkPermission = function(req, res, next){
 	}
 
 	res.render("noAuth", {title : "Waring"});
+}
+/*
+{
+	password : "",
+	email ; ""
+}
+*/
+exports.authenticate = function(id, password, callback){
+	load(function(err, users){
+		if(err) return callback(err);
+		
+		if(users[id].password == hash(password)){
+			var user = {
+				id : id,
+				email : users[id].email
+			}
+			callback(null, user);
+		} else {
+			callback();
+		}
+	});
+}
+exports.register = function(id, password, email, callback){
+	load(function(err, users){
+		if(err) return callback(err);
+		
+		console.log(users);
+		
+		if(users[id]){
+			callback("exsit id");
+		} else {
+			users[id] = {
+				password : hash(password),
+				email : email
+			}
+			save(users, callback);
+		}
+	});
+}
+
+function load(callback){
+	try {
+		var users = require("../users.json");
+		callback(null, users);
+	} catch(e){
+		callback(e)
+	}
+}
+function save(users, callback){
+	fs.writeFile("./users.json", JSON.stringify(users, null, 4), {encode : "utf8"}, callback);
+}
+function hash(data){
+	return crypto.createHash('sha512').update(data + config.salt).digest("base64");
 }
