@@ -6,10 +6,10 @@ block content
 			p 전체 경로에서 검색합니다.
 		else
 			p #{path.name}의 하위 페이지를 검색합니다 
-			p 
-				만약 모든 페이지 중에 검색하고 싶다면 
+			p
+				|만약 모든 페이지 중에 검색하고 싶다면 
 				a(href = "/?find") 전체검색
-				을 누르세요
+				|을 누르세요
 		form()
 			input(type="search", name="find")
 			input(type="submit", value="검색")
