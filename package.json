@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node app",
-	"test" : "nodemon -w routes -w app.js -w config.json app.js"
+    "test": "nodemon -w routes -w app.js -w config.json app.js"
   },
   "dependencies": {
     "express": "*",
     "jade": "*",
-    "connect-flash" : "*",
-	"marked" : "*"
+    "connect-flash": "*",
+    "marked": "*",
+    "nodegit": "*",
   }
 }
