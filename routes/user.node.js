@@ -28,8 +28,6 @@ exports.register = function(id, password, email, callback){
 	load(function(err, users){
 		if(err) return callback(err);
 		
-		console.log(users);
-		
 		if(users[id]){
 			callback("exsit id");
 		} else {
