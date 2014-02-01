@@ -11,6 +11,6 @@
     "jade": "*",
     "connect-flash": "*",
     "marked": "*",
-    "nodegit": "*",
+    "nodegit": "*"
   }
 }
