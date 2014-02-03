@@ -1,6 +1,7 @@
 var config = require("./config.node.js");
 
 var user = require("./user.node.js");
+var group = require("./group.node.js")
 
 exports.login = function(req, res){
 	var id = req.param("id");
@@ -13,8 +14,7 @@ exports.login = function(req, res){
 		if(!user) {
 			req.flash('warn', 'Login Fail! Check your Id or Password');
 		} else {
-			//TODO save user object
-			req.session.user = id;
+			req.session.user = user;
 		}
 		res.redirect(decodeURIComponent(req.param("redirect")));
 	})
@@ -50,29 +50,59 @@ exports.signup = function(req, res){
 		res.redirect(decodeURIComponent(req.param("redirect")));
 	});
 }
+exports.list = function(req, res){
+	user.list(function(err, users){
+		group.list(function(err, groups){
+			res.render("userlist", {title : "list", users : users, groups : groups});
+		});
+	});
+}
 
-exports.checkPermission = function(req, res, next){
-	if(!config.security){
-		next();
-		return;
+exports.checkReadPermission = function(req, res, next){
+	if(!config.security) return next();
+	if(!req.session.user || !req.session.group) {
+		if(config.security.anonymous.charAt(0) == "r"){
+			return next();
+		} else {
+			return res.render("noAuth", {title : "Waring"});
+		}
 	}
-
-	var permission;
-	if(config.security.admin == req.session.user){
-		permission = config.security.permission.substr(0, 3);
-	} else if(req.session.user){
-		permission = config.security.permission.substr(3, 3);
-	} else {
-		permission = config.security.permission.substr(6, 3);
+	
+	group.permission(req.session.user.group, function(err, permission) {
+		if(err) throw err;
+		if(permission.charAt(0) == "r") return next();
+		res.render("noAuth", {title : "Waring"});
+	});
+}
+exports.checkWritePermission = function(req, res, next){
+	if(!config.security) return next();
+	if(!req.session.user || !req.session.group) {
+		if(config.security.anonymous.charAt(1) == "w"){
+			return next();
+		} else {
+			return res.render("noAuth", {title : "Waring"});
+		}
 	}
-
-	if(req.method.toUpperCase() == "GET" && permission.charAt(0) == "r") {
-		next();
-		return;
-	} else if(req.method.toUpperCase() == "POST" && permission.charAt(1) == "w") {
-		next();
-		return;
+	
+	group.permission(req.session.user.group, function(err, permission) {
+		if(err) throw err;
+		if(permission.charAt(1) == "w") return next();
+		res.render("noAuth", {title : "Waring"});
+	});
+}
+exports.checkAdminPermission = function(req, res, next){
+	if(!config.security) return next();
+	if(!req.session.user || !req.session.group) {
+		if(config.security.anonymous.charAt(2) == "x"){
+			return next();
+		} else {
+			return res.render("noAuth", {title : "Waring"});
+		}
 	}
-
-	res.render("noAuth", {title : "Waring"});
+	
+	group.permission(req.session.user.group, function(err, permission) {
+		if(err) throw err;
+		if(permission.charAt(2) == "x") return next();
+		res.render("noAuth", {title : "Waring"});
+	});
 }

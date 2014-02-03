@@ -10,7 +10,6 @@
     "express": "*",
     "jade": "*",
     "connect-flash": "*",
-    "marked": "*",
-    "nodegit": "*"
+    "marked": "*"
   }
 }

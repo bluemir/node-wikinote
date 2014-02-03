@@ -2,13 +2,6 @@ var config = require("./config.node.js");
 var fs = require('fs');
 var crypto = require('crypto');
 
-/*
-{
-	password : "",
-	email ; "",
-	groups : [""]
-}
-*/
 exports.authenticate = function(id, password, callback){
 	load(function(err, users){
 		if(err) return callback(err);
@@ -16,7 +9,8 @@ exports.authenticate = function(id, password, callback){
 		if(users[id].password == hash(password)){
 			var user = {
 				id : id,
-				email : users[id].email
+				email : users[id].email,
+				group : users[id].group
 			}
 			callback(null, user);
 		} else {
@@ -39,6 +33,9 @@ exports.register = function(id, password, email, callback){
 		}
 	});
 }
+exports.list = function(callback){
+	load(callback);
+}
 
 function load(callback){
 	try {
@@ -52,5 +49,5 @@ function save(users, callback){
 	fs.writeFile("./users.json", JSON.stringify(users, null, 4), {encode : "utf8"}, callback);
 }
 function hash(data){
-	return crypto.createHash('sha512').update(data + config.salt).digest("base64");
+	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");
 }

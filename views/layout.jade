@@ -2,7 +2,8 @@ doctype html
 html
     head
         title #{notename}::#{title}
-        link(rel='stylesheet', href='/!public/stylesheets/style.css')
+        block style
+            link(rel='stylesheet', href='/!public/stylesheets/style.css')
     body
         div#wapper
             header
@@ -11,7 +12,7 @@ html
                 -if(config.security)
                     div(id ="user")
                         -if(session.user)
-                            span #{session.user}
+                            span #{session.user.id}
                             a(href="/!logout?redirect=#{path.encode()}") logout
                         -else
                             form(action="/!login?redirect=#{path.encode()}", method="post")
@@ -34,6 +35,7 @@ html
                                     li: a(href="#{path}?presentation") Presentation
                                     li.seperater
                                     li: a(href="/!signup?redirect=#{path.encode()}") Sign Up
+                                    li: a(href="/!user") Users
                         div(id="breadcrumbs")
                             -for(var i = 0; i < bread.length; i++)
                                 = "/"

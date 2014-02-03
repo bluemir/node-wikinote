@@ -4,15 +4,15 @@ var Path = require("./path.node.js");
 var user = require("./userApp.node.js");
 
 exports.init = function(app){
-	//app.get("!list", listAll);
 	app.get("/", redirectToFront);
 	app.get("/!logout", disableMenu, user.logout);
 	app.get("/!signup", disableMenu, user.signupForm);
+	app.get("/!user",disableMenu, user.checkAdminPermission, user.list)
 	app.post("/!login", disableMenu, user.login);
 	app.post("/!signup", disableMenu, user.signup);
 
 	app.get(/^\/!public\/.*$/, publicFile);
-	app.get(/^.*\.[^.\/]+$/, user.checkPermission, staticFile);
+	app.get(/^.*\.[^.\/]+$/, user.checkReadPermission, staticFile);
 
 	var getRouterFactory = new ParamRouterFactory(wikiApp.view);
 	getRouterFactory.register("edit", wikiApp.edit);
@@ -22,14 +22,14 @@ exports.init = function(app){
 	getRouterFactory.register("find", wikiApp.find);
 	getRouterFactory.register("delete", wikiApp.deleteForm);
 	getRouterFactory.register("history", wikiApp.history);
-	app.get(/^.*\/[^.\/]+$/, user.checkPermission, getRouterFactory.getRouter());
+	app.get(/^.*\/[^.\/]+$/, user.checkReadPermission, getRouterFactory.getRouter());
 
 	var postRouterFactory = new ParamRouterFactory();
 	postRouterFactory.register("edit", wikiApp.save);
 	postRouterFactory.register("attach", wikiApp.upload);
 	postRouterFactory.register("move", wikiApp.move);
 	postRouterFactory.register("delete", wikiApp.deleteComfirm);
-	app.post(/^.*\/[^.\/]+$/, user.checkPermission, postRouterFactory.getRouter());
+	app.post(/^.*\/[^.\/]+$/, user.checkWritePermission, postRouterFactory.getRouter());
 }
 
 exports.preModule = function(req, res, next){
@@ -64,6 +64,9 @@ function staticFile(req, res){
 
 function disableMenu(req, res, next) {
 	res.locals.disableMenu = true;
+	next();
+}
+function checkAdmin(req, res, next) {
 	next();
 }
 
