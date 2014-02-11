@@ -76,7 +76,8 @@ exports.checkReadPermission = function(req, res, next){
 }
 exports.checkWritePermission = function(req, res, next){
 	if(!config.security) return next();
-	if(!req.session.user || !req.session.group) {
+	
+	if(!req.session.user || !req.session.user.group) {
 		if(config.security.anonymous.charAt(1) == "w"){
 			return next();
 		} else {
@@ -92,7 +93,7 @@ exports.checkWritePermission = function(req, res, next){
 }
 exports.checkAdminPermission = function(req, res, next){
 	if(!config.security) return next();
-	if(!req.session.user || !req.session.group) {
+	if(!req.session.user || !req.session.user.group) {
 		if(config.security.anonymous.charAt(2) == "x"){
 			return next();
 		} else {

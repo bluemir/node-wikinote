@@ -52,6 +52,9 @@
 	function goMovePage(){
 		location.href = getUrl() + "?move";
 	}
+	function goPresentation(){
+		location.href = getUrl() + "?presentation";
+	}
 
 	function saveData(){
 		if(textarea){
@@ -62,7 +65,6 @@
 		return location.pathname;
 	}
 
-
 	function saveDataWithAjax(data){
 		if(textarea){
 			var ajax = new XMLHttpRequest();
@@ -71,9 +73,7 @@
 			ajax.send("data=" + encodeURIComponent(textarea.value));
 		}
 	}
-	function goPresentation(){
-		location.href = getUrl() + "?presentation";
-	}
+	
 	function printSaveMsg(){
 		var $msg = document.getElementById("message");
 		$msg.innerHTML = "Save successful!";

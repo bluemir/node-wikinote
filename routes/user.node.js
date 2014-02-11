@@ -18,6 +18,7 @@ exports.authenticate = function(id, password, callback){
 		}
 	});
 }
+
 exports.register = function(id, password, email, callback){
 	load(function(err, users){
 		if(err) return callback(err);
@@ -35,6 +36,14 @@ exports.register = function(id, password, email, callback){
 }
 exports.list = function(callback){
 	load(callback);
+}
+exports.setGroup = function(id, group, callback){
+	load(function(err, users){
+		if(err) return callback(err);
+		//TODO group check
+		users[id].group = group;
+		save(users, callback);
+	})
 }
 
 function load(callback){
