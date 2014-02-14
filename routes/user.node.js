@@ -6,7 +6,7 @@ exports.authenticate = function(id, password, callback){
 	load(function(err, users){
 		if(err) return callback(err);
 		
-		if(users[id].password == hash(password)){
+		if(users[id] && users[id].password == hash(password)){
 			var user = {
 				id : id,
 				email : users[id].email,
