@@ -280,7 +280,13 @@ article.view th, article.view td {
 	border : 1px solid gray;
 	padding : 5px;
 }
-article.view code{
+article.view code {
+	border : 1px solid gray;
+	border-radius : 3px;
+	padding : 2px;
+}
+article.view pre>code,
+article.view xmp {
 	display : block;
 	background : black;
 	color : white;
@@ -289,7 +295,8 @@ article.view code{
 	border-radius : 3px;
 	word-wrap : break-word;
 }
-article.view code:before {
+article.view pre>code:before,
+article.view xmp:before {
 	content : "code";
 	display : block;
 	color : green;
@@ -297,7 +304,8 @@ article.view code:before {
 	border-bottom : 1px solid green;
 	padding : 2px;
 }
-article.view code.lang-pic{
+article.view pre>code.lang-pic,
+article.view xmp.lang-pic {
 	background : white;
 	color : black;
 	padding : 0px;
@@ -305,7 +313,8 @@ article.view code.lang-pic{
 	display : inline;
 	font-size : 1.1em;
 }
-article.view code.lang-pic:before {
+article.view pre>code.lang-pic:before,
+article.view xmp.lang-pic:before {
 	content : none;
 	display : none;
 }
