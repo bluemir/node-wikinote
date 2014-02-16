@@ -1,20 +1,34 @@
 var fs = require("fs");
-
-var config = require("../config.json");
-
 var env = process.env;
 
-config.frontPage = config.frontPage || "FrontPage";
-config.wikiDir = config.wikiDir || "~/wiki";
-config.wikiDir = config.wikiDir.replace(/^~/g, env.HOME);
+apply(resolve(load()));
 
-var o = {
+var defaultValue = {
     frontPage : "FrontPage",
-    wikiDir : "~/wiki"
+    wikiDir : "~/wiki",
+    autoBackup : false
 }
 
-function resolveHome(path){
-    return path.replace(/^~/g, env.HOME);
+function load(){
+    var config = require("../config.json");
+    for(var name in defaultValue){
+        if(!config[name]){
+            config[name] = defaultValue[name];
+        }
+    }
+    return config;
 }
 
-module.exports = config;
+function resolve(config){
+    config.wikiDir = resolveHome(config.wikiDir);
+    return config;
+    
+    function resolveHome(path){
+        return path.replace(/^~/g, env.HOME);
+    }
+}
+function apply(config){
+    for(var name in config){
+        module.exports[name] = config[name];
+    }
+}
