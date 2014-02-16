@@ -85,7 +85,6 @@ function backup(method, fullname, author, callback){
 	command += "--author" + wapper(signature(author));
 
 	exec(command, {cwd : saveDir}, function(e, stdout, stderr){
-		console.log(command,e,stdout,stderr);
 		callback();			
 	});
 	
