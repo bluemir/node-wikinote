@@ -1,0 +1,14 @@
+{
+    "frontPage": "FrontPage",
+    "wikiDir": "~/wiki",
+    "autoBackup": false,
+
+	/*
+    "security": {
+        "salt": "123456789",
+        "admin": "bluemir",
+        "permission": "rw-rw-r--",
+        "anonymous": "r--"
+    },*/
+	"wikiname" : "WikiNote"
+}

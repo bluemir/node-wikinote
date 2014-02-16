@@ -1,25 +1,55 @@
 var fs = require("fs");
+var crypto = require("crypto");
 var env = process.env;
 
-var defaultValue = {
-	frontPage : "FrontPage",
-	wikiDir : "~/wiki",
-	autoBackup : false,
-	wikiname : "WikiNote"
+var DEFAULT_HASH = "Oa9EoNS92Y2j2oDfrCvfzvqE5V2FfiaMO+jVffSye6fcBpfohZpq8NOz+i9E6EADcgr2yv/ApJPHRWLrUQOYBQ==";
+
+loadConfing();
+
+function loadConfing(){
+	var config = loadDefault();
+
+	var local = loadLocals();	
+
+	overwrite(config, local);
+
+	config = resolve(config);
+
+	module.exports = config;
 }
 
-apply(resolve(load()));
 
-function load(){
-	var config = require("../config.json");
-	for(var name in defaultValue){
-		if(!config[name]){
-			config[name] = defaultValue[name];
+function loadDefault() {
+	var config = fs.readFileSync("config/default.json", { encoding : "utf8" });
+
+	//check default file change
+	if(DEFAULT_HASH !== hash(config)){
+		throw new Error("config/default.json is changed");
+	}
+	return JSON.parse(removeComment(config));
+}
+
+function loadLocals() {
+	if(fs.existsSync("config/local.json")){
+		var data = fs.readFileSync("config/local.json", {encoding :"utf8"})
+		return JSON.parse(removeComment(data));
+	} else {
+		fs.writeFileSync("config/local.json", "{}", {encoding : "utf8"});
+		return {};
+	}
+}
+
+function overwrite(dest, src){
+	for(var key in src){
+		if(typeof src[key] === "object"){
+			dest[key] = dest[key] || {}
+			overwrite(dest[key], src[key]);
+		} else {
+			dest[key] = src[key];
 		}
 	}
-	return config;
+	return dest;
 }
-
 function resolve(config){
 	config.wikiDir = resolveHome(config.wikiDir);
 	return config;
@@ -28,43 +58,56 @@ function resolve(config){
 		return path.replace(/^~/g, env.HOME);
 	}
 }
-function apply(config){
-	for(var name in config){
-		module.exports[name] = config[name];
-	}
+
+function hash(data){
+	return crypto.createHash('sha512').update(data).digest("base64");
 }
 
-exports.load = function(callback){
-	fs.readFile("./config.json", function(err, data){
-		if(err) return callback(err);
+function removeComment(str) {
 
-		var config = JSON.parse(data);
-		for(var name in defaultValue){
-			if(!config[name]){
-				config[name] = defaultValue[name];
-			}
-		}
+  var uid = '_' + +new Date(),
+      primitives = [],
+      primIndex = 0;
 
-		apply(resolve(config));
-		callback(null);
-	});
-}
+  return (
+    str
 
-var config = {
+    /* Remove strings */
+    .replace(/(['"])(\\\1|.)+?\1/g, function(match){
+      primitives[primIndex] = match;
+      return (uid + '') + primIndex++;
+    })
+
+    /* Remove Regexes */
+    .replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g, function(match, $1, $2){
+      primitives[primIndex] = $2;
+      return $1 + (uid + '') + primIndex++;
+    })
+
+    /*
+    - Remove single-line comments that contain would-be multi-line delimiters
+        E.g. // Comment /* <--
+    - Remove multi-line comments that contain would be single-line delimiters
+        E.g. /* // <--
+   */
+    .replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, '')
+
+    /*
+    Remove single and multi-line comments,
+    no consideration of inner-contents
+   */
+    .replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, '')
+
+    /*
+    Remove multi-line comments that have a replaced ending (string/regex)
+    Greedy, so no inner strings/regexes will stop it.
+   */
+    .replace(RegExp('\\/\\*[\\s\\S]+' + uid + '\\d+', 'g'), '')
+
+    /* Bring back strings & regexes */
+    .replace(RegExp(uid + '(\\d+)', 'g'), function(match, n){
+      return primitives[n];
+    })
+  );
 };
 
-config.load = function(callback){
-	fs.readFile("./config.json", function(err, data){
-		if(err) return callback(err);
-
-		var config = JSON.parse(data);
-		for(var name in config){
-			if(!this[name]){
-				this[name] = config[name];
-			}
-		}
-
-		apply(resolve(config));
-		callback(null);
-	});
-}
