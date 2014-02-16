@@ -32,7 +32,7 @@ wikiApp.edit = function(req, res){
 }
 wikiApp.save = function(req, res){
 	var data = req.param("data");
-	wikiFS.writeWiki(req.wikiPath, data, function(err){
+	wikiFS.writeWiki(req.wikiPath, data, req.session.user, function(err){
 		res.redirect(req.path); 
 	});
 }

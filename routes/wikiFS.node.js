@@ -16,11 +16,11 @@ exports.readWiki = function(path, callback){
 		callback(null, data);
 	});
 }
-exports.writeWiki = function(path, data, callback){
+exports.writeWiki = function(path, data, author, callback){
 	readyDir(path.path, function (){
 		fs.writeFile(saveDir + path.full + ".md", data, "utf8", function(err){
 			if(!err)
-				backup("update", path.full, null, callback);
+				backup("update", path.full, author, callback);
 			else
 				callback(err);
 		});
@@ -72,16 +72,36 @@ function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);
 }
 function backup(method, fullname, author, callback){
-	var authorStr = author ? author.id + " <" + author.email + ">" : "anomymous <anomymous@wikinote>"
 	if(!config.autoBackup){
 		callback();
 		return;
 	}
-	var command = "git commit -a ";
-	command += "-m " + "'update : " + fullname + "'";
-	command += "--author " + "'" + authorStr + "'";
+	
+	var message = method + " : " + fullname
+	
+	var command = "git add .;"
+	command += "git commit -a ";
+	command += "-m" + wapper(buildMessage(method, fullname));
+	command += "--author" + wapper(signature(author));
 
-	exec('git commit -am "update : ' + fullname + '"', {cwd : saveDir}, function(){
+	exec(command, {cwd : saveDir}, function(e, stdout, stderr){
+		console.log(command,e,stdout,stderr);
 		callback();			
 	});
+	
+	function wapper(str){
+		return " '" + str + "' ";
+	}
+	function signature(author){
+		if(!author){
+			return "anomymous <anomymous@wikinote>";
+		}
+		var id = author.id || "anomymous";
+		var email = author.email || id + "@wikinote";
+		
+		return id + " <" + email + ">";
+	}
+	function buildMessage(method, notename){
+		return method + " : " + notename;
+	}
 }
