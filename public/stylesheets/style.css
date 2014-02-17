@@ -356,12 +356,17 @@ article.find td {
 }
 
 /*history*/
-article.history p.history-date {
-	color : blue;
+article.history table{
+	width : 100%;
+	border-collapse : collapse;
 }
-article.history p.history-subject {
-	text-indent : 3em;
+
+article.history th,
+article.history td {
+	border : 1px solid gray;
+	padding : 3px;
 }
+
 
 /*Print*/
 @media print {

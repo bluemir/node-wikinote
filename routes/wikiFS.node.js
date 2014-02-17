@@ -58,15 +58,28 @@ exports.find = function(path, word, callback){
 	searchEngine.search(word, path, callback);
 }
 exports.history = function(path, callback){
-	exec("git log '--pretty=tformat:%ci\x01%s\x01%h' -- " + saveDir + path + ".md",
-		{cwd : saveDir}, function(e, stdout, stderr){
+	//%c  : date
+	//%s  : subject
+	//%h  : hash id
+	//%an : author name
+	//%ae : author email
+	var logFormat = "%cD%x01%s%x01%h%x01%an%x01%ae"
+	var command = "git log --pretty=format:'" + logFormat + "' -- " + saveDir + path + ".md";
+	exec(command, {cwd : saveDir}, function(e, stdout, stderr){
 		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
 			var tmp = log.split("\x01");
-			return { date : tmp[0], subject : tmp[1], id : tmp[2]};
+			return { 
+				date : tmp[0], 
+				subject : tmp[1], 
+				id : tmp[2],
+				author : {
+					name : tmp[3],
+					email : tmp[4]
+				}
+			};
 		});
 		callback(null, logs);
 	});
-	
 } 
 function readyDir(path, callback){
 	fs.mkdir(saveDir + path, callback);

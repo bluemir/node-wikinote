@@ -3,10 +3,16 @@ extends layout
 block content
   article.history
     h1 History of #{notename}
-    - if(!logs)
+    if(!logs)
       p this page dose not have history!
-    - else
-      -for(var i = 0; i < logs.length; i++)
-        p.history-date #{logs[i].date}
-        p.history-subject #{logs[i].subject}
-        input(type="hidden", value="#{logs[i].id}")
+    else
+      table
+        tr
+          th version
+          th date
+          th author
+        for log, index in logs
+          tr
+            td #{log.id}
+            td #{log.date}
+            td #{log.author.name}
