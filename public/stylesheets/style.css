@@ -318,6 +318,11 @@ article.view xmp.lang-pic:before {
 	content : none;
 	display : none;
 }
+article.view pre>code.lang-not-code,
+article.view xmp.lang-not-code {
+	content : none;
+	display : none;
+}
 article.view p, article li{
 	line-height : 1.2em;
 }
