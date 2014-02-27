@@ -366,7 +366,9 @@ article.history td {
 	border : 1px solid gray;
 	padding : 3px;
 }
-
+article.history td.id {
+	text-align : center;
+}
 
 /*Print*/
 @media print {

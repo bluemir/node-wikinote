@@ -31,9 +31,8 @@ exports.set = function(name, permission, callback){
 }
 exports.rename = function(oldName, newName, callback){
     load(function(err, groups){
-        var permission = groups[oldName];
+        groups[newName] = groups[oldName];
         delete groups[oldName];
-        groups[newName] = permission;
         save(groups, callback);
     });
 }
