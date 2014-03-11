@@ -44,6 +44,7 @@ exports.preModule = function(req, res, next){
 		info : req.flash("info"),
 		warn : req.flash('warn')
 	};
+	res.locals.wikiname = config.wikiname;
 	next();
 }
 

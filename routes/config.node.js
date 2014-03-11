@@ -6,7 +6,8 @@ apply(resolve(load()));
 var defaultValue = {
     frontPage : "FrontPage",
     wikiDir : "~/wiki",
-    autoBackup : false
+    autoBackup : false,
+	wikiname : "WikiNote"
 }
 
 function load(){

@@ -7,8 +7,7 @@ html
     body
         div#wapper
             header
-                a(href="/")
-                    img(src="/!public/images/logo.png")
+                a(id="wikiname", href="/") #{wikiname}
                 -if(config.security)
                     div(id ="user")
                         -if(session.user)

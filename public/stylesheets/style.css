@@ -1,3 +1,5 @@
+@import url(font/wikinote_logo_font.css);
+
 #wapper {
 	max-width : 800px;
 	margin : auto;
@@ -5,14 +7,22 @@
 	border : 1px solid black;
 	border-radius : 15px;
 }
-header img {
-	border : none;
-	margin : 10px;
-}
-header {
+#wapper>header {
+	padding-top : 10px;
 	display : fixed;
 	border-bottom : 1px solid gray;
 	position : relative;
+}
+#wapper>header #wikiname {
+	font-family: 'Alegreya Sans SC', sans-serif;
+	font-size : 48px;
+	font-weight : bold;
+	font-style : italic;
+	color : blue;
+	text-decoration : none;
+	padding : 10px;
+	letter-spacing : -2px;
+	word-spacing : 12px;
 }
 /* login */
 #user {

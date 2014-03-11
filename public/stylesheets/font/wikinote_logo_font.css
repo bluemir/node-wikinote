@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'Alegreya Sans SC';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Alegreya Sans SC'), local('AlegreyaSansSC-Regular'), url(AlegreyaSansSC_400_Normal.woff) format('woff');
+}
+@font-face {
+  font-family: 'Alegreya Sans SC';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Alegreya Sans SC Bold'), local('AlegreyaSansSC-Bold'), url(AlegreyaSansSC_700_Normal.woff) format('woff');
+}
+@font-face {
+  font-family: 'Alegreya Sans SC';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Alegreya Sans SC Italic'), local('AlegreyaSansSC-Italic'), url(AlegreyaSansSC_400_Italic.woff) format('woff');
+}
+@font-face {
+  font-family: 'Alegreya Sans SC';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Alegreya Sans SC Bold Italic'), local('AlegreyaSansSC-BoldItalic'), url(AlegreyaSansSC_700_Italic.woff) format('woff');
+}
