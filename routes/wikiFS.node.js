@@ -17,7 +17,7 @@ exports.readWiki = function(path, callback){
 	});
 }
 exports.writeWiki = function(path, data, author, callback){
-	readyDir(path.path, function (){
+	readyDir(path, function (){
 		fs.writeFile(saveDir + path.full + ".md", data, "utf8", function(err){
 			if(!err)
 				backup("update", path.full, author, callback);
@@ -82,7 +82,34 @@ exports.history = function(path, callback){
 	});
 } 
 function readyDir(path, callback){
-	fs.mkdir(saveDir + path, callback);
+	var pathArray = path.toArray();
+
+	checkDir(pathArray.length, function(err, level){
+		if(err) return callback(err);
+
+		mkdir(level + 1, callback);
+	});
+
+	function checkDir(level, callback){
+		if(level < 0) return callback(new Error());
+
+		fs.exists(getPath(level), function(exist){
+			if(exist) return callback(null, level);
+			checkDir(level - 1, callback);
+		});
+	}
+
+	function mkdir(level, callback){
+		if(level > pathArray.length) return callback(null);
+
+		fs.mkdir(getPath(level), function(err){
+			mkdir(level + 1, callback);
+		});
+	}
+
+	function getPath(level){
+		return saveDir + "/" + pathArray.slice(0, level).join("/");
+	}
 }
 function backup(method, fullname, author, callback){
 	if(!config.autoBackup){
