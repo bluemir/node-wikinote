@@ -30,7 +30,7 @@ exports.fileList = function(path, callback){
 	fs.readdir(saveDir + path.full, callback);
 }
 exports.acceptFile  = function(srcPath, path, name, callback){
-	readyDir(path.full, function(){
+	readyDir(path, function(){
 		fs.readFile(srcPath, function(e, data){
 			if(e) return callback(e);
 			fs.writeFile(saveDir + path.full + "/" + name, data, callback);
