@@ -7,9 +7,10 @@
     "test": "nodemon -w routes -w app.js -w config.json app.js"
   },
   "dependencies": {
-    "express": "*",
+    "express": "3.*",
     "jade": "*",
     "connect-flash": "*",
-    "marked": "*"
+    "marked": "*",
+    "mkdirp": "~0.3.5"
   }
 }
