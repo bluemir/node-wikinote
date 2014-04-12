@@ -1,9 +1,12 @@
 var config = require("./config.node.js");
 var fs = require('fs');
 var crypto = require('crypto');
+var jellybin = require("jellybin");
+
+var db = jellybin("users.json");
 
 exports.authenticate = function(id, password, callback){
-	load(function(err, users){
+	db.load(function(err, users){
 		if(err) return callback(err);
 		
 		if(users[id] && users[id].password == hash(password)){
@@ -20,7 +23,7 @@ exports.authenticate = function(id, password, callback){
 }
 
 exports.register = function(id, password, email, callback){
-	load(function(err, users){
+	db.load(function(err, users){
 		if(err) return callback(err);
 		
 		if(users[id]){
@@ -30,33 +33,22 @@ exports.register = function(id, password, email, callback){
 				password : hash(password),
 				email : email
 			}
-			save(users, callback);
+			db.save(users, callback);
 		}
 	});
 }
 exports.list = function(callback){
-	load(callback);
+	db.load(callback);
 }
 exports.setGroup = function(id, group, callback){
-	load(function(err, users){
+	db.load(function(err, users){
 		if(err) return callback(err);
 		//TODO group check
 		users[id].group = group;
-		save(users, callback);
+		db.save(users, callback);
 	})
 }
 
-function load(callback){
-	try {
-		var users = require("../users.json");
-		callback(null, users);
-	} catch(e){
-		callback(e)
-	}
-}
-function save(users, callback){
-	fs.writeFile("./users.json", JSON.stringify(users, null, 4), {encode : "utf8"}, callback);
-}
 function hash(data){
 	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");
 }
