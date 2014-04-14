@@ -1,7 +1,7 @@
 var fs = require("fs");
 var mkdirp = require("mkdirp");
 var exec = require("child_process").exec;
-var config = require("./config.node.js");
+var config = require("../config");
 
 var SearchEngine = require("./searchEngine.node.js")
 var searchEngine = new SearchEngine(config.wikiDir);

@@ -1,4 +1,4 @@
-var config = require("./config.node.js");
+var config = require("../config");
 var wikiApp = require("./wikiApp.node.js")
 var Path = require("./path.node.js");
 var user = require("./userApp.node.js");

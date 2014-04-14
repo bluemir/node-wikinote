@@ -1,7 +1,7 @@
 var wikiFS = require("./wikiFS.node.js");
 var marked = require("marked");
 var Path = require("./path.node.js");
-var config = require("./config.node.js");
+var config = require("../config");
 
 marked.setOptions({
 	gfm: true,

@@ -1,4 +1,4 @@
-var config = require("./config.node.js");
+var config = require("../config");
 var fs = require('fs');
 var crypto = require('crypto');
 var jellybin = require("jellybin");

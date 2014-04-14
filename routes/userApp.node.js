@@ -1,4 +1,4 @@
-var config = require("./config.node.js");
+var config = require("../config");
 
 var user = require("./user.node.js");
 var group = require("./group.node.js")
