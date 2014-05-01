@@ -13,23 +13,6 @@ exports.init = function(app){
 
 	app.get(/^\/!public\/.*$/, publicFile);
 	app.get(/^.*\.[^.\/]+$/, user.checkReadPermission, staticFile);
-
-	var getRouterFactory = new ParamRouterFactory(wikiApp.view);
-	getRouterFactory.register("edit", wikiApp.edit);
-	getRouterFactory.register("attach", wikiApp.attach);
-	getRouterFactory.register("move", wikiApp.moveForm);
-	getRouterFactory.register("presentation", wikiApp.presentation);
-	getRouterFactory.register("find", wikiApp.find);
-	getRouterFactory.register("delete", wikiApp.deleteForm);
-	getRouterFactory.register("history", wikiApp.history);
-	app.get(/^.*\/[^.\/]+$/, user.checkReadPermission, getRouterFactory.getRouter());
-
-	var postRouterFactory = new ParamRouterFactory();
-	postRouterFactory.register("edit", wikiApp.save);
-	postRouterFactory.register("attach", wikiApp.upload);
-	postRouterFactory.register("move", wikiApp.move);
-	postRouterFactory.register("delete", wikiApp.deleteComfirm);
-	app.post(/^.*\/[^.\/]+$/, user.checkWritePermission, postRouterFactory.getRouter());
 }
 
 exports.preModule = function(req, res, next){
@@ -71,21 +54,3 @@ function checkAdmin(req, res, next) {
 	next();
 }
 
-function ParamRouterFactory(defaultFunc){
-	this.defaultFunc = defaultFunc;
-	this.map = {};
-}
-ParamRouterFactory.prototype.register = function(key, func){
-	this.map[key] = func;
-}
-ParamRouterFactory.prototype.getRouter = function(){
-	var that = this;
-	return function router(req, res){
-		for(var key in that.map){
-			if(key in req.query){
-				return that.map[key](req, res);
-			}
-		}
-		return that.defaultFunc && that.defaultFunc(req, res);
-	}
-}
