@@ -12,7 +12,6 @@ exports.init = function(app){
 	app.post("/!signup", disableMenu, user.signup);
 
 	app.get(/^\/!public\/.*$/, publicFile);
-	app.get(/^.*\.[^.\/]+$/, user.checkReadPermission, staticFile);
 }
 
 exports.preModule = function(req, res, next){
@@ -22,7 +21,6 @@ exports.preModule = function(req, res, next){
 	res.locals.notename = req.wikiPath.name;
 	res.locals.config = config;
 	res.locals.session = req.session;
-	res.locals.msg = req.flash('msg');
 	res.locals.msg = { 
 		info : req.flash("info"),
 		warn : req.flash('warn')

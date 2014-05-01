@@ -1,9 +1,22 @@
+var path = require("path");
 var user = require("./userApp.node.js");
-var wikiApp = require("./wikiApp.node.js")
+var wikiApp = require("./wikiApp.node.js");
+var config = require("../config");
 
 exports.index = function(req, res){
 	res.render('index', { title: 'Express' });
 };
+
+var regex = /^.*\.[^.\/]+$/
+exports.static = function(req, res, next){
+	var filePath = path.join(config.wikiDir, decodeURIComponent(req.path));
+
+	if(regex.test(req.path)){
+		res.sendfile(filePath);
+	} else {
+		next();
+	}
+}
 
 exports.wikiView = function(req, res, next){
 	user.checkReadPermission(req, res, function(){
