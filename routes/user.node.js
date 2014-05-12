@@ -3,7 +3,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var jellybin = require("jellybin");
 
-var db = jellybin("users.json");
+var db = jellybin("users.json", { create : true });
 
 exports.authenticate = function(id, password, callback){
 	db.load(function(err, users){
