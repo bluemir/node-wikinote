@@ -26,6 +26,7 @@ app.configure(function(){
 	app.use(flash());
 	app.use(wikiapp.preModule);
 	app.use(app.router);
+	app.use(routes.public);
 	app.use(routes.static);
 	app.use(routes.paramRouter);
 	app.use(routes.wikiView);

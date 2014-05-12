@@ -7,12 +7,20 @@ exports.index = function(req, res){
 	res.render('index', { title: 'Express' });
 };
 
-var regex = /^.*\.[^.\/]+$/
+var staticRegex = /^.*\.[^.\/]+$/;
 exports.static = function(req, res, next){
 	var filePath = path.join(config.wikiDir, decodeURIComponent(req.path));
 
-	if(regex.test(req.path)){
+	if(staticRegex.test(req.path)){
 		res.sendfile(filePath);
+	} else {
+		next();
+	}
+}
+var publicRegex = /^\/!public\/.*$/;
+exports.public = function(req, res, next){
+	if(publicRegex.test(req.path)){
+		res.sendfile(req.path.substring(2));
 	} else {
 		next();
 	}
