@@ -3,7 +3,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var jellybin = require("jellybin");
 
-var group = require("./group.node");
+var group = require("./group");
 
 var db = jellybin("users.json", { create : true });
 

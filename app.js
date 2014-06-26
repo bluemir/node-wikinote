@@ -7,7 +7,7 @@ var express = require('express')
 var routes = require('./routes')
 var http = require('http')
 var path = require('path');
-var user = require('./routes/user.node.js');
+var user = require('./app/user');
 var wikiapp = require("./routes/wiki.node.js");
 var flash = require("connect-flash");
 

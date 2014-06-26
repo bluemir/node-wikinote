@@ -1,4 +1,4 @@
-var wikiFS = require("./wikiFS.node.js");
+var wikiFS = require("../app/wikiFS");
 var marked = require("marked");
 var Path = require("./path.node.js");
 var config = require("../config");

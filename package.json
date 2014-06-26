@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "nodemon -w routes -w app.js -w config.json app.js"
+    "test": "nodemon -w app -w routes -w app.js -w config.json app.js"
   },
   "dependencies": {
     "connect-flash": "*",

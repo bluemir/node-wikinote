@@ -1,7 +1,7 @@
 var config = require("../config");
 
-var user = require("./user.node.js");
-var group = require("./group.node.js")
+var user = require("../app/user.js");
+var group = require("../app/group.js")
 
 exports.login = function(req, res){
 	var id = req.param("id");

@@ -3,7 +3,7 @@ var mkdirp = require("mkdirp");
 var exec = require("child_process").exec;
 var config = require("../config");
 
-var SearchEngine = require("./searchEngine.node.js")
+var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
 
 exports.readWiki = function(path, callback){
