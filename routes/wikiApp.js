@@ -1,6 +1,6 @@
 var wikiFS = require("../app/wikiFS");
 var marked = require("marked");
-var Path = require("./path.node.js");
+var Path = require("./path.js");
 var config = require("../config");
 
 marked.setOptions({

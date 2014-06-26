@@ -1,8 +1,8 @@
 var config = require("../config");
-var wikiApp = require("./wikiApp.node.js");
-var wikiApi = require("./wikiApi.node.js");
-var Path = require("./path.node.js");
-var user = require("./userApp.node.js");
+var wikiApp = require("./wikiApp.js");
+var wikiApi = require("./wikiApi.js");
+var Path = require("./path.js");
+var user = require("./userApp.js");
 
 exports.init = function(app){
 	app.get("/", redirectToFront);
