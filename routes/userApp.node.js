@@ -60,50 +60,61 @@ exports.list = function(req, res){
 
 exports.checkReadPermission = function(req, res, next){
 	if(!config.security) return next();
-	if(!req.session.user || !req.session.group) {
+	
+	if(!req.session.user) {
 		if(config.security.anonymous.charAt(0) == "r"){
 			return next();
 		} else {
 			return res.render("noAuth", {title : "Waring"});
 		}
 	}
-	
-	group.permission(req.session.user.group, function(err, permission) {
+	user.hasReadPermission(req.session.user.id, function(err, f){
 		if(err) throw err;
-		if(permission.charAt(0) == "r") return next();
-		res.render("noAuth", {title : "Waring"});
+
+		if(f) {
+			return next();
+		} else {
+			return res.render("noAuth", {title : "Waring"});
+		}
 	});
 }
 exports.checkWritePermission = function(req, res, next){
 	if(!config.security) return next();
 	
-	if(!req.session.user || !req.session.user.group) {
+	if(!req.session.user) {
 		if(config.security.anonymous.charAt(1) == "w"){
 			return next();
 		} else {
 			return res.render("noAuth", {title : "Waring"});
 		}
 	}
-	
-	group.permission(req.session.user.group, function(err, permission) {
+	user.hasWritePermission(req.session.user.id, function(err, f){
 		if(err) throw err;
-		if(permission.charAt(1) == "w") return next();
-		res.render("noAuth", {title : "Waring"});
+
+		if(f) {
+			return next();
+		} else {
+			return res.render("noAuth", {title : "Waring"});
+		}
 	});
 }
+
 exports.checkAdminPermission = function(req, res, next){
 	if(!config.security) return next();
-	if(!req.session.user || !req.session.user.group) {
+	if(!req.session.user) {
 		if(config.security.anonymous.charAt(2) == "x"){
 			return next();
 		} else {
 			return res.render("noAuth", {title : "Waring"});
 		}
 	}
-	
-	group.permission(req.session.user.group, function(err, permission) {
+	user.hasAdminPermission(req.session.user.id, function(err, f){
 		if(err) throw err;
-		if(permission.charAt(2) == "x") return next();
-		res.render("noAuth", {title : "Waring"});
+
+		if(f) {
+			return next();
+		} else {
+			return res.render("noAuth", {title : "Waring"});
+		}
 	});
 }

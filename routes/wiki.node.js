@@ -1,5 +1,6 @@
 var config = require("../config");
-var wikiApp = require("./wikiApp.node.js")
+var wikiApp = require("./wikiApp.node.js");
+var wikiApi = require("./wikiApi.node.js");
 var Path = require("./path.node.js");
 var user = require("./userApp.node.js");
 
@@ -7,11 +8,11 @@ exports.init = function(app){
 	app.get("/", redirectToFront);
 	app.get("/!logout", disableMenu, user.logout);
 	app.get("/!signup", disableMenu, user.signupForm);
-	app.get("/!user",disableMenu, user.checkAdminPermission, user.list)
+	app.get("/!user", disableMenu, user.checkAdminPermission, user.list)
 	app.post("/!login", disableMenu, user.login);
 	app.post("/!signup", disableMenu, user.signup);
 
-	app.get(/^\/!public\/.*$/, publicFile);
+	app.post("/!api/1/save", wikiApi.checkWritePermission, wikiApi.save);
 }
 
 exports.preModule = function(req, res, next){

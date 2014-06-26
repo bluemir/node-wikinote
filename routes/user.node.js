@@ -3,6 +3,8 @@ var fs = require('fs');
 var crypto = require('crypto');
 var jellybin = require("jellybin");
 
+var group = require("./group.node");
+
 var db = jellybin("users.json", { create : true });
 
 exports.authenticate = function(id, password, callback){
@@ -13,7 +15,7 @@ exports.authenticate = function(id, password, callback){
 			var user = {
 				id : id,
 				email : users[id].email,
-				group : users[id].group
+				groups : users[id].groups
 			}
 			callback(null, user);
 		} else {
@@ -40,13 +42,38 @@ exports.register = function(id, password, email, callback){
 exports.list = function(callback){
 	db.load(callback);
 }
+exports.hasReadPermission = function(id, callback){
+	var user = db.json[id];
+	if(!user) return callback(new Error("not Exist user"));
+	
+
+	callback(null, user.groups.some(function(element, index){
+		return group.checkPermission(element, "r--");
+	}));
+}
+exports.hasWritePermission = function(id, callback){
+	var user = db.json[id];
+	if(!user) return callback(new Error("not Exist user"));
+
+	callback(null, user.groups.some(function(element, index){
+		return group.checkPermission(element, "-w-");
+	}));
+}
+exports.hasAdminPermission = function(id, callback){
+	var user = db.json[id];
+	if(!user) return callback(new Error("not Exist user"));
+
+	callback(null, user.groups.some(function(element, index){
+		return group.checkPermission(element, "---");
+	}));
+}
 exports.setGroup = function(id, group, callback){
 	db.load(function(err, users){
 		if(err) return callback(err);
 		//TODO group check
-		users[id].group = group;
+		users[id].groups.push(group);
 		db.save(users, callback);
-	})
+	});
 }
 
 function hash(data){
