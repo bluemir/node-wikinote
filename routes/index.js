@@ -27,25 +27,25 @@ exports.public = function(req, res, next){
 }
 
 exports.wikiView = function(req, res, next){
-	user.checkReadPermission(req, res, function(){
+	wikiApp.checkReadPermission(req, res, function(){
 		wikiApp.view(req, res, next);
 	});
 }
 
 var paramRouter = ParamRouter();
-paramRouter.get("view", user.checkReadPermission, wikiApp.view);
-paramRouter.get("edit", user.checkWritePermission, wikiApp.edit);
-paramRouter.get("attach", user.checkWritePermission, wikiApp.attach);
-paramRouter.get("move", user.checkWritePermission, wikiApp.moveForm);
-paramRouter.get("presentation", user.checkReadPermission, wikiApp.presentation);
-paramRouter.get("find", user.checkReadPermission, wikiApp.find);
-paramRouter.get("delete", user.checkWritePermission, wikiApp.deleteForm);
-paramRouter.get("history", user.checkReadPermission, wikiApp.history);
+paramRouter.get("view", wikiApp.checkReadPermission, wikiApp.view);
+paramRouter.get("edit", wikiApp.checkWritePermission, wikiApp.edit);
+paramRouter.get("attach", wikiApp.checkWritePermission, wikiApp.attach);
+paramRouter.get("move", wikiApp.checkWritePermission, wikiApp.moveForm);
+paramRouter.get("presentation", wikiApp.checkReadPermission, wikiApp.presentation);
+paramRouter.get("find", wikiApp.checkReadPermission, wikiApp.find);
+paramRouter.get("delete", wikiApp.checkWritePermission, wikiApp.deleteForm);
+paramRouter.get("history", wikiApp.checkReadPermission, wikiApp.history);
 
-paramRouter.post("edit", user.checkWritePermission, wikiApp.save);
-paramRouter.post("attach", user.checkWritePermission, wikiApp.upload);
-paramRouter.post("move", user.checkWritePermission, wikiApp.move);
-paramRouter.post("delete", user.checkWritePermission, wikiApp.deleteComfirm);
+paramRouter.post("edit", wikiApp.checkWritePermission, wikiApp.save);
+paramRouter.post("attach", wikiApp.checkWritePermission, wikiApp.upload);
+paramRouter.post("move", wikiApp.checkWritePermission, wikiApp.move);
+paramRouter.post("delete", wikiApp.checkWritePermission, wikiApp.deleteComfirm);
 
 exports.paramRouter = paramRouter;
 

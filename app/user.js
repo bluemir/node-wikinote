@@ -45,7 +45,6 @@ exports.list = function(callback){
 exports.hasReadPermission = function(id, callback){
 	var user = db.json[id];
 	if(!user) return callback(new Error("not Exist user"));
-	
 
 	callback(null, user.groups.some(function(element, index){
 		return group.checkPermission(element, "r--");

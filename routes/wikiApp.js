@@ -2,6 +2,7 @@ var wikiFS = require("../app/wikiFS");
 var marked = require("marked");
 var Path = require("./path.js");
 var config = require("../config");
+var userApp = require("./userApp");
 
 marked.setOptions({
 	gfm: true,
@@ -102,6 +103,28 @@ wikiApp.deleteComfirm = function(req, res){
 wikiApp.history = function(req, res){
 	wikiFS.history(req.wikiPath, function(e, logs){
 		res.render("history", {title : "Wiki Note::History", logs : logs});
+	});
+}
+
+wikiApp.checkReadPermission = function(req, res, next){
+	userApp.checkReadPermission(req.session.user, function(err, f){
+		if (err) throw err;
+		if (f) return next();
+		else return res.render("noAuth", {title : "Waring"});
+	});
+}
+wikiApp.checkWritePermission = function(req, res, next){
+	userApp.checkWritePermission(req.session.user, function(err, f){
+		if (err) throw err;
+		if (f) return next();
+		else return res.render("noAuth", {title : "Waring"});
+	});
+}
+wikiApp.checkAdminPermission = function(req, res, next){
+	userApp.checkAdminPermission(req.session.user, function(err, f){
+		if (err) throw err;
+		if (f) return next();
+		else return res.render("noAuth", {title : "Waring"});
 	});
 }
 

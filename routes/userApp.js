@@ -58,63 +58,44 @@ exports.list = function(req, res){
 	});
 }
 
-exports.checkReadPermission = function(req, res, next){
-	if(!config.security) return next();
-	
-	if(!req.session.user) {
+exports.checkReadPermission = function(user_, callback){
+	if(!config.security) return callback(null, true)
+
+	if(user_){
+		user.hasReadPermission(user_.id, callback);
+	} else {
 		if(config.security.anonymous.charAt(0) == "r"){
-			return next();
+			return callback(null, true);
 		} else {
-			return res.render("noAuth", {title : "Waring"});
+			return callback(null, false);
 		}
 	}
-	user.hasReadPermission(req.session.user.id, function(err, f){
-		if(err) throw err;
-
-		if(f) {
-			return next();
-		} else {
-			return res.render("noAuth", {title : "Waring"});
-		}
-	});
 }
-exports.checkWritePermission = function(req, res, next){
-	if(!config.security) return next();
-	
-	if(!req.session.user) {
+
+exports.checkWritePermission = function(user_, callback){
+	if(!config.security) return callback(null, true)
+
+	if(user_){
+		user.hasWritePermission(user_.id, callback);
+	} else {
 		if(config.security.anonymous.charAt(1) == "w"){
-			return next();
+			return callback(null, true);
 		} else {
-			return res.render("noAuth", {title : "Waring"});
+			return callback(null, false);
 		}
 	}
-	user.hasWritePermission(req.session.user.id, function(err, f){
-		if(err) throw err;
-
-		if(f) {
-			return next();
-		} else {
-			return res.render("noAuth", {title : "Waring"});
-		}
-	});
 }
 
-exports.checkAdminPermission = function(req, res, next){
-	if(!config.security) return next();
-	if(!req.session.user) {
+exports.checkAdminPermission = function(user_, callback){
+	if(!config.security) return callback(null, true)
+
+	if(user_){
+		user.hasAdminPermission(user_.id, callback);
+	} else {
 		if(config.security.anonymous.charAt(2) == "x"){
-			return next();
+			return callback(null, true);
 		} else {
-			return res.render("noAuth", {title : "Waring"});
+			return callback(null, false);
 		}
 	}
-	user.hasAdminPermission(req.session.user.id, function(err, f){
-		if(err) throw err;
-
-		if(f) {
-			return next();
-		} else {
-			return res.render("noAuth", {title : "Waring"});
-		}
-	});
 }
