@@ -19,7 +19,15 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 			ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 			ajax.send("data=" + encodeURIComponent(cm.doc.getValue()));
 		}
-	}
+	},
+	indentUnit : 4,
+	tabSize : 4,
+	indentWithTabs : true,
+	profile: "html"
+});
+emmetPlugin.clearKeymap();
+emmetPlugin.setKeymap({
+	'Ctrl-Enter': 'expand_abbreviation'
 });
 function showMsg(level, message){
 	var $msg = document.getElementById("message");
