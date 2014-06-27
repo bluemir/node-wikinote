@@ -24,7 +24,7 @@ app.configure(function(){
 	app.use(express.cookieParser());
 	app.use(express.cookieSession({ secret: 'wikinote'}));
 	app.use(flash());
-	app.use(wikiapp.preModule);
+	app.use(routes.preModule);
 	app.use(app.router);
 	app.use(routes.public);
 	app.use(routes.static);

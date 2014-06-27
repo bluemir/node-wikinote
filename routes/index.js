@@ -1,11 +1,23 @@
 var path = require("path");
+var Path = require("./path.js");
 var user = require("./userApp.js");
 var wikiApp = require("./wikiApp.js");
 var config = require("../config");
 
-exports.index = function(req, res){
-	res.render('index', { title: 'Express' });
-};
+exports.preModule = function(req, res, next){
+	req.wikiPath = new Path(req.path);
+	res.locals.path = req.wikiPath;
+	res.locals.bread = req.wikiPath.toArray();
+	res.locals.notename = req.wikiPath.name;
+	res.locals.config = config;
+	res.locals.session = req.session;
+	res.locals.msg = {
+		info : req.flash("info"),
+		warn : req.flash('warn')
+	};
+	res.locals.wikiname = config.wikiname;
+	next();
+}
 
 var staticRegex = /^.*\.[^.\/]+$/;
 exports.static = function(req, res, next){
