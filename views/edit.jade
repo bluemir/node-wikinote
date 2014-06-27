@@ -1,10 +1,15 @@
 extends layout
 
 block content
+	link(rel="stylesheet" href="/!public/lib/CodeMirror/lib/codemirror.css")
 	article.edit
 		form(method="post")
 			textarea(name="data", cols="80", rows="25")
 				!= wikiData
-			img(src="/!public/Zen-Coding/zc-powered.png", onclick="zen_textarea.showInfo();")
 			input(type="submit", value="저장")
-			script(src="/!public/Zen-Coding/zen_textarea.js")
+
+block scripts
+	script(src="/!public/lib/CodeMirror/lib/codemirror.js")
+	script(src="/!public/lib/CodeMirror/mode/markdown/markdown.js")
+	script(src="/!public/editor.js")
+

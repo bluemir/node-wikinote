@@ -185,6 +185,7 @@ header p.msg-dynamic {
 	background : #d9edf7;
 	color : #3a87ad;
 	border-color : #bce8f1;
+	z-index : 10;
 }
 
 header p.msg-dynamic.warn {
@@ -353,6 +354,13 @@ article.edit textarea {
 article.edit form>img {
 	cursor : pointer;
 	float : right;
+}
+article.edit .CodeMirror {
+	border : 1px solid gray;
+	width : 100%;
+	resize : vertical;
+	height : auto;
+	min-height : 300px;
 }
 /* find */
 article.find table{
