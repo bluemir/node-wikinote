@@ -43,7 +43,7 @@ exports.deleteFile = function(path, callback){
 	});
 }
 exports.move = function(srcPath, targetPath, callback){
-	mkdirp(config.wikiDir + path.toString(), function(){
+	mkdirp(config.wikiDir + targetPath.toString(), function(){
 		fs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full,function(e){
 			console.log(e);
 		});

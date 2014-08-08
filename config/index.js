@@ -2,7 +2,7 @@ var fs = require("fs");
 var crypto = require("crypto");
 var env = process.env;
 
-var DEFAULT_HASH = "Oa9EoNS92Y2j2oDfrCvfzvqE5V2FfiaMO+jVffSye6fcBpfohZpq8NOz+i9E6EADcgr2yv/ApJPHRWLrUQOYBQ==";
+var DEFAULT_HASH = "deXsLL1gakVqN6WvrTM6bK9uto34M6ONwIiBEBFI0rdJmx5N4WJGyNX9i/auRh8V5rMLPLg3KZkyxDc3oGExMA==";
 
 loadConfing();
 
@@ -56,8 +56,11 @@ function loadLocals() {
 
 function overwrite(dest, src){
 	for(var key in src){
-		if(typeof src[key] === "object"){
-			dest[key] = dest[key] || {}
+		if(src[key] instanceof Array){
+			dest[key] = dest[key] || [];
+			overwrite(dest[key], src[key]);
+		} else if(typeof src[key] === "object"){
+			dest[key] = dest[key] || {};
 			overwrite(dest[key], src[key]);
 		} else {
 			dest[key] = src[key];

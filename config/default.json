@@ -7,8 +7,8 @@
     "security": {
         "salt": "123456789",
         "admin": "bluemir",
-        "permission": "rw-rw-r--",
         "anonymous": "r--"
+		"defaultPermission" : ["read","write"],
     },*/
 	"wikiname" : "WikiNote"
 }

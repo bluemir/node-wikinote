@@ -17,3 +17,4 @@ npm-debug.log
 
 config/local.json
 users.json
+user.nedb

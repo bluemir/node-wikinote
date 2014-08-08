@@ -8,7 +8,6 @@ var routes = require('./routes')
 var http = require('http')
 var path = require('path');
 var user = require('./app/user');
-var wikiapp = require("./routes/wiki");
 var flash = require("connect-flash");
 
 var app = express();
@@ -37,7 +36,7 @@ app.configure('development', function(){
 	app.use(express.errorHandler());
 });
 
-wikiapp.init(app);
+routes.init(app);
 
 http.createServer(app).listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
