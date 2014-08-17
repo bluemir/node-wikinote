@@ -12,8 +12,7 @@ db.users.ensureIndex({fieldName : "id", unique : true});
 exports.authenticate = function(id, password, callback){
 	db.users.findOne({id : id}, function(err, user){
 		if(err) return callback(err);
-		console.log(user.password , "\n", hash(password));	
-		if(user.password == hash(password)){
+		if(user && user.password == hash(password)){
 			callback(null, user);
 		} else {
 			callback();
@@ -26,8 +25,8 @@ exports.register = function(id, password, email, callback){
 		if(err) return callback(err);
 		if(user) return callback("exsit id");
 		db.users.insert({
-			id : id, 
-			password : hash(password), 
+			id : id,
+			password : hash(password),
 			email : email,
 			permission : ["read"]
 		}, function(err, data){
