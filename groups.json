@@ -1,6 +1,0 @@
-{
-    "admin" : "rwx",
-    "editor" : "rw-",
-    "viewer" : "r--",
-    "troller" : "---"
-}

@@ -1,6 +1,6 @@
-module.exports = wikiPath;
+module.exports = WikiPath;
 
-function wikiPath(path){
+function WikiPath(path){
 	this.full = nomalizePath(decodeURIComponent(path));
 	var index = this.full.lastIndexOf("/");
 	if(index == 0){
@@ -10,13 +10,13 @@ function wikiPath(path){
 	}
 	this.name = this.full.substr(index + 1);
 }
-wikiPath.prototype.toString = function(){
+WikiPath.prototype.toString = function(){
 	return this.full;
 }
-wikiPath.prototype.toArray = function(){
+WikiPath.prototype.toArray = function(){
 	return this.full.split("/").slice(1);
 }
-wikiPath.prototype.encode = function(){
+WikiPath.prototype.encode = function(){
 	return encodeURIComponent(this.full);
 }
 function nomalizePath(path){

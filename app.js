@@ -1,43 +1,31 @@
-
-/**
-* Module dependencies.
-*/
-
 var express = require('express')
-var routes = require('./routes')
 var http = require('http')
 var path = require('path');
-var user = require('./app/user');
-var wikiapp = require("./routes/wiki");
 var flash = require("connect-flash");
+var bodyParser = require("body-parser");
+var favicon = require('serve-favicon');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var errorHandler = require('errorhandler');
+var routes = require('./routes')
 
 var app = express();
 
-app.configure(function(){
-	app.set('port', process.env.PORT || 4000);
-	app.set('views', __dirname + '/views');
-	app.set('view engine', 'jade');
-	app.use(express.favicon("public/icon/note_book.png"));
-	app.use(express.logger('dev'));
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(express.cookieParser());
-	app.use(express.cookieSession({ secret: 'wikinote'}));
-	app.use(flash());
-	app.use(routes.preModule);
-	app.use(app.router);
-	app.use(routes.public);
-	app.use(routes.static);
-	app.use(routes.paramRouter);
-	app.use(routes.wikiView);
-	//app.use(express.static(path.join(__dirname, 'public')));
-});
+app.set('port', process.env.PORT || 4000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 
-app.configure('development', function(){
-	app.use(express.errorHandler());
-});
+app.use(favicon("public/icon/note_book.png"));
+app.use(bodyParser.urlencoded({extended : true}));
+app.use(cookieParser());
+app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}));
+app.use(flash());
 
-wikiapp.init(app);
+routes.init(app);
+
+if ('development' == process.env.NODE_ENV || 'development') {
+	app.use(errorHandler());
+}
 
 http.createServer(app).listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));

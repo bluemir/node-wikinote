@@ -1,6 +1,6 @@
 var wikiFS = require("../app/wikiFS");
 var marked = require("marked");
-var Path = require("./path.js");
+var WikiPath = require("./wikipath");
 var config = require("../config");
 var userApp = require("./userApp");
 
@@ -34,14 +34,14 @@ wikiApp.edit = function(req, res){
 wikiApp.save = function(req, res){
 	var data = req.param("data");
 	wikiFS.writeWiki(req.wikiPath, data, req.session.user, function(err){
-		res.redirect(req.path); 
+		res.redirect(req.path);
 	});
 }
 wikiApp.moveForm = function(req, res){
 	res.render("move", {title : "Wiki Note::Move"});
 }
 wikiApp.move = function(req, res){
-	wikiFS.move(req.wikiPath, new Path(req.param("target")), function(){
+	wikiFS.move(req.wikiPath, new WikiPath(req.param("target")), function(){
 		res.redirect(req.param("target"));
 	});
 }
@@ -62,7 +62,7 @@ wikiApp.staticFiles = function(req, res){
 }
 wikiApp.presentation = function(req, res){
 	wikiFS.readWiki(req.wikiPath, function(err, data){
-		var option = {}; 
+		var option = {};
 		try {
 			option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
 		} catch (e){
@@ -105,27 +105,4 @@ wikiApp.history = function(req, res){
 		res.render("history", {title : "Wiki Note::History", logs : logs});
 	});
 }
-
-wikiApp.checkReadPermission = function(req, res, next){
-	userApp.checkReadPermission(req.session.user, function(err, f){
-		if (err) throw err;
-		if (f) return next();
-		else return res.render("noAuth", {title : "Waring"});
-	});
-}
-wikiApp.checkWritePermission = function(req, res, next){
-	userApp.checkWritePermission(req.session.user, function(err, f){
-		if (err) throw err;
-		if (f) return next();
-		else return res.render("noAuth", {title : "Waring"});
-	});
-}
-wikiApp.checkAdminPermission = function(req, res, next){
-	userApp.checkAdminPermission(req.session.user, function(err, f){
-		if (err) throw err;
-		if (f) return next();
-		else return res.render("noAuth", {title : "Waring"});
-	});
-}
-
 module.exports = wikiApp;
