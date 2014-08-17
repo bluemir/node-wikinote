@@ -6,7 +6,7 @@ wikinote는 위키같은 메모장을 사용하고 싶은 마음에서 시작되
 
 ##How To Install/Run
 ```
-# git clone https://github.com/HyeokJun/wikinote.git
+# git clone https://github.com/bluemir/wikinote.git
 # cd wikinote & npm install
 # npm start
 ```
@@ -27,6 +27,6 @@ wikinote는 위키같은 메모장을 사용하고 싶은 마음에서 시작되
  * git을 이용하여 history를 관리한다.
 
 ###주의
- * history 기능은 현재 git에 dependency를 가지고 있습니다. 
+ * history 기능은 현재 git에 dependency를 가지고 있습니다.
    history기능을 사용하기 위해서는 반드시 시스템에 git이 깔려 있어야 합니다.
    추후 javascript git module로 바꿀 예정입니다.
