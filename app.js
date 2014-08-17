@@ -1,10 +1,4 @@
-
-/**
-* Module dependencies.
-*/
-
 var express = require('express')
-var routes = require('./routes')
 var http = require('http')
 var path = require('path');
 var flash = require("connect-flash");
@@ -13,16 +7,18 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var errorHandler = require('errorhandler');
+var routes = require('./routes')
 
 var app = express();
 
 app.set('port', process.env.PORT || 4000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+
 app.use(favicon("public/icon/note_book.png"));
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended : true}));
 app.use(cookieParser());
-app.use(session({ secret: 'wikinote'}));
+app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}));
 app.use(flash());
 
 routes.init(app);

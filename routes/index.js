@@ -6,21 +6,6 @@ var wikiApi = require("./wikiApi");
 var config = require("../config");
 var ParamRouter = require("./paramRouter")
 
-var appRouter = ParamRouter();
-appRouter.get("view", user.checkPermission(user.PERMISSION.READ), wikiApp.view);
-appRouter.get("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.edit);
-appRouter.get("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.attach);
-appRouter.get("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.moveForm);
-appRouter.get("presentation", user.checkPermission(user.PERMISSION.READ), wikiApp.presentation);
-appRouter.get("find", user.checkPermission(user.PERMISSION.READ), wikiApp.find);
-appRouter.get("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteForm);
-appRouter.get("history", user.checkPermission(user.PERMISSION.READ), wikiApp.history);
-
-appRouter.post("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.save);
-appRouter.post("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.upload);
-appRouter.post("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.move);
-appRouter.post("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteComfirm);
-
 exports.init = function(app){
 	app.use(preModule);
 
@@ -35,7 +20,23 @@ exports.init = function(app){
 
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
 
+	var appRouter = ParamRouter();
+	appRouter.get("view", user.checkPermission(user.PERMISSION.READ), wikiApp.view);
+	appRouter.get("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.edit);
+	appRouter.get("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.attach);
+	appRouter.get("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.moveForm);
+	appRouter.get("presentation", user.checkPermission(user.PERMISSION.READ), wikiApp.presentation);
+	appRouter.get("find", user.checkPermission(user.PERMISSION.READ), wikiApp.find);
+	appRouter.get("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteForm);
+	appRouter.get("history", user.checkPermission(user.PERMISSION.READ), wikiApp.history);
+
+	appRouter.post("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.save);
+	appRouter.post("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.upload);
+	appRouter.post("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.move);
+	appRouter.post("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteComfirm);
+
 	app.use(appRouter);
+
 	app.use(wikiView);
 }
 
@@ -68,7 +69,7 @@ function staticRouter(req, res, next){
 var publicRegex = /^\/!public\/.*$/;
 function publicRouter(req, res, next){
 	if(publicRegex.test(req.path)){
-		res.sendFile(req.path.substring(2));
+		res.sendFile(req.path.substring(2), {root : "./"});
 	} else {
 		next();
 	}
