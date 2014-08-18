@@ -1,8 +1,8 @@
 #wikinote
+# English #
 --
 ##What is wikinote
-wikinote는 위키같은 메모장을 사용하고 싶은 마음에서 시작되었습니다.
-철저하게 개인화된 위키를 지향하며 markdown문법을 사용합니다.
+ * The project 'wikinote' starts on the think that wants to use simple text editor having wiki's features. It uses 'markdown' grammar like git wiki, and specialized for individual uses.
 
 ##How To Install/Run
 ```
@@ -10,7 +10,38 @@ wikinote는 위키같은 메모장을 사용하고 싶은 마음에서 시작되
 # cd wikinote & npm install
 # npm start
 ```
-##Wikinote의 기능
+##Functions of Wikinote
+ * Documentation
+  * markdown(gfm support)
+  * markdown rendering
+ * History management
+ * presentation(reveal.js)
+ * shortcut support
+ * Supports login and editing authority management
+
+##Features of wikinote
+ * It does not use any DBMS at all.
+ * All the saved files are editable immediately.
+  * No need to use wikinote for editing the contents.
+ * Uses markdown grammar.
+ * History management is based on 'git'.
+
+###Caution
+ * Now, history function is depended on git. So, you have to be prepared for git on your system to use history function. It will be planned to replace 'javascript git module'
+
+
+# Korean #
+--
+##wikinote란?
+ * ikinote는 위키같은 메모장을 사용하고 싶은 마음에서 시작되었습니다. 철저하게 개인화된 위키를 지향하며 markdown문법을 사용합니다.
+
+##설치 및 실행방법
+```
+# git clone https://github.com/bluemir/wikinote.git
+# cd wikinote & npm install
+# npm start
+```
+##wikinote의 기능
  * 문서 작성
   * markdown(gfm 지원)
   * markdown 렌더링
