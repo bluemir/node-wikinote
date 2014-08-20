@@ -3,6 +3,7 @@ var http = require('http')
 var path = require('path');
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
+var multipart = require("connect-multiparty");
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -17,6 +18,7 @@ app.set('view engine', 'jade');
 
 app.use(favicon("public/icon/note_book.png"));
 app.use(bodyParser.urlencoded({extended : true}));
+app.use(multipart());
 app.use(cookieParser());
 app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}));
 app.use(flash());
