@@ -12,7 +12,7 @@
             <a id="wikiname" href="/">{{ wikiname }}</a>
             {% if config.security %}
             <div id="user">
-                {% if sesstion.user.id %}
+                {% if session.user.id %}
                 <a href="/!login?redirect={{ path.encode() }}">logout</a>
                 {% else %}
                 <form action="/!login?redirect={{ path.encode() }}" method="post">
