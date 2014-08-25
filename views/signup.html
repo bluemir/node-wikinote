@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<article class="signup">
+    <form method="post" id="signup">
+        <dl>
+            <dt>ID</dt>
+            <dd>
+                <input type="text" placeholder="id" name="id" id="signup.id" />
+            </dd>
+            <dt>Password</dt>
+            <dd>
+                <input type="password" placeholder="password" name="password" id="signup.password" />
+            </dd>
+            <dt>Password confirm</dt>
+            <dd>
+                <input type="password" placeholder="password confirm" name="confirm" id="signup.confirm" />
+            </dd>
+        </dl>
+        <p><input type="submit" value="signup" /></p>
+    </form>
+</article>
+{% endblock %}

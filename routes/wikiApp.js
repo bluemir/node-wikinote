@@ -83,8 +83,8 @@ wikiApp.find = function(req, res){
 wikiApp.deleteForm = function(req, res){
 	res.render("delete", {title : "Wiki Note::Delete"});
 }
-wikiApp.deleteComfirm = function(req, res){
-	if(req.wikiPath.name != req.param("comfirm")){
+wikiApp.deleteConfirm = function(req, res){
+	if(req.wikiPath.name != req.param("confirm")){
 		req.flash("warn","note의 이름이 정확하지 않습니다.");
 		res.redirect(req.wikiPath + "?delete" );
 		return;

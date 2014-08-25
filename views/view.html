@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<article class="view">
+    {% if wikiData != null %}
+    {{ wikiData|safe }}
+    {% else %}
+    <h2><a href="{{ path.toString() }}?edit">create this page</a></h2>
+    {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<article class="history">
+    <h1>History of {{ notename }}</h1>
+    {% if logs %}
+    <table>
+        <tr>
+            <th>version</th>
+            <th>date</th>
+            <th>author</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td class="id">{{ log.id }}</td>
+            <td>{{ log.date }}</td>
+            <td>{{ log.author.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>this page dose not have history!</p>
+    {% endif %}
+</article>
+{% endblock %}
