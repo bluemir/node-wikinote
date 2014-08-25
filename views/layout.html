@@ -13,13 +13,15 @@
             {% if config.security %}
             <div id="user">
                 {% if session.user.id %}
-                <a href="/!login?redirect={{ path.encode() }}">logout</a>
+                {{ session.user.id }}
+                <a href="/!logout?redirect={{ path.encode() }}">logout</a>
                 {% else %}
                 <form action="/!login?redirect={{ path.encode() }}" method="post">
                     <input type="text" placeholder="id" name="id"/>
                     <input type="password" placeholder="password" name="password"/>
                     <input type="submit", value="login"/>
                 </form>
+                {% endif %}
             </div>
             {% endif %}
             {% if !disableMenu %}
