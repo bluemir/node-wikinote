@@ -33,7 +33,7 @@ exports.init = function(app){
 	appRouter.post("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.save);
 	appRouter.post("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.upload);
 	appRouter.post("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.move);
-	appRouter.post("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteComfirm);
+	appRouter.post("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteConfirm);
 
 	app.use(appRouter);
 
@@ -44,7 +44,6 @@ exports.init = function(app){
 function preModule(req, res, next){
 	req.wikiPath = new WikiPath(req.path);
 	res.locals.path = req.wikiPath;
-	res.locals.bread = req.wikiPath.toArray();
 	res.locals.notename = req.wikiPath.name;
 	res.locals.config = config;
 	res.locals.session = req.session;

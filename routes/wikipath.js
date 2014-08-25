@@ -16,6 +16,18 @@ WikiPath.prototype.toString = function(){
 WikiPath.prototype.toArray = function(){
 	return this.full.split("/").slice(1);
 }
+WikiPath.prototype.bread = function(){
+	var arr = this.full.split("/").slice(1);
+	var result = [];
+	for(var i = 0; i < arr.length; i++){
+		result[i] = {
+			path : arr.slice(0, i+1).join('/'),
+			name : arr[i]
+		}
+	}
+	return result;
+}
+
 WikiPath.prototype.encode = function(){
 	return encodeURIComponent(this.full);
 }

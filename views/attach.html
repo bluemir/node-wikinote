@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<article class="attach">
+    <ul>
+        {% for file in files %}
+        <li><a href="{{ path.toString() }}/{{ file }}">{{file}}</a></li>
+        {% endfor %}
+    </ul>
+    <form enctype="multipart/form-data" method="post">
+        <input type="file" name="upload" onchange="forms[0].submit()"/>
+    </form>
+</article>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block style %}
+    {% parent %}
+    <link rel="stylesheet" href="/!public/lib/CodeMirror/lib/codemirror.css" />
+{% endblock %}
+{% block contents %}
+<article class="edit">
+    <form method="post">
+        <textarea name="data" cols="80" rows="25">{{ wikiData|safe }}</textarea>
+    </form>
+</article>
+{% endblock %}
+
+{% block scripts %}
+<script src="/!public/lib/CodeMirror/lib/codemirror.js"></script>
+<script src="/!public/lib/CodeMirror/mode/markdown/markdown.js"></script>
+<script src="/!public/lib/codemirror-emmet/dist/emmet.js"></script>
+<script src="/!public/editor.js"></script>
+{% endblock %}

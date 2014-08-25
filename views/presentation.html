@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ notename }}::{{ title }}</title>
+    <meta name="viewport" content="width=device-width" initial-scale="1.0" maximum-scale="1.0" user-scalable="no" />
+    <link rel="stylesheet" href="/!public/lib/reveal.js/css/reveal.css" />
+    <link rel="stylesheet" href="/!public/lib/reveal.js/lib/css/zenburn.css" />
+    <link rel="stylesheet" href="/!public/lib/reveal.js/css/theme/default.css" id="theme"/>
+    <link rel="stylesheet" href="/!public/lib/reveal.js/css/print/pdf.css" type="text/css" media="print"/>
+    <!--[if lt IE 9]-->
+    <script src="/!public/lib/reveal.js/lib/js/html5shiv.js"></script>
+    <!--[endif]-->
+</head>
+<body>
+    <div class="reveal">
+        <div class="sildes">{{ wikidata }}
+    </div>
+    <script src="/!public/shotcut.js"></script>
+    <script src="/!public/lib/reveal.js/lib/js/head.min.js"></script>
+    <script src="/!public/lib/reveal.js/js/reveal.js"></script>
+    <script src="/!public/presentation.js"></script>
+    <script>
+        init("#{option.theme}","#{option.transition || "default"}");
+    </script>
+</body>
+</html>

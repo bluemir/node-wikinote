@@ -1,9 +1,0 @@
-extends layout
-
-block content
-  article.view
-    - if(wikiData != null)
-        != wikiData
-    - else
-      h2
-        a(href="#{path}?edit") create this page
