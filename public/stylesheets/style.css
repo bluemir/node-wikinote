@@ -8,6 +8,7 @@
 	border-radius : 15px;
 }
 #wapper>header {
+	font-family : Helvetica, Arial, sans-serif;
 	padding-top : 10px;
 	display : fixed;
 	border-bottom : 1px solid gray;
@@ -207,6 +208,7 @@ article img {
 	max-width : 100%;
 }
 article {
+	font-family : Helvetica, Arial, sans-serif;
 	padding : 10px;
 }
 article a{
