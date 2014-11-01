@@ -1,3 +1,4 @@
+var express = require("express");
 var path = require("path");
 var WikiPath = require("./wikipath");
 var user = require("./userApp");
@@ -9,7 +10,7 @@ var ParamRouter = require("./paramRouter")
 exports.init = function(app){
 	app.use(preModule);
 
-	app.use(publicRouter);
+	//app.use(express.static(config.wikiDir));
 	app.use(staticRouter);
 
 	app.get("/", redirectToFront);
@@ -37,7 +38,7 @@ exports.init = function(app){
 
 	app.use(appRouter);
 
-	app.use(wikiView);
+	app.use(user.checkPermission(user.PERMISSION.READ), wikiApp.view);
 }
 
 
@@ -64,20 +65,6 @@ function staticRouter(req, res, next){
 	} else {
 		next();
 	}
-}
-var publicRegex = /^\/!public\/.*$/;
-function publicRouter(req, res, next){
-	if(publicRegex.test(req.path)){
-		res.sendFile(req.path.substring(2), {root : "./"});
-	} else {
-		next();
-	}
-}
-
-function wikiView(req, res, next){
-	user.checkPermission(user.PERMISSION.READ)(req, res, function(){
-		wikiApp.view(req, res, next);
-	});
 }
 
 function redirectToFront(req, res){

@@ -25,6 +25,8 @@ app.use(cookieParser());
 app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}));
 app.use(flash());
 
+app.use("/!public", express.static(__dirname + "/public"));
+
 routes.init(app);
 
 if ('development' == process.env.NODE_ENV || 'development') {
