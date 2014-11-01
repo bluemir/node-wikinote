@@ -26,9 +26,7 @@ function ParamRouter(){
 		_map.post[name] = makeChain(arguments);
 	}
 	function makeChain(args){
-		var chain = [].filter.call(args, function(elem, index){
-			return index != 0;
-		});
+		var chain = [].slice.call(args, 1);
 		return function(req, res, next){
 			var count = 0;
 			chain[count](req, res, onComplete);
