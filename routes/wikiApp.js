@@ -4,13 +4,24 @@ var WikiPath = require("./wikipath");
 var config = require("../config");
 var userApp = require("./userApp");
 
+var externalLinkRenderer = new marked.Renderer();
+var protocolRegexp = /^https?:\/\/.+$/;
+externalLinkRenderer.link = function(href, title, text){
+	var external = protocolRegexp.test(href);
+	return "<a href=\"" + href + "\"" + 
+		(external ? " target=\"_blank\"" : "")+
+		(title ? " title=\"" + title + "\"" : "") +
+		">" + text + "</a>";
+}
+
 marked.setOptions({
 	gfm: true,
 	tables: true,
 	breaks: false,
 	pedantic: false,
 	sanitize: false,
-	smartLists: true
+	smartLists: true,
+	renderer : externalLinkRenderer
 });
 
 var wikiApp = {};
