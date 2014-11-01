@@ -1,4 +1,9 @@
 @import url(font/wikinote_logo_font.css);
+/*	color : #04D3F5;
+	color : #3404F5;
+	color : #0853E8;
+	color : #049AFF;
+	color : #0416FF; */
 
 #wapper {
 	max-width : 800px;
@@ -8,17 +13,18 @@
 	border-radius : 15px;
 }
 #wapper>header {
+	font-family : Helvetica, Arial, sans-serif;
 	padding-top : 10px;
 	display : fixed;
 	border-bottom : 1px solid gray;
 	position : relative;
 }
 #wapper>header #wikiname {
+	color : #0416FF;
 	font-family: 'Alegreya Sans SC', sans-serif;
 	font-size : 48px;
 	font-weight : bold;
 	font-style : italic;
-	color : blue;
 	text-decoration : none;
 	padding : 10px;
 	letter-spacing : -2px;
@@ -26,13 +32,16 @@
 }
 /* login */
 #user {
+	font-weight : bold;
 	float: right;
 	margin : 10px;
 	position: absolute;
 	top: 0px;
 	right: 0px;
 }
-
+#user a, #user input{
+	font-weight : normal;
+}
 #user input[type="text"], #user input[type="password"]{
 	width : 100px;
 }
@@ -71,7 +80,6 @@
 	box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0px 1px 2px rgba(0,0,0,0.05);
 }
 
-
 header > div {
 	margin : 10px;
 }
@@ -89,7 +97,7 @@ header div > ul li{
 }
 
 header div > ul a{
-	color :blue;
+	color : #049AFF;
 	float: left;
 	padding: 3px 8px;
 	text-decoration: none;
@@ -197,21 +205,22 @@ header p.msg-dynamic.warn {
 }
 #breadcrumbs a {
 	text-decoration : none;
-	color : blue;
+	color : #049AFF;
 }
 #breadcrumbs a:hover {
 	text-decoration : underline;
 }
 /*common style*/
+article {
+	font-family : "Noto Sans CJK TC", "Noto Sans", Helvetica, Arial, sans-serif;
+	padding : 10px;
+}
 article img {
 	max-width : 100%;
 }
-article {
-	padding : 10px;
-}
 article a{
 	text-decoration : none;
-	color : blue;
+	color : #049AFF;
 }
 article a:hover {
 	text-decoration : underline;
@@ -222,17 +231,20 @@ article h1, article h2, article h3, article h4, article h5, article h6 {
 	margin-top : 1em;
 }
 article h1{	
-	margin-top : 0em;
+		margin-top : 0em;
 	font-size: 2.5em;
-	font-style : italic;
+	font-weight: bolder;
+	text-shadow : 1px 1px 5px #ccc;
 }
 article h2{
+	font-weight : bold;
 	font-size: 1.8em;
 	border-bottom : 1px solid gray;
 	padding-bottom : 5px;
 }
 article h3{
-	font-size: 1.5em;
+	font-weight : bold;
+	font-size : 1.5em;
 }
 article h4{
 	font-size: 1.3em;
