@@ -8,10 +8,13 @@ var config = require("../config");
 var ParamRouter = require("./paramRouter")
 
 exports.init = function(app){
-	app.use(preModule);
+	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
+		dotfiles: 'ignore',
+		index: false,
+		redirect: false
+	}));
 
-	//app.use(express.static(config.wikiDir));
-	app.use(staticRouter);
+	app.use(preModule);
 
 	app.get("/", redirectToFront);
 	app.get("/!logout", disableMenu, user.logout);
@@ -54,17 +57,6 @@ function preModule(req, res, next){
 	};
 	res.locals.wikiname = config.wikiname;
 	next();
-}
-
-var staticRegex = /^.*\.[^.\/]+$/;
-function staticRouter(req, res, next){
-	var filePath = path.join(config.wikiDir, decodeURIComponent(req.path));
-
-	if(staticRegex.test(req.path)){
-		res.sendfile(filePath);
-	} else {
-		next();
-	}
 }
 
 function redirectToFront(req, res){

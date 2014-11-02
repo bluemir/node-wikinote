@@ -26,7 +26,12 @@ exports.writeWiki = function(path, data, author, callback){
 	})
 }
 exports.fileList = function(path, callback){
-	fs.readdir(config.wikiDir + path.full, callback);
+	fs.readdir(config.wikiDir + path.toString(), function(err, files){
+		if(err) return callback(err);
+		callback(null, files.filter(function(filename){
+			return filename[0] != ".";
+		}));
+	});
 }
 exports.acceptFile  = function(srcPath, path, name, callback){
 	mkdirp(config.wikiDir + path.toString(), function(){
@@ -37,7 +42,7 @@ exports.acceptFile  = function(srcPath, path, name, callback){
 	});
 }
 exports.deleteFile = function(path, callback){
-	fs.unlink(config.wikiDir + path, function(e){
+	fs.unlink(config.wikiDir + path.toString(), function(e){
 		console.log(e);
 		fs.unlink(config.wikiDir + path + ".md", callback );
 	});
