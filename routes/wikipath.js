@@ -33,7 +33,7 @@ WikiPath.prototype.encode = function(){
 }
 function nomalizePath(path){
 	if(path[path.length -1] == "/"){
-		return path.substr(0, path.length -2);
+		return path.substr(0, path.length - 1);
 	}
 	else {
 		return path;
