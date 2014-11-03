@@ -4,6 +4,7 @@ var WikiPath = require("./wikipath");
 var user = require("./userApp");
 var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
+var loader = require("./loader");
 var config = require("../config");
 var ParamRouter = require("./paramRouter")
 
@@ -38,6 +39,8 @@ exports.init = function(app){
 	appRouter.post("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.upload);
 	appRouter.post("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.move);
 	appRouter.post("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteConfirm);
+
+	loader.initAction(appRouter);
 
 	app.use(appRouter);
 

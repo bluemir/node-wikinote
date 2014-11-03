@@ -405,9 +405,32 @@ article.history td.id {
 	text-align : center;
 }
 
+/*	color : #04D3F5;
+	color : #3404F5;
+	color : #0853E8;
+	color : #049AFF;
+	color : #0416FF; */
+#wapper>footer {
+	text-align : center;
+	border-top : 1px dotted gray;
+	font-size : 0.8em;
+}
+#wapper>footer p {
+	margin : 4px;
+}
+#wapper>footer a {
+	color : white;
+	padding : 2px 4px;
+	border-radius : 5px;
+	text-decoration : none;
+	background: #049AFF;
+}
 /*Print*/
 @media print {
-	header{
+	#wapper header{
+		display : none;
+	}
+	#wapper footer{
 		display : none;
 	}
 	#wapper {

@@ -7,13 +7,7 @@ var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
 
 exports.readWiki = function(path, callback){
-	fs.readFile(config.wikiDir + path.full + ".md", "utf8", function(err, data){
-		if(err){
-			callback(err);
-			return;
-		}
-		callback(null, data);
-	});
+	fs.readFile(config.wikiDir + path.full + ".md", "utf8", callback);
 }
 exports.writeWiki = function(path, data, author, callback){
 	mkdirp(config.wikiDir + path.toString(), function(){
@@ -24,6 +18,19 @@ exports.writeWiki = function(path, data, author, callback){
 				callback(err);
 		});
 	})
+}
+exports.readFile = function(path, callback){
+	fs.readFile(config.wikiDir + path.full, "utf8", callback);
+}
+exports.writeFile = function(path, data, author, callback){
+	mkdirp(config.wikiDir + path.path, function(){
+		fs.writeFile(config.wikiDir + path.full, data, "utf8", function(err){
+			if(!err)
+				backup("update", path.full, author, callback);
+			else 
+				callback(err);
+		});
+	});
 }
 exports.fileList = function(path, callback){
 	fs.readdir(config.wikiDir + path.toString(), function(err, files){

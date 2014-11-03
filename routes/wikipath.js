@@ -27,15 +27,25 @@ WikiPath.prototype.bread = function(){
 	}
 	return result;
 }
-
 WikiPath.prototype.encode = function(){
 	return encodeURIComponent(this.full);
+}
+WikiPath.prototype.append = function(name){
+	var path = new WikiPath("/");
+	path.full = this.full + "/" + name;
+	var index = path.full.lastIndexOf("/");
+	if(index == 0){
+		path.path = "/";
+	} else {
+		path.path = path.full.substr(0, index);
+	}
+	path.name = path.full.substr(index + 1);
+	return path;
 }
 function nomalizePath(path){
 	if(path[path.length -1] == "/"){
 		return path.substr(0, path.length - 1);
-	}
-	else {
+	} else {
 		return path;
 	}
 }

@@ -3,6 +3,7 @@ var marked = require("marked");
 var WikiPath = require("./wikipath");
 var config = require("../config");
 var userApp = require("./userApp");
+var loader = require("./loader");
 
 var externalLinkRenderer = new marked.Renderer();
 var protocolRegexp = /^https?:\/\/.+$/;
@@ -34,7 +35,9 @@ wikiApp.view = function(req, res){
 		} else {
 			data = marked(data);
 		}
-		res.render("view", {title : "Wiki Note", wikiData: data});
+		loader.postArticle(req.wikiPath, req.session.user, function(err, html){
+			res.render("view", {title : "Wiki Note", wikiData: data, pluginsData : html});
+		});
 	});
 }
 wikiApp.edit = function(req, res){
