@@ -1,0 +1,47 @@
+#comment textarea {
+	box-sizing : border-box;
+	width : 100%;
+	resize : vertical;
+}
+#comment-buttons {
+	text-align :right;
+}
+#comment form {
+	border-bottom : 1px solid gray;
+	padding-bottom : 10px;
+}
+#comment article {
+	margin : 0px;
+	border-bottom : 1px solid gray;
+}
+#comment article:after {
+	display : block;
+	content :"";
+	clear : both;
+}
+#comment article div {
+	vertical-align : top;
+}
+#comment article .author {
+	width : 80px;
+	border-right : 1px dotted gray;
+	float : left;
+}
+#comment article .author.header {
+}
+#comment article .contents {
+	margin-left : 90px;
+	margin-right : 120px;
+}
+#comment article .time {
+	font-size : 0.8em;
+	float : right;
+	width : 100px;
+	top : 0px;
+	border-left : 1px dotted gray;
+	padding-left : 10px;
+}
+#comment article .time.header {
+	font-size : 1em;
+}
+

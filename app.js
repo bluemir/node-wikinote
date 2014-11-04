@@ -14,7 +14,7 @@ var swig = require("swig");
 var app = express();
 app.engine("html", swig.renderFile)
 
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 2000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 

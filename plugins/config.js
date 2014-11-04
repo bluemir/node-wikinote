@@ -18,5 +18,8 @@ module.exports = {
 		},
 		post : {
 		}
+	},
+	assets : {
+		comment : require("./comment").assets()
 	}
 }

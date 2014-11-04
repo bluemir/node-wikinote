@@ -73,3 +73,14 @@ ActionInterface.prototype.redirect = function(){
 	var res = this._.res;
 	return res.redirect.apply(res, arguments);
 }
+ActionInterface.prototype.flash = function(){
+	var req = this._.req;
+	return req.flash.apply(req, arguments);
+}
+
+exports.assets = function(app, express){
+	for(var name in plugins.assets){
+		app.use("/!plugins/" + name, express.static(plugins.assets[name]));
+	}
+}
+

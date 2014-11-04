@@ -9,13 +9,15 @@ var config = require("../config");
 var ParamRouter = require("./paramRouter")
 
 exports.init = function(app){
+	loader.assets(app, express);
+
+	app.use(preModule);
+
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
 		index: false,
 		redirect: false
 	}));
-
-	app.use(preModule);
 
 	app.get("/", redirectToFront);
 	app.get("/!logout", disableMenu, user.logout);
@@ -46,7 +48,6 @@ exports.init = function(app){
 
 	app.use(user.checkPermission(user.PERMISSION.READ), wikiApp.view);
 }
-
 
 function preModule(req, res, next){
 	req.wikiPath = new WikiPath(req.path);
