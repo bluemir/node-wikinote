@@ -25,7 +25,7 @@
 		}
 	}, false);
 
-	var textarea = document.getElementsByTagName("textarea")[0];
+	var textarea = document.querySelector(".edit textarea");
 	if(textarea){
 		textarea.addEventListener("keydown", function(e) {
 			if(e.keyCode == "\t".charCodeAt(0)){
