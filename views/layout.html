@@ -37,7 +37,9 @@
                             <li><a href="{{ path.toString() }}?move">Move</a></li>
                             <li><a href="{{ path.toString() }}?find">Find</a></li>
                             <li><a href="{{ path.toString() }}?history">Histroy</a></li>
-                            <li><a href="{{ path.toString() }}?presentation">Presentation</a></li>
+							{% for menu in menus %}
+							<li><a href="{{ path.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
+							{% endfor %}
                             <li class="seperater"></li>
                             <li><a href="/!signup?redirect={{ path.encode() }}">SignUp</a></li>
                         </ul>

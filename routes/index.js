@@ -12,7 +12,7 @@ exports.init = function(app){
 	loader.assets(app, express);
 
 	app.use(preModule);
-
+	
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
 		index: false,
@@ -32,7 +32,6 @@ exports.init = function(app){
 	appRouter.get("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.edit);
 	appRouter.get("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.attach);
 	appRouter.get("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.moveForm);
-	appRouter.get("presentation", user.checkPermission(user.PERMISSION.READ), wikiApp.presentation);
 	appRouter.get("find", user.checkPermission(user.PERMISSION.READ), wikiApp.find);
 	appRouter.get("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteForm);
 	appRouter.get("history", user.checkPermission(user.PERMISSION.READ), wikiApp.history);
@@ -59,6 +58,7 @@ function preModule(req, res, next){
 		info : req.flash("info"),
 		warn : req.flash('warn')
 	};
+	res.locals.menus = loader.menus();
 	res.locals.wikiname = config.wikiname;
 	next();
 }

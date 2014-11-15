@@ -5,7 +5,7 @@ module.exports = {
 	],
 	action : {
 		get : {
-			//presention : require('./presention')
+			"@presentation" : require('./presentation')
 		},
 		post : {
 			"$comment" : require("./comment").onComment

@@ -4,6 +4,12 @@ var userModule = require("../app/user");
 
 var plugins = require("../plugins/config.js");
 
+var menus = [];
+
+exports.menus = function(){
+	return menus;
+}
+
 exports.postArticle = function(wikipath, user, callback){
 	async.map(plugins.postArticle, process, function(err, results){
 		var html = results.reduce(function(prev, curr){
@@ -20,17 +26,23 @@ exports.postArticle = function(wikipath, user, callback){
 exports.initAction = function(paramRouter){
 	var action = plugins.action;
 	for(var name in action.get){
-		if(name[0] == "$"){
+		if (name[0] == "$"){
 			//ignore menu
 			paramRouter.get(name.substr(1), actionHandler(action.get[name]));
+		} else if (name[0] == "@") {
+			menus.push(name.substr(1));
+			paramRouter.get(name.substr(1), action.get[name](RawActionInterface));
 		} else {
+			menus.push(name);
 			paramRouter.get(name, actionHandler(action.get[name]));
 		}
 	}
 	for(var name in action.post){
-		if(name[0] == "$"){
+		if (name[0] == "$"){
 			//ignore menu
 			paramRouter.post(name.substr(1), actionHandler(action.post[name]));
+		} else if (name[0] == "@") {
+			paramRouter.post(name.substr(1), action.post[name](RawActionInterface));
 		} else {
 			paramRouter.post(name, actionHandler(action.post[name]));
 		}
@@ -87,5 +99,15 @@ exports.assets = function(app, express){
 	for(var name in plugins.assets){
 		app.use("/!plugins/" + name, express.static(plugins.assets[name]));
 	}
+}
+
+RawActionInterface = function(req, res){
+	return {
+		path : req.wikiPath,
+		user : req.session.user
+	}
+}
+RawActionInterface.readFile = function(path, callback){
+	wikiFS.readFile(path, callback);
 }
 
