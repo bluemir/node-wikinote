@@ -355,7 +355,24 @@ article.view .right {
 article.view .center {
 	text-align : center;
 }
-
+article.view ol.footnotes:before {
+	display : block;
+	background : #ccc;
+	content : "";
+	height : 2px;
+	margin-bottom : 5px;
+	margin-left : -20px;
+	width : 100px;
+	margin-left : -2em;
+}
+article.view ol.footnotes {
+	margin : 0px;
+	padding-left : 2em;
+	font-size : 0.8em;
+}
+article.view ol.footnotes p {
+	margin : 0px;
+}
 /*edit*/
 article.edit textarea {
 	tab-size : 4;
