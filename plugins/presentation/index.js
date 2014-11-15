@@ -11,7 +11,7 @@ module.exports = function(wikinote){
 
 	app.get("*", function(req, res) {
 		var note = wikinote(req, res);
-		wikinote.readFile(req.wikiPath, function(err, data){
+		wikinote.readFile(note.path, function(err, data){
 			var option = {};
 			try {
 				option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);

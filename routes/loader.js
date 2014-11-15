@@ -28,31 +28,18 @@ exports.initAction = function(paramRouter){
 	for(var name in action.get){
 		if (name[0] == "$"){
 			//ignore menu
-			paramRouter.get(name.substr(1), actionHandler(action.get[name]));
-		} else if (name[0] == "@") {
-			menus.push(name.substr(1));
-			paramRouter.get(name.substr(1), action.get[name](RawActionInterface));
+			paramRouter.get(name.substr(1), action.get[name](ActionInterface));
 		} else {
 			menus.push(name);
-			paramRouter.get(name, actionHandler(action.get[name]));
+			paramRouter.get(name, action.get[name](ActionInterface));
 		}
 	}
 	for(var name in action.post){
 		if (name[0] == "$"){
 			//ignore menu
-			paramRouter.post(name.substr(1), actionHandler(action.post[name]));
-		} else if (name[0] == "@") {
-			paramRouter.post(name.substr(1), action.post[name](RawActionInterface));
+			paramRouter.post(name.substr(1), action.post[name](ActionInterface));
 		} else {
-			paramRouter.post(name, actionHandler(action.post[name]));
-		}
-	}
-
-	function actionHandler(handler){
-		return function(req, res, next){
-			var actionInterface = new ActionInterface(req, res, next);
-
-			handler(actionInterface);
+			paramRouter.post(name, action.post[name](ActionInterface));
 		}
 	}
 }
@@ -72,42 +59,21 @@ PluginInterface.prototype.hasPermission = function(permission, callback){
 	userModule.hasPermission(this.user ? this.user.id : null, callback);
 }
 
-ActionInterface.prototype = new PluginInterface();
-function ActionInterface(req, res, next){
-	this.path = req.wikiPath;
-	this.user = req.session.user;
-	this._ = {
-		req : req,
-		res : res,
-		next : next
-	};
-}
-ActionInterface.prototype.param = function(){
-	var req = this._.req;
-	return req.param.apply(req, arguments);
-}
-ActionInterface.prototype.redirect = function(){
-	var res = this._.res;
-	return res.redirect.apply(res, arguments);
-}
-ActionInterface.prototype.flash = function(){
-	var req = this._.req;
-	return req.flash.apply(req, arguments);
-}
-
 exports.assets = function(app, express){
 	for(var name in plugins.assets){
 		app.use("/!plugins/" + name, express.static(plugins.assets[name]));
 	}
 }
 
-RawActionInterface = function(req, res){
+ActionInterface = function(req, res){
 	return {
 		path : req.wikiPath,
 		user : req.session.user
 	}
 }
-RawActionInterface.readFile = function(path, callback){
+ActionInterface.readFile = function(path, callback){
 	wikiFS.readFile(path, callback);
 }
-
+ActionInterface.writeFile = function(path, data, user, callback){
+	wikiFS.writeFile(path, data, user, callback);
+}

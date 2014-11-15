@@ -36,58 +36,62 @@ function parseData(data){
 	}).filter(function(e){return e !== null});
 }
 
-exports.onComment = function(wikinote){
-	var commentPath = wikinote.path.append(".comments");
+exports.writeComment = function(wikinote){
+	return function(req, res){
+		var note = wikinote(req, res);
+		
+		var commentPath = note.path.append(".comments");
 
-	var contents = wikinote.param("contents");
-	var time = new Date().getTime();
-	var author = wikinote.user ? wikinote.user.id : wikinote.param("author").trim();
+		var contents = req.param("contents");
+		var time = new Date().getTime();
+		var author = note.user ? note.user.id : req.param("author").trim();
 
-	if(!author || author == ""){
-		wikinote.flash("warn", "Please login or write down your name");
-		wikinote.redirect(wikinote.path);
-
-		return;
-	}
-	if(config.recaptcha && (config.requestToUser || !wikinote.user)){
-		captchaVerify(wikinote, function(err, result){
-			if(err) {
-				wikinote.flash("warn", "something wrong with reCaptca");
-				wikinote.redirect(wikinote.path);
-				return;
-			}
-			if(result) {
-				appendComment();
-			} else {
-				wikinote.flash("warn", "checkout captcha string");
-				wikinote.redirect(wikinote.path);
-			}
-		});
-	} else {
-		appendComment();
-	}
-
-	function appendComment(){
-		wikinote.readFile(commentPath, function(err, data){
-			if(err && err.code != 'ENOENT'){
-				return callback(err);
-			}
-
-			data = data || "";
-			data += "\x02" + time + ":" + author + ":" + contents + "\r\n\x03";
-
-			wikinote.writeFile(commentPath, data, function(){
-				wikinote.redirect(wikinote.path);
+		if(!author || author == "") {
+			req.flash("warn", "Please login or write down your name");
+			res.redirect(note.path);
+			return;
+		}
+		if(config.recaptcha && (config.requestToUser || !note.user)){
+			captchaVerify(req, function(err, result){
+				if(err) {
+					req.flash("warn", "something wrong with reCaptca");
+					res.redirect(note.path);
+					return;
+				}
+				if(result) {
+					appendComment();
+				} else {
+					req.flash("warn", "checkout captcha string");
+					res.redirect(note.path);
+				}
 			});
-		});
+		} else {
+			appendComment();
+		}
+
+		function appendComment(){
+			wikinote.readFile(commentPath, function(err, data){
+				if(err && err.code != 'ENOENT'){
+					return callback(err);
+				}
+
+				data = data || "";
+				data += "\x02" + time + ":" + author + ":" + contents + "\r\n\x03";
+
+				wikinote.writeFile(commentPath, data, note.user, function(){
+					res.redirect(note.path);
+				});
+			});
+		}
 	}
 }
-function captchaVerify(wikinote, callback){
+
+function captchaVerify(_req, callback){
 	var reqData = "";
 	reqData += "privatekey=" + config.recaptcha.privateKey + "&";
-	reqData += "remoteip=" + wikinote._.req.ip + "&";
-	reqData += "challenge=" + wikinote.param("recaptcha_challenge_field") + "&";
-	reqData += "response=" + wikinote.param("recaptcha_response_field");
+	reqData += "remoteip=" + _req.ip + "&";
+	reqData += "challenge=" + _req.param("recaptcha_challenge_field") + "&";
+	reqData += "response=" + _req.param("recaptcha_response_field");
 
 	var req = https.request({
 		host : "www.google.com",

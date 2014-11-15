@@ -5,10 +5,10 @@ module.exports = {
 	],
 	action : {
 		get : {
-			"@presentation" : require('./presentation')
+			"presentation" : require('./presentation')
 		},
 		post : {
-			"$comment" : require("./comment").onComment
+			"comment" : require("./comment").writeComment
 		}
 	},
 	globalAction : {
