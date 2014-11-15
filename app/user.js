@@ -28,7 +28,7 @@ exports.register = function(id, password, email, callback){
 			id : id,
 			password : hash(password),
 			email : email,
-			permission : ["read"]
+			permission : config.security.defaultPermission || ["read"]
 		}, function(err, data){
 			callback(null, data);
 		});
@@ -45,9 +45,26 @@ exports.hasPermission = function(id, permission, callback){
 	db.users.findOne({
 		id : id,
 		permission : permission
-	}, callback);
+	}, function(err, ok){
+		if(err) return callback(err);
+
+		if(ok) return callback(null, true);
+
+		if(config.security && config.security.defaultPermission) {
+			return callback(null, checkDefault());
+		} else {
+			return callback(null, false);
+		}
+
+		function checkDefault(){
+			return config.security.defaultPermission.some(function(elem){
+				return elem == permission;
+			});
+		}
+	});
 }
 
 function hash(data){
 	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");
 }
+

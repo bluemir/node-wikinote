@@ -51,22 +51,16 @@ exports.signup = function(req, res){
 
 exports.PERMISSION = user.PERMISSION;
 function hasPermission(_user, permission, callback){
-	if(!config.security) return next();
+	if(!config.security) return callback();
 
-	if(_user){
-		user.hasPermission(_user.id, permission, function(err, user){
-			if(err || !user){
-				return callback(false);
-			} else {
-				return callback(true);
-			}
-		});
-	} else if(checkDefault(permission)) {
-		return callback(true);
-	} else {
-		return callback(false);
-	}
-}
+	user.hasPermission(_user ? _user.id : null, permission, function(err, ok){
+		if(err || !ok){
+			return callback(false);
+		} else {
+			return callback(true);
+		}
+	});
+} 
 
 exports.checkPermission = function(permission){
 	return function checkPermission(req, res, next){

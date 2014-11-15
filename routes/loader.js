@@ -1,5 +1,6 @@
 var async = require("async");
 var wikiFS = require("../app/wikiFS");
+var userModule = require("../app/user");
 
 var plugins = require("../plugins/config.js");
 
@@ -15,6 +16,7 @@ exports.postArticle = function(wikipath, user, callback){
 		plugin(new PluginInterface(wikipath, user), callback);
 	}
 }
+
 exports.initAction = function(paramRouter){
 	var action = plugins.action;
 	for(var name in action.get){
@@ -53,6 +55,9 @@ PluginInterface.prototype.readFile = function(path, callback){
 }
 PluginInterface.prototype.writeFile = function(path, data, callback){
 	wikiFS.writeFile(path, data, this.user, callback);
+}
+PluginInterface.prototype.hasPermission = function(permission, callback){
+	userModule.hasPermission(this.user ? this.user.id : null, callback);
 }
 
 ActionInterface.prototype = new PluginInterface();

@@ -5,9 +5,9 @@ var config = require("../config");
 var userApp = require("./userApp");
 var loader = require("./loader");
 
-var externalLinkRenderer = new marked.Renderer();
+var customRender = new marked.Renderer();
 var protocolRegexp = /^https?:\/\/.+$/;
-externalLinkRenderer.link = function(href, title, text){
+customRender.link = function(href, title, text){
 	var external = protocolRegexp.test(href);
 	return "<a href=\"" + href + "\"" + 
 		(external ? " target=\"_blank\"" : "")+
@@ -22,7 +22,8 @@ marked.setOptions({
 	pedantic: false,
 	sanitize: false,
 	smartLists: true,
-	renderer : externalLinkRenderer
+	footnotes : true,
+	renderer : customRender 
 });
 
 var wikiApp = {};
