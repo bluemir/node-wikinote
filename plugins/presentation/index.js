@@ -11,13 +11,13 @@ module.exports = function(wikinote){
 
 	app.get("*", function(req, res) {
 		var note = wikinote(req, res);
-		wikinote.readFile(note.path, function(err, data){
+		wikinote.readWiki(note.path, function(err, data){
 			var option = {};
 			try {
 				option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
 			} catch (e){
 			}
-			res.render("presentation", {title : "Wiki Note::Presentation", wikiData: data, option : option});
+			res.render("presentation", {title : "Wiki Note::Presentation", wikidata: data, option : option});
 		});
 	});
 	return app;

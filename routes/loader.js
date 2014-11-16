@@ -77,3 +77,7 @@ ActionInterface.readFile = function(path, callback){
 ActionInterface.writeFile = function(path, data, user, callback){
 	wikiFS.writeFile(path, data, user, callback);
 }
+ActionInterface.readWiki = function(path, callback){
+	wikiFS.readWiki(path, callback);
+}
+
