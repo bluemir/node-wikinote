@@ -95,6 +95,17 @@ wikiApp.find = function(req, res){
 		res.render("find", {title : "Wiki Note::Find", result : data});
 	});
 }
+wikiApp.search = function(req, res){
+	var word = req.param("q");
+	if(!word){
+		res.render("search", {title : "Wiki Note::Search", result : null});
+		return;
+	}
+	wikiFS.find("", word, function(e, data){
+		res.render("search", {title : "Wiki Note::Search", result :data, word : word});
+	});
+
+}
 wikiApp.deleteForm = function(req, res){
 	res.render("delete", {title : "Wiki Note::Delete"});
 }

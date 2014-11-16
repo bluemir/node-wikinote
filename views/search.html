@@ -2,22 +2,15 @@
 
 {% block contents %}
 <article class="find">
-    {% if path.toString() == "" %}
-    <p>전체 경로에서 검색합니다.</p>
-    {% else %}
-    <p>{{ path.name }}의 하위 페이지를 검색합니다.</p>
-    <p>만약 모든 페이지를 검색하고 싶다면 <a href="/!search">전체검색</a>를 누르세요</p>
-    {% endif %}
+	<h1>Search</h1>
+    <p>여기서 wikinote의 내용을 검색할수 있습니다.</p>
     <form>
-        <input type="search" name="find"/>
+        <input type="search" name="q"/>
         <input type="submit" value="검색"/>
     </form>
+	{% if word %}
+    <h2>검색결과</h2>
     {% if result != null %}
-    {% if path == "" %}
-    <h2>전체 페이지 검색결과</h2>
-    {% else %}
-    <h2>하위 페이지 검색결과</h2>
-    {% endif %}
     <ul>
         {% for key, value in result %}
         <li>
@@ -35,6 +28,9 @@
         </li>
         {% endfor %}
     </ul>
+	{% else %}
+	<p>검색결과가 없습니다.</p>
     {% endif %}
+	{% endif %}
 </article>
 {% endblock %}

@@ -35,12 +35,12 @@
                             <li><a href="{{ path.toString() }}?delete">Delete</a></li>
                             <li><a href="{{ path.toString() }}?attach">Attach</a></li>
                             <li><a href="{{ path.toString() }}?move">Move</a></li>
-                            <li><a href="{{ path.toString() }}?find">Find</a></li>
                             <li><a href="{{ path.toString() }}?history">Histroy</a></li>
 							{% for menu in menus %}
 							<li><a href="{{ path.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
 							{% endfor %}
                             <li class="seperater"></li>
+                            <li><a href="/!search">Search</a></li>
                             <li><a href="/!signup?redirect={{ path.encode() }}">SignUp</a></li>
                         </ul>
                     </li>

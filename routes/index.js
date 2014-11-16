@@ -24,6 +24,7 @@ exports.init = function(app){
 	app.get("/!signup", disableMenu, user.signupForm);
 	app.post("/!login", disableMenu, user.login);
 	app.post("/!signup", disableMenu, user.signup);
+	app.get("/!search", disableMenu, wikiApp.search);
 
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
 
@@ -32,7 +33,6 @@ exports.init = function(app){
 	appRouter.get("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.edit);
 	appRouter.get("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.attach);
 	appRouter.get("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.moveForm);
-	appRouter.get("find", user.checkPermission(user.PERMISSION.READ), wikiApp.find);
 	appRouter.get("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteForm);
 	appRouter.get("history", user.checkPermission(user.PERMISSION.READ), wikiApp.history);
 
@@ -64,11 +64,7 @@ function preModule(req, res, next){
 }
 
 function redirectToFront(req, res){
-	if("find" in req.query){
-		wikiApp.find(req, res);
-	} else {
-		res.redirect("/" + config.frontPage);
-	}
+	res.redirect("/" + config.frontPage);
 }
 
 function disableMenu(req, res, next) {
