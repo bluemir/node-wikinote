@@ -2,7 +2,7 @@ var fs = require("fs");
 var crypto = require("crypto");
 var env = process.env;
 
-var DEFAULT_HASH = "deXsLL1gakVqN6WvrTM6bK9uto34M6ONwIiBEBFI0rdJmx5N4WJGyNX9i/auRh8V5rMLPLg3KZkyxDc3oGExMA==";
+var DEFAULT_HASH = "n3rzm6rLUIZ0GKpMC+XS1uBZ1aoRVT+iyKN0TL3HtClokNV6lhRW0MjhKNF02JhlXN9pWQs+kYp2hh9md0QXRA==";
 
 loadConfing();
 

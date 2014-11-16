@@ -10,11 +10,12 @@ var session = require('express-session');
 var errorHandler = require('errorhandler');
 var routes = require('./routes');
 var swig = require("swig");
+var config = require("./config")
 
 var app = express();
 app.engine("html", swig.renderFile)
 
-app.set('port', process.env.PORT || 2000);
+app.set('port', process.env.PORT || config.PORT || 4000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 

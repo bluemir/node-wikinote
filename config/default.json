@@ -1,4 +1,5 @@
 {
+	"PORT" : 4000,
     "frontPage": "FrontPage",
     "wikiDir": "~/wiki",
     "autoBackup": false,
