@@ -1,5 +1,6 @@
 var express = require("express");
 var swig = require("swig");
+var path = require("path");
 
 module.exports = function(wikinote){
 	var app = express();
@@ -23,4 +24,7 @@ module.exports = function(wikinote){
 	return app;
 }
 
+module.exports.assets = function(){
+	return path.join(__dirname, "assets");
+}
 

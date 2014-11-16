@@ -20,6 +20,7 @@ module.exports = {
 		}
 	},
 	assets : {
-		comment : require("./comment").assets()
+		comment : require("./comment").assets(),
+		presentation : require("./presentation").assets()
 	}
 }

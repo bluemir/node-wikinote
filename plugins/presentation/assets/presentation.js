@@ -14,18 +14,18 @@ function init(theme, transition){
 		//|| Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
 		// Optional libraries used to extend on reveal.js
 		dependencies: [ { 
-				src: '/!public/lib/reveal.js/lib/js/classList.js', 
+				src: '/!plugins/presentation/reveal.js/lib/js/classList.js', 
 				condition: function() { return !document.body.classList; } 
 			}, { 
-				src: '/!public/lib/reveal.js/plugin/highlight/highlight.js', 
+				src: '/!plugins/presentation/reveal.js/plugin/highlight/highlight.js', 
 				async: true, 
 				callback: function() { hljs.initHighlightingOnLoad(); }
 			}, { 
-				src: '/!public/lib/reveal.js/plugin/zoom-js/zoom.js', 
+				src: '/!plugins/presentation/reveal.js/plugin/zoom-js/zoom.js', 
 				async: true,
 				condition: function() { return !!document.body.classList; }
 			}, { 
-				src: '/!public/lib/reveal.js/plugin/notes/notes.js', 
+				src: '/!plugins/presentation/reveal.js/plugin/notes/notes.js', 
 				async: true, condition: function() { return !!document.body.classList; }
 			}
 		]
