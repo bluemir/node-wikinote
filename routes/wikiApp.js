@@ -31,7 +31,7 @@ var wikiApp = {};
 wikiApp.view = function(req, res){
 	wikiFS.readWiki(req.wikiPath, function(err, data){
 		if(err) {
-			console.log(err);
+			res.status(404);
 			data = null;
 		} else {
 			data = marked(data);

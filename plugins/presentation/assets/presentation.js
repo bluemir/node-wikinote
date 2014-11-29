@@ -13,20 +13,33 @@ function init(theme, transition){
 		transition: transition,
 		//|| Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
 		// Optional libraries used to extend on reveal.js
-		dependencies: [ { 
-				src: '/!plugins/presentation/reveal.js/lib/js/classList.js', 
-				condition: function() { return !document.body.classList; } 
-			}, { 
-				src: '/!plugins/presentation/reveal.js/plugin/highlight/highlight.js', 
-				async: true, 
+		dependencies: [ {
+				src: '/!plugins/presentation/reveal.js/lib/js/classList.js',
+				condition: function() { return !document.body.classList; }
+			}, {
+				src: '/!plugins/presentation/reveal.js/plugin/markdown/marked.js',
+				condition: function() { return !!document.querySelector( '[data-markdown]' ); }
+			}, {
+				src: '/!plugins/presentation/reveal.js/plugin/markdown/markdown.js',
+				condition: function() { return !!document.querySelector( '[data-markdown]' ); }
+			}, {
+				src: '/!plugins/presentation/reveal.js/plugin/highlight/highlight.js',
+				async: true,
 				callback: function() { hljs.initHighlightingOnLoad(); }
-			}, { 
-				src: '/!plugins/presentation/reveal.js/plugin/zoom-js/zoom.js', 
+			}, {
+				src: '/!plugins/presentation/reveal.js/plugin/zoom-js/zoom.js',
 				async: true,
 				condition: function() { return !!document.body.classList; }
-			}, { 
-				src: '/!plugins/presentation/reveal.js/plugin/notes/notes.js', 
+			}, {
+				src: '/!plugins/presentation/reveal.js/plugin/notes/notes.js',
 				async: true, condition: function() { return !!document.body.classList; }
+			}, {
+				src: '/!plugins/presentation/reveal.js/plugin/math/math.js',
+				async: true
+			}, {
+				src: 'plugin/notes/notes.js',
+				async: true,
+				condition: function() { return !!document.body.classList; }
 			}
 		]
 	});
