@@ -12,8 +12,8 @@
             <a id="wikiname" href="/">{{ wikiname }}</a>
             {% if config.security %}
             <div id="user">
-                {% if session.user.id %}
-                {{ session.user.id }}
+                {% if user.id %}
+                {{ user.id }}
                 <a href="/!logout?redirect={{ path.encode() }}">logout</a>
                 {% else %}
                 <form action="/!login?redirect={{ path.encode() }}" method="post">
@@ -52,13 +52,15 @@
                 </div>
             </div>
             {% endif %}
-            {% if msg.warn.length != 0 %}
-            <p class="msg-warn">{{ msg.warn }}</p>
-            {% elseif msg.info.length != 0 %}
-            <p class="msg-info">{{ msg.info }}</p>
-            {% else %}
-            <p class="msg-dynamic" id="message"></p>
+            {% set warn = utils.flash("warn") %}
+            {% if warn != "" %}
+            <p class="msg-warn">{{ warn }}</p>
             {% endif %}
+            {% set info = utils.flash("info") %}
+            {% if info != "" %}
+            <p class="msg-info">{{ info }}</p>
+            {% endif %}
+            <p class="msg-dynamic" id="message"></p>
         </header>
         {% block contents %}
         {% endblock %}

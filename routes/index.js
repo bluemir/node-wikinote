@@ -12,14 +12,7 @@ exports.init = function(app){
 	loader.assets(app, express);
 
 	app.use(preModule);
-
 	app.use(user.middleware);
-
-	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
-		dotfiles: 'ignore',
-		index: false,
-		redirect: false
-	}));
 
 	app.get("/", redirectToFront);
 	app.get("/!logout", disableMenu, user.logout);
@@ -27,6 +20,12 @@ exports.init = function(app){
 	app.post("/!login", disableMenu, user.login);
 	app.post("/!signup", disableMenu, user.signup);
 	app.get("/!search", disableMenu, wikiApp.search);
+
+	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
+		dotfiles: 'ignore',
+		index: false,
+		redirect: false
+	}));
 
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
 
@@ -55,11 +54,9 @@ function preModule(req, res, next){
 	res.locals.path = req.wikiPath;
 	res.locals.notename = req.wikiPath.name;
 	res.locals.config = config;
-	res.locals.session = req.session;
-	res.locals.msg = {
-		info : req.flash("info"),
-		warn : req.flash('warn')
-	};
+	res.locals.utils = {
+		flash : req.flash.bind(req)
+	}
 	res.locals.menus = loader.menus();
 	res.locals.wikiname = config.wikiname;
 	next();

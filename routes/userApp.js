@@ -9,6 +9,8 @@ exports.login = function(req, res){
 	req.user.authenticate(id, password, function(err){
 		if(err) {
 			req.flash('warn', 'Login Fail! Check your Id or Password');
+		} else {
+			req.flash("info", "Welcome " + req.param("id") + "!");
 		}
 		res.redirect(decodeURIComponent(req.param("redirect")));
 	});
@@ -53,6 +55,7 @@ exports.middleware = function(req, res, next){
 	req.user = user.bind(req.session.user, function(value){
 		req.session.user = value;
 	});
+	res.locals.user = req.user;
 	next();
 }
 exports.checkPermission = function(permission){
