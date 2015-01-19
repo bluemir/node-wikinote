@@ -6,20 +6,15 @@ exports.login = function(req, res){
 	var id = req.param("id");
 	var password = req.param("password");
 
-	user.authenticate(id, password, function(err, user){
+	req.user.authenticate(id, password, function(err){
 		if(err) {
-			throw err;
-		}
-		if(!user) {
 			req.flash('warn', 'Login Fail! Check your Id or Password');
-		} else {
-			req.session.user = user;
 		}
 		res.redirect(decodeURIComponent(req.param("redirect")));
-	})
+	});
 }
 exports.logout = function(req, res){
-	delete req.session.user;
+	req.user.logout();
 	req.flash('info', 'Logout successfully!');
 	res.redirect(decodeURIComponent(req.param("redirect")));
 }
@@ -37,34 +32,35 @@ exports.signup = function(req, res){
 		res.redirect("!signup?redirect=" + req.param("redirect"));
 		return;
 	}
-	user.register(req.param("id"), req.param("password"), req.param("email"), function(err, user){
+	req.user.register(req.param("id"), req.param("password"), req.param("email"), function(err){
 		if(err){
 			req.flash("warn", "already registered id. please try another one.");
 			res.redirect("!signup?redirect=" + req.param("redirect"));
 			return;
 		}
 		req.flash("info", "Welcome " + req.param("id") + "!");
-		req.session.user = user;
 		res.redirect(decodeURIComponent(req.param("redirect")));
 	});
 }
 
+
 exports.PERMISSION = user.PERMISSION;
-function hasPermission(_user, permission, callback){
-	if(!config.security) return callback();
 
-	user.hasPermission(_user ? _user.id : null, permission, function(err, ok){
-		if(err || !ok){
-			return callback(false);
-		} else {
-			return callback(true);
-		}
+exports.middleware = function(req, res, next){
+	if(!req.session.user){
+		req.session.user = {};
+	}
+	req.user = user.bind(req.session.user, function(value){
+		req.session.user = value;
 	});
-} 
-
+	next();
+}
 exports.checkPermission = function(permission){
 	return function checkPermission(req, res, next){
-		hasPermission(req.session.user, permission, function(has){
+		req.user.hasPermission(permission, function(err, has){
+			if(err) {
+				throw err;
+			}
 			if(has){
 				next();
 			} else {
@@ -73,9 +69,13 @@ exports.checkPermission = function(permission){
 		});
 	}
 }
+
 exports.checkApiPermission = function(permission){
 	return function checkPermission(req, res, next){
-		hasPermission(req.session.user, permission, function(has){
+		req.user.hasPermission(permission, function(err, has){
+			if(err){
+				throw err;
+			}
 			if(has){
 				next();
 			} else {
@@ -83,10 +83,4 @@ exports.checkApiPermission = function(permission){
 			}
 		});
 	}
-}
-
-function checkDefault(permission){
-	return config.security.defaultPermission.some(function(elem){
-		return elem == permission;
-	});
 }

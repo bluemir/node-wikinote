@@ -9,41 +9,45 @@ var db = {
 
 db.users.ensureIndex({fieldName : "id", unique : true});
 
-exports.authenticate = function(id, password, callback){
-	db.users.findOne({id : id}, function(err, user){
-		if(err) return callback(err);
-		if(user && user.password == hash(password)){
-			callback(null, user);
-		} else {
-			callback();
-		}
-	});
-}
-
-exports.register = function(id, password, email, callback){
-	db.users.findOne({id : id}, function(err, user){
-		if(err) return callback(err);
-		if(user) return callback("exsit id");
-		db.users.insert({
-			id : id,
-			password : hash(password),
-			email : email,
-			permission : config.security.defaultPermission || ["read"]
-		}, function(err, data){
-			callback(null, data);
-		});
-	});
-}
-
 exports.PERMISSION = {
 	READ : "read",
 	WRITE : "write",
 	ADMIN : "admin",
 };
 
-exports.hasPermission = function(id, permission, callback){
-	db.users.findOne({
+var User = {};
+
+User.authenticate = function(id, password, callback){
+	var that = this;
+	db.users.findOne({id : id, password: hash(password)}, function(err, user){
+		if(err) return callback(err);
+		if(!user) return callback(new Error("authentication fail!"));
+
+		that.store = user;
+
+		callback();
+	});
+}
+User.logout = function(){
+	this.store = {};
+}
+User.register = function(id, password, email, callback){
+	var that = this;
+	db.users.insert({
 		id : id,
+		password : hash(password),
+		email : email,
+		permission : config.security.defaultPermission || ["read"]
+	}, function(err, data){
+		if(err) return callback(err);
+
+		that.store = data;
+		callback(null, data);
+	});
+}
+User.hasPermission = function(permission, callback){
+	db.users.findOne({
+		id : this.id,
 		permission : permission
 	}, function(err, ok){
 		if(err) return callback(err);
@@ -55,16 +59,50 @@ exports.hasPermission = function(id, permission, callback){
 		} else {
 			return callback(null, false);
 		}
-
-		function checkDefault(){
-			return config.security.defaultPermission.some(function(elem){
-				return elem == permission;
-			});
-		}
 	});
+
+	function checkDefault(){
+		return config.security.defaultPermission.some(function(elem){
+			return elem == permission;
+		});
+	}
 }
+User.canRead = function(callback){
+	this.hasPermission("read", callback);
+}
+User.canWrite = function(){
+	this.hasPermission("write", callback);
+}
+User.changePassword = function(password, callback){
+
+}
+
+exports.bind = function(store, save){
+	var property = {
+		store :{
+			set : function(value){
+				save(value);
+				store = value;
+			},
+			get : function(){
+				return store;
+			}
+		},
+		id : {
+			get : function(){
+				return store.id;
+			}
+		},
+		email : {
+			get : function(){
+				return store.email;
+			}
+		}
+	};
+	return user = Object.create(User, property);
+}
+
 
 function hash(data){
 	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");
 }
-

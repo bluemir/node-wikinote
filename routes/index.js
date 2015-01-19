@@ -12,7 +12,9 @@ exports.init = function(app){
 	loader.assets(app, express);
 
 	app.use(preModule);
-	
+
+	app.use(user.middleware);
+
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
 		index: false,
