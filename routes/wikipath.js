@@ -14,14 +14,14 @@ WikiPath.prototype.toString = function(){
 	return this.full;
 }
 WikiPath.prototype.toArray = function(){
-	return this.full.split("/").slice(1);
+	return this.full.split("/").filter(function(str){return str != "";});
 }
 WikiPath.prototype.bread = function(){
-	var arr = this.full.split("/").slice(1);
+	var arr = this.toArray();
 	var result = [];
 	for(var i = 0; i < arr.length; i++){
 		result[i] = {
-			path : arr.slice(0, i+1).join('/'),
+			path : "/" + arr.slice(0, i+1).join('/'),
 			name : arr[i]
 		}
 	}
@@ -43,7 +43,11 @@ WikiPath.prototype.append = function(name){
 	return path;
 }
 function nomalizePath(path){
-	if(path[path.length -1] == "/"){
+	if(path == "/"){
+		return path;
+	}
+
+	if(path[path.length - 1] == "/"){
 		return path.substr(0, path.length - 1);
 	} else {
 		return path;

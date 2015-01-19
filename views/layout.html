@@ -47,7 +47,7 @@
                 </ul>
                 <div id="breadcrumbs">
                     {% for key, val in path.bread() %}
-                    <span>/ </span><a href="/{{ val.path }}">{{ val.name }}</a>
+                    <span>/ </span><a href="{{ val.path }}">{{ val.name }}</a>
                     {% endfor %}
                 </div>
             </div>

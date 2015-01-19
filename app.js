@@ -8,8 +8,9 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var errorHandler = require('errorhandler');
-var routes = require('./routes');
 var swig = require("swig");
+
+var routes = require('./routes');
 var config = require("./config")
 
 var app = express();
