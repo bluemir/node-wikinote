@@ -49,13 +49,7 @@ exports.signup = function(req, res){
 exports.PERMISSION = user.PERMISSION;
 
 exports.middleware = function(req, res, next){
-	if(!req.session.user){
-		req.session.user = {};
-	}
-	req.user = user.bind(req.session.user, function(value){
-		req.session.user = value;
-	});
-	res.locals.user = req.user;
+	req.user = res.locals.user = user.bind(req.session, "user");
 	next();
 }
 exports.checkPermission = function(permission){

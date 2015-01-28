@@ -73,19 +73,16 @@ User.canRead = function(callback){
 User.canWrite = function(){
 	this.hasPermission("write", callback);
 }
-User.changePassword = function(password, callback){
 
-}
-
-exports.bind = function(store, save){
-	var property = {
-		store :{
+exports.bind = function(session, key){
+	session[key] = session[key] || {};
+	return Object.create(User, {
+		store : {
 			set : function(value){
-				save(value);
-				store = value;
+				session[key] = value;
 			},
-			get : function(){
-				return store;
+			get : function() {
+				return session[key];
 			}
 		},
 		id : {
@@ -98,10 +95,8 @@ exports.bind = function(store, save){
 				return store.email;
 			}
 		}
-	};
-	return user = Object.create(User, property);
+	});
 }
-
 
 function hash(data){
 	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");
