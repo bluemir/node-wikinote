@@ -15,6 +15,5 @@ results
 node_modules
 npm-debug.log
 
-config/local.json
-users.json
+config/local.yaml
 user.nedb
