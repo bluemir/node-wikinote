@@ -20,7 +20,8 @@
     "nedb": "~0.10.7",
     "serve-favicon": "~2.0.1",
     "swig": "~1.4.2",
-    "moment": "~2.8.3"
+    "moment": "~2.8.3",
+    "js-yaml": "~3.2.5"
   },
   "devDependencies": {
     "mocha": "~2.1.0"

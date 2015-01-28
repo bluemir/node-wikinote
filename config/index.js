@@ -1,57 +1,43 @@
 var fs = require("fs");
 var crypto = require("crypto");
+var yaml = require("js-yaml");
 var env = process.env;
 
-var DEFAULT_HASH = "n3rzm6rLUIZ0GKpMC+XS1uBZ1aoRVT+iyKN0TL3HtClokNV6lhRW0MjhKNF02JhlXN9pWQs+kYp2hh9md0QXRA==";
+loadConfig();
 
-loadConfing();
-
-var watcher = fs.watch("config/local.json");
-
+var watcher = fs.watch("config/local.yaml");
 watcher.on('change', function(event, filename){
 	try {
-		var config = loadDefault();
-
-		var local = loadLocals();
-
-		overwrite(config, local);
-
-		apply(resolve(config));
+		loadConfig();
 		console.log("change config " + filename);
 	} catch(e) {
 		console.log(e, filename);
 	}
 });
 
-function loadConfing(){
+function loadConfig(){
 	var config = loadDefault();
+	var local = loadLocal();
 
-	var local = {};
-	if(fs.existsSync("config/local.json")){
-		local = loadLocals();
-	} else {
-		fs.writeFileSync("config/local.json", "{}", {encoding : "utf8"});
-	}
-
-	overwrite(config, local);
-
-	apply(resolve(config));
+	apply(resolve(overwrite(config, local)));
 }
-
 
 function loadDefault() {
-	var config = fs.readFileSync("config/default.json", { encoding : "utf8" });
-
-	//check default file change
-	if(DEFAULT_HASH !== hash(config)){
-		throw new Error("config/default.json is changed");
+	var doc = read('config/default.yaml');
+	if(read("config/.default.hash").trim() !== hash(doc)){
+		throw new Error("config/default.yaml is changed");
 	}
-	return JSON.parse(removeComment(config));
+	return yaml.safeLoad(doc);
 }
 
-function loadLocals() {
-	var data = fs.readFileSync("config/local.json", {encoding :"utf8"})
-	return JSON.parse(removeComment(data));
+function loadLocal() {
+	var doc = "";
+	try {
+		doc = read('config/local.yaml');
+	} catch (e){
+		fs.writeFileSync("config/local.yaml", "", {encoding : "utf8"});
+	}
+	return yaml.safeLoad(doc);
 }
 
 function overwrite(dest, src){
@@ -86,54 +72,9 @@ function apply(config){
 }
 
 function hash(data){
-	return crypto.createHash('sha512').update(data).digest("base64");
+	return crypto.createHash('sha512').update(data).digest("base64").trim();
 }
 
-function removeComment(str) {
-
-	var uid = '_' + +new Date(),
-	primitives = [],
-	primIndex = 0;
-
-	return (
-		str
-
-		/* Remove strings */
-		.replace(/(['"])(\\\1|.)+?\1/g, function(match){
-			primitives[primIndex] = match;
-			return (uid + '') + primIndex++;
-		})
-
-		/* Remove Regexes */
-		.replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g, function(match, $1, $2){
-			primitives[primIndex] = $2;
-			return $1 + (uid + '') + primIndex++;
-		})
-
-		/*
-		   - Remove single-line comments that contain would-be multi-line delimiters
-		   E.g. // Comment /* <--
-		   - Remove multi-line comments that contain would be single-line delimiters
-		   E.g. /* // <--
-		   */
-		   .replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, '')
-
-			   /*
-				  Remove single and multi-line comments,
-				  no consideration of inner-contents
-				  */
-			   .replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, '')
-
-			   /*
-				  Remove multi-line comments that have a replaced ending (string/regex)
-				  Greedy, so no inner strings/regexes will stop it.
-				  */
-			   .replace(RegExp('\\/\\*[\\s\\S]+' + uid + '\\d+', 'g'), '')
-
-		   /* Bring back strings & regexes */
-		   .replace(RegExp(uid + '(\\d+)', 'g'), function(match, n){
-			   return primitives[n];
-		   })
-	);
-};
-
+function read(filename){
+	return fs.readFileSync(filename, 'utf8');
+}

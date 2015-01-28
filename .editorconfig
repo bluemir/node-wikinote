@@ -6,3 +6,6 @@ tab_width = 4
 indent_style = tab
 tab_width = 4
 
+[config/*.yaml]
+indent_style = space
+indent_size = 4
