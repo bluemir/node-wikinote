@@ -87,12 +87,12 @@ exports.bind = function(session, key){
 		},
 		id : {
 			get : function(){
-				return store.id;
+				return session[key].id;
 			}
 		},
 		email : {
 			get : function(){
-				return store.email;
+				return session[key].email;
 			}
 		}
 	});
