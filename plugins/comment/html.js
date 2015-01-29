@@ -7,9 +7,9 @@ module.exports = function(comments, user){
 	'<header>' + comments.length + ' Comments</header>' +
 	'<form action="?comment" method="post">' +
 		'<textarea name="contents" placeholder="leave a comment"></textarea>' +
-		(config.requestToUser || !user ? captcha() : "") +
+		(config.requestToUser || !user.isLogin() ? captcha() : "") +
 		'<div id="comment-buttons">' +
-		(user ? "" :'<input name="author" type="text" placeholder="name" maxlength="20"/>') +
+		(user.isLogin() ? "" :'<input name="author" type="text" placeholder="name" maxlength="20"/>') +
 		'<input type="submit" value="comment"/>' +
 		'</div>' +
 	'</form>' +
@@ -45,4 +45,3 @@ function captcha(){
 		'</noscript>' +
 	'</div>';
 }
-

@@ -73,6 +73,9 @@ User.canRead = function(callback){
 User.canWrite = function(){
 	this.hasPermission("write", callback);
 }
+User.isLogin = function(){
+	return !!this.store.id;
+}
 
 exports.bind = function(session, key){
 	session[key] = session[key] || {};
