@@ -1,1 +1,1 @@
-module.exports = ["comment"]
+module.exports = ["comment", "presentation"]

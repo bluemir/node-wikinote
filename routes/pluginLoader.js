@@ -12,7 +12,7 @@ plugins.forEach(function(plugin){
 });
 
 exports.menus = function(){
-
+	return loader.menus;
 }
 
 exports.actions = function(paramRouter){
@@ -62,6 +62,7 @@ function Loader(){
 		get : [], post : []
 	}
 	var assets = [];
+	var menus = [];
 
 	this.Interface = {
 		article : {
@@ -78,6 +79,9 @@ function Loader(){
 			},
 			post : function(name, func){
 				actions.post[name] = func;
+			},
+			menu : function(name){
+				menus.push(name);
 			}
 		},
 		assets : function(name, path){
@@ -90,9 +94,18 @@ function Loader(){
 		writefile : function(path, data, user, callback){
 			//TODO Check argument
 			wikiFS.writeFile(path, data, user, callback);
+		},
+		readwiki : function(path, callback){
+			//TODO Check argument
+			wikiFS.readWiki(path, callback);
+		},
+		writewiki : function(path, callback){
+			//TODO Checkargument
+			wikiFS.writeFile(path, data, user, callback);
 		}
 	};
 	this.postArticle = postArticle;
 	this.actions = actions;
 	this.assets = assets;
+	this.menus = menus;
 }
