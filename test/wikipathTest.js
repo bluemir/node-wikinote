@@ -105,6 +105,16 @@ describe("WikiPath", function(){
 			assert.equal(str, "%2Ftest%2Fpath-with-%ED%95%9C%EA%B8%80");
 		});
 	});
+	describe("change property", function(){
+		it("should change name when change name", function(){
+			//Given
+			var path = new WikiPath("/test/path");
+			//When
+			path.full = "/test/path/new";
+			//Then
+			assert.equal(path.name, "new");
+		});
+	});
 	//Given
 	//When
 	//Then
