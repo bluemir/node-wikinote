@@ -17,3 +17,5 @@ npm-debug.log
 
 config/local.yaml
 user.nedb
+public/stylesheets/main.css
+public/stylesheets/admin.css
