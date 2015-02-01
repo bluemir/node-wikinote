@@ -25,14 +25,6 @@ describe("WikiPath", function(){
 			assert.equal(path.full, "/test/path with space");
 
 		});
-		it("should normalize url with encoded space", function(){
-			//Given
-			//When
-			var path = new WikiPath("/test/path%20with%20space");
-			//Then
-			assert.equal(path.full, "/test/path with space");
-
-		});
 		it("should parse note name and dir path", function(){
 			//Given
 			//When
@@ -40,6 +32,16 @@ describe("WikiPath", function(){
 			//Then
 			assert.equal(path.path, "/test/path/to");
 			assert.equal(path.name, "note");
+		});
+	});
+	describe("#decode()", function(){
+		it("should normalize url with encoded space", function(){
+			//Given
+			//When
+			var path = WikiPath.decode("/test/path%20with%20space");
+			//Then
+			assert.equal(path.full, "/test/path with space");
+
 		});
 	});
 	describe("#toString()", function(){
@@ -103,6 +105,37 @@ describe("WikiPath", function(){
 			var str = path.encode();
 			//Then
 			assert.equal(str, "%2Ftest%2Fpath-with-%ED%95%9C%EA%B8%80");
+		});
+	});
+	describe("#copy",function(){
+		it("should copy WikiPath (not reference)", function(){
+			//Given
+			var path = new WikiPath("/test");
+			//When
+			var copyPath = path.copy();
+			path.full = "/other";
+			//Then
+			assert.equal(copyPath.full, "/test");
+		});
+	});
+	describe("#resolve", function(){
+		it("should return resolved path", function(){
+			//Given
+			var path = new WikiPath("/test/path");
+			//When
+			var resolvedPath = path.resolve("./new");
+			//Then
+			assert.equal(resolvedPath.full, "/test/path/new");
+		});
+	});
+	describe("change property", function(){
+		it("should change name when change name", function(){
+			//Given
+			var path = new WikiPath("/test/path");
+			//When
+			path.full = "/test/path/new";
+			//Then
+			assert.equal(path.name, "new");
 		});
 	});
 	//Given

@@ -1,14 +1,39 @@
+var resolve = require("path").resolve;
 module.exports = WikiPath;
 
-function WikiPath(path){
-	this.full = nomalizePath(decodeURIComponent(path));
-	var index = this.full.lastIndexOf("/");
-	if(index == 0){
-		this.path = "/";
-	} else {
-		this.path = this.full.substr(0, index);
-	}
-	this.name = this.full.substr(index + 1);
+function WikiPath(PATH){
+	var path = "";
+	var index = 0;
+	var base = "";
+	var name = "";
+	Object.defineProperty(this, "full", {
+		get : function(){
+			return path;
+		},
+		set : function(str){
+			path = nomalizePath(str);
+			var index = path.lastIndexOf("/");
+			base = path.substr(0, index);
+			name = path.substr(index + 1);
+		},
+		enumerable : true
+	});
+	Object.defineProperty(this, "name", {
+		get : function(){
+			return name;
+		},
+		enumerable : true
+	});
+	Object.defineProperty(this, "path", {
+		get : function(){
+			return base;
+		},
+		enumerable : true
+	});
+	this.full = PATH;
+}
+WikiPath.decode = function(PATH){
+	return new WikiPath(decodeURIComponent(PATH));
 }
 WikiPath.prototype.toString = function(){
 	return this.full;
@@ -31,16 +56,13 @@ WikiPath.prototype.encode = function(){
 	return encodeURIComponent(this.full);
 }
 WikiPath.prototype.append = function(name){
-	var path = new WikiPath("/");
-	path.full = this.full + "/" + name;
-	var index = path.full.lastIndexOf("/");
-	if(index == 0){
-		path.path = "/";
-	} else {
-		path.path = path.full.substr(0, index);
-	}
-	path.name = path.full.substr(index + 1);
-	return path;
+	return new WikiPath(this.full + "/" + name);
+}
+WikiPath.prototype.copy = function(){
+	return new WikiPath(this.full);
+}
+WikiPath.prototype.resolve = function(PATH){
+	return new WikiPath(resolve(this.full, PATH));
 }
 function nomalizePath(path){
 	if(path == "/"){
