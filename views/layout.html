@@ -1,7 +1,11 @@
 <!doctype html>
 <html>
 <head>
-    <title>{{ notename }}::{{ title }}</title>
+    <title>
+        {% block title %}
+        {{ wikipath.name }}::{{ title }}
+        {% endblock %}
+    </title>
     {% block style %}
     <link rel="stylesheet" href="/!public/stylesheets/style.css"/>
     {% endblock %}
@@ -9,14 +13,14 @@
 <body>
     <div id="wapper">
         <header>
-            <a id="wikiname" href="/">{{ wikiname }}</a>
+            <a id="wikiname" href="/">{{ config.wikiname }}</a>
             {% if config.security %}
             <div id="user">
                 {% if user.id %}
                 {{ user.id }}
-                <a href="/!logout?redirect={{ path.encode() }}">logout</a>
+                <a href="/!logout?redirect={{ wikipath.encode() }}">logout</a>
                 {% else %}
-                <form action="/!login?redirect={{ path.encode() }}" method="post">
+                <form action="/!login?redirect={{ wikipath.encode() }}" method="post">
                     <input type="text" placeholder="id" name="id"/>
                     <input type="password" placeholder="password" name="password"/>
                     <input type="submit", value="login"/>
@@ -27,26 +31,26 @@
             {% if !disableMenu %}
             <div>
                 <ul>
-                    <li><a href="{{ path.toString() }}">View</a></li>
-                    <li><a href="{{ path.toString() }}?edit">Edit</a></li>
+                    <li><a href="{{ wikipath.toString() }}">View</a></li>
+                    <li><a href="{{ wikipath.toString() }}?edit">Edit</a></li>
                     <li>
                         <a href="#">More</a>
                         <ul>
-                            <li><a href="{{ path.toString() }}?delete">Delete</a></li>
-                            <li><a href="{{ path.toString() }}?attach">Attach</a></li>
-                            <li><a href="{{ path.toString() }}?move">Move</a></li>
-                            <li><a href="{{ path.toString() }}?history">Histroy</a></li>
+                            <li><a href="{{ wikipath.toString() }}?delete">Delete</a></li>
+                            <li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
+                            <li><a href="{{ wikipath.toString() }}?move">Move</a></li>
+                            <li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
 							{% for menu in menus %}
-							<li><a href="{{ path.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
+							<li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
 							{% endfor %}
                             <li class="seperater"></li>
                             <li><a href="/!search">Search</a></li>
-                            <li><a href="/!signup?redirect={{ path.encode() }}">SignUp</a></li>
+                            <li><a href="/!signup?redirect={{ wikipath.encode() }}">SignUp</a></li>
                         </ul>
                     </li>
                 </ul>
                 <div id="breadcrumbs">
-                    {% for key, val in path.bread() %}
+                    {% for key, val in wikipath.bread() %}
                     <span>/ </span><a href="{{ val.path }}">{{ val.name }}</a>
                     {% endfor %}
                 </div>

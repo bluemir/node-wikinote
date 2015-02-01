@@ -50,15 +50,12 @@ exports.init = function(app){
 }
 
 function preModule(req, res, next){
-	req.wikiPath = req.wikipath = WikiPath.decode(req.path);
-	res.locals.path = req.wikiPath;
-	res.locals.notename = req.wikiPath.name;
+	res.locals.wikipath = req.wikipath = WikiPath.decode(req.path);
 	res.locals.config = config;
 	res.locals.utils = {
 		flash : req.flash.bind(req)
 	}
 	res.locals.menus = loader.menus();
-	res.locals.wikiname = config.wikiname;
 	next();
 }
 
