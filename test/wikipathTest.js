@@ -107,6 +107,27 @@ describe("WikiPath", function(){
 			assert.equal(str, "%2Ftest%2Fpath-with-%ED%95%9C%EA%B8%80");
 		});
 	});
+	describe("#copy",function(){
+		it("should copy WikiPath (not reference)", function(){
+			//Given
+			var path = new WikiPath("/test");
+			//When
+			var copyPath = path.copy();
+			path.full = "/other";
+			//Then
+			assert.equal(copyPath.full, "/test");
+		});
+	});
+	describe("#resolve", function(){
+		it("should return resolved path", function(){
+			//Given
+			var path = new WikiPath("/test/path");
+			//When
+			var resolvedPath = path.resolve("./new");
+			//Then
+			assert.equal(resolvedPath.full, "/test/path/new");
+		});
+	});
 	describe("change property", function(){
 		it("should change name when change name", function(){
 			//Given

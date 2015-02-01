@@ -1,3 +1,4 @@
+var resolve = require("path").resolve;
 module.exports = WikiPath;
 
 function WikiPath(PATH){
@@ -56,6 +57,12 @@ WikiPath.prototype.encode = function(){
 }
 WikiPath.prototype.append = function(name){
 	return new WikiPath(this.full + "/" + name);
+}
+WikiPath.prototype.copy = function(){
+	return new WikiPath(this.full);
+}
+WikiPath.prototype.resolve = function(PATH){
+	return new WikiPath(resolve(this.full, PATH));
 }
 function nomalizePath(path){
 	if(path == "/"){
