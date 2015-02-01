@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title %}
+{{ wikipath.name }}::Edit - {{ config.wikiname }}
+{% endblock %}
+
 {% block style %}
     {% parent %}
     <link rel="stylesheet" href="/!public/lib/CodeMirror/lib/codemirror.css" />

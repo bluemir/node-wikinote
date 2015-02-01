@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title %}
+{{ wikipath.name }} - {{config.wikiname}}
+{% endblock %}
+
 {% block contents %}
 <article class="view">
     {% if wikiData != null %}
@@ -12,4 +16,3 @@
 	{{ pluginsData|safe }}
 </section>
 {% endblock %}
-

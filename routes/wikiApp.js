@@ -37,13 +37,13 @@ wikiApp.view = function(req, res){
 			data = marked(data);
 		}
 		loader.postArticle(req.wikipath, req.user, function(err, html){
-			res.render("view", {title : "Wiki Note", wikiData: data, pluginsData : html});
+			res.render("view", {wikiData: data, pluginsData : html});
 		});
 	});
 }
 wikiApp.edit = function(req, res){
 	wikiFS.readWiki(req.wikipath, function(err, data){
-		res.render("edit", {title : "Wiki Note::Edit", wikiData: data});
+		res.render("edit", {wikiData: data});
 	});
 }
 wikiApp.save = function(req, res){
@@ -53,7 +53,7 @@ wikiApp.save = function(req, res){
 	});
 }
 wikiApp.moveForm = function(req, res){
-	res.render("move", {title : "Wiki Note::Move"});
+	res.render("move", {});
 }
 wikiApp.move = function(req, res){
 	wikiFS.move(req.wikipath, new WikiPath(req.param("target")), function(){
@@ -62,7 +62,7 @@ wikiApp.move = function(req, res){
 }
 wikiApp.attach = function(req, res){
 	wikiFS.fileList(req.wikipath, function(err, files){
-		res.render("attach", {title : "Wiki Note::Attach", files: files || []});
+		res.render("attach", {files: files || []});
 	});
 }
 wikiApp.upload = function(req, res){
@@ -82,32 +82,23 @@ wikiApp.presentation = function(req, res){
 			option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
 		} catch (e){
 		}
-		res.render("presentation", {title : "Wiki Note::Presentation", wikiData: data, option : option});
+		res.render("presentation", {wikiData: data, option : option});
 	});
 }
-wikiApp.find = function(req, res){
-	var word = req.param("find");
-	if(word == ""){
-		res.render("find", {title : "Wiki Note::Find", result : null});
-		return;
-	}
-	wikiFS.find(req.wikipath, word, function(e, data){
-		res.render("find", {title : "Wiki Note::Find", result : data});
-	});
-}
+
 wikiApp.search = function(req, res){
 	var word = req.param("q");
 	if(!word){
-		res.render("search", {title : "Wiki Note::Search", result : null});
+		res.render("search", {result : null});
 		return;
 	}
 	wikiFS.find("", word, function(e, data){
-		res.render("search", {title : "Wiki Note::Search", result :data, word : word});
+		res.render("search", {result :data, word : word});
 	});
 
 }
 wikiApp.deleteForm = function(req, res){
-	res.render("delete", {title : "Wiki Note::Delete"});
+	res.render("delete", {});
 }
 wikiApp.deleteConfirm = function(req, res){
 	if(req.wikipath.name != req.param("confirm")){
@@ -128,7 +119,7 @@ wikiApp.deleteConfirm = function(req, res){
 }
 wikiApp.history = function(req, res){
 	wikiFS.history(req.wikipath, function(e, logs){
-		res.render("history", {title : "Wiki Note::History", logs : logs});
+		res.render("history", {logs : logs});
 	});
 }
 module.exports = wikiApp;
