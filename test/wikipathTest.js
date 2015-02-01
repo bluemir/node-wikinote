@@ -25,14 +25,6 @@ describe("WikiPath", function(){
 			assert.equal(path.full, "/test/path with space");
 
 		});
-		it("should normalize url with encoded space", function(){
-			//Given
-			//When
-			var path = new WikiPath("/test/path%20with%20space");
-			//Then
-			assert.equal(path.full, "/test/path with space");
-
-		});
 		it("should parse note name and dir path", function(){
 			//Given
 			//When
@@ -40,6 +32,16 @@ describe("WikiPath", function(){
 			//Then
 			assert.equal(path.path, "/test/path/to");
 			assert.equal(path.name, "note");
+		});
+	});
+	describe("#decode()", function(){
+		it("should normalize url with encoded space", function(){
+			//Given
+			//When
+			var path = WikiPath.decode("/test/path%20with%20space");
+			//Then
+			assert.equal(path.full, "/test/path with space");
+
 		});
 	});
 	describe("#toString()", function(){

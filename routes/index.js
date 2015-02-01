@@ -50,7 +50,7 @@ exports.init = function(app){
 }
 
 function preModule(req, res, next){
-	req.wikiPath = new WikiPath(req.path);
+	req.wikiPath = WikiPath.decode(req.path);
 	res.locals.path = req.wikiPath;
 	res.locals.notename = req.wikiPath.name;
 	res.locals.config = config;

@@ -2,30 +2,37 @@ module.exports = WikiPath;
 
 function WikiPath(PATH){
 	var path = "";
+	var index = 0;
+	var base = "";
+	var name = "";
 	Object.defineProperty(this, "full", {
 		get : function(){
 			return path;
 		},
 		set : function(str){
-			path = nomalizePath(decodeURIComponent(str));
+			path = nomalizePath(str);
+			var index = path.lastIndexOf("/");
+			base = path.substr(0, index);
+			name = path.substr(index + 1);
 		},
 		enumerable : true
 	});
 	Object.defineProperty(this, "name", {
 		get : function(){
-			var index = this.full.lastIndexOf("/");
-			return path.substr(index + 1);
+			return name;
 		},
 		enumerable : true
 	});
 	Object.defineProperty(this, "path", {
 		get : function(){
-			var index = this.full.lastIndexOf("/");
-			return path.substr(0, index);
+			return base;
 		},
 		enumerable : true
 	});
 	this.full = PATH;
+}
+WikiPath.decode = function(PATH){
+	return new WikiPath(decodeURIComponent(PATH));
 }
 WikiPath.prototype.toString = function(){
 	return this.full;
