@@ -3,13 +3,13 @@ var marked = require("marked");
 var WikiPath = require("./wikipath");
 var config = require("../config");
 var userApp = require("./userApp");
-var loader = require("./loader");
+var loader = require("./pluginLoader");
 
 var customRender = new marked.Renderer();
 var protocolRegexp = /^https?:\/\/.+$/;
 customRender.link = function(href, title, text){
 	var external = protocolRegexp.test(href);
-	return "<a href=\"" + href + "\"" + 
+	return "<a href=\"" + href + "\"" +
 		(external ? " target=\"_blank\"" : "")+
 		(title ? " title=\"" + title + "\"" : "") +
 		">" + text + "</a>";
@@ -23,7 +23,7 @@ marked.setOptions({
 	sanitize: false,
 	smartLists: true,
 	footnotes : true,
-	renderer : customRender 
+	renderer : customRender
 });
 
 var wikiApp = {};
@@ -36,7 +36,7 @@ wikiApp.view = function(req, res){
 		} else {
 			data = marked(data);
 		}
-		loader.postArticle(req.wikiPath, req.session.user, function(err, html){
+		loader.postArticle(req.wikiPath, req.user, function(err, html){
 			res.render("view", {title : "Wiki Note", wikiData: data, pluginsData : html});
 		});
 	});

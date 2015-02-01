@@ -4,12 +4,12 @@ var WikiPath = require("./wikipath");
 var user = require("./userApp");
 var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
-var loader = require("./loader");
+var loader = require("./pluginLoader");
 var config = require("../config");
 var ParamRouter = require("./paramRouter")
 
 exports.init = function(app){
-	loader.assets(app, express);
+	loader.assets(app);
 
 	app.use(preModule);
 	app.use(user.middleware);
@@ -42,7 +42,7 @@ exports.init = function(app){
 	appRouter.post("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.move);
 	appRouter.post("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteConfirm);
 
-	loader.initAction(appRouter);
+	loader.actions(appRouter);
 
 	app.use(appRouter);
 
@@ -50,7 +50,7 @@ exports.init = function(app){
 }
 
 function preModule(req, res, next){
-	req.wikiPath = WikiPath.decode(req.path);
+	req.wikiPath = req.wikipath = WikiPath.decode(req.path);
 	res.locals.path = req.wikiPath;
 	res.locals.notename = req.wikiPath.name;
 	res.locals.config = config;
