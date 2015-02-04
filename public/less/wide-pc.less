@@ -1,0 +1,469 @@
+/* common */
+html, body {
+	margin : 0px;
+	background : #d1d1d1;
+	font-family : @body-font;
+	font-size : 16px;
+}
+.row {
+	max-width : 850px;
+	min-width : 550px;
+	margin : auto;
+}
+
+/* header */
+body>header {
+	width : 100%;
+	top : 0px;
+	background : black;
+	box-shadow : 0px 5px 3px rgba(128,128,128, 0.5);
+	position : fixed;
+
+	.row {
+		position : relative;
+		padding-bottom : 5px;
+	}
+
+	#wikiname {
+		color : white;
+		font-family: @title-font;
+		font-size : 35px;
+		font-weight : bold;
+		text-decoration : none;
+		letter-spacing : -2px;
+		word-spacing : 12px;
+	}
+
+	#user {
+		color : white;
+		font-size : 16px;
+		font-weight : normal;
+		float :right;
+
+		position : absolute;
+		right : 0px;
+		top : 5px;
+
+		input {
+			&[type="text"], &[type="password"] {
+				width : 100px;
+			}
+		}
+
+		a, input[type="submit"] {
+			display : inline-block;
+
+			padding : 1px 6px;
+			margin : 2px;
+			font-size : 14px;
+			line-height : 14px;
+			height : 16px;
+			text-align : center;
+			vertical-align : middle;
+			cursor: pointer;
+			color : #808080;
+			background : @menu-color;
+			border: 0px solid #cccccc;
+			border-radius : 5px;
+			text-decoration : none;
+
+			&:hover, &:focus {
+				color: #333333;
+			}
+
+			&:active {
+				background-image : none;
+				box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0px 1px 2px rgba(0,0,0,0.05);
+			}
+		}
+		.username {
+			font-weight : bold;
+		}
+	}
+
+	#breadcrumbs {
+		font-size : 12px;
+		color : #919191;
+
+
+		a {
+			color : #919191;
+			text-decoration : none;
+		}
+
+		a:hover {
+			text-decoration : underline;
+		}
+
+	}
+
+	.menu {
+		margin: 0px;
+		padding : 0px;
+		list-style: none;
+		position : absolute;
+		right : 0px;
+		bottom : 0px;
+
+		& > li {
+			float: left;
+			padding : 5px 10px;
+			position: relative;
+			transition: all linear 0.15s;
+
+			a {
+				color : @menu-color;
+				float: left;
+				text-decoration: none;
+			}
+
+			&:hover {
+				background : #333;
+
+			}
+			&:hover > ul {
+				transition: all linear 0.15s;
+
+				display: block;
+			}
+		}
+
+		/* sub menu */
+		.submenu {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: none;
+			position: absolute;
+			top : 100%;
+			right: 0;
+			z-index: 200;
+			background: #333;
+			box-shadow : 0px 2px 2px 2px rgba(128,128,128, 0.5);
+			padding : 8px 0px;
+			//border : 1px solid gray;
+
+			li {
+				float: none;
+				margin: 0;
+				padding: 8px 32px;
+				display: block;
+
+				a {
+					height: auto;
+					line-height: 1;
+					display: block;
+					white-space: nowrap;
+					float: none;
+					text-transform: none;
+				}
+
+				&:hover {
+					background: #555;
+				}
+			}
+
+			li.seperater {
+				border-bottom : 1px solid #555;
+				padding : 0px;
+				margin : 8px 0px;
+			}
+		}
+	}
+	/* Clear floated elements */
+	&:after {
+		visibility: hidden;
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 0;
+	}
+}
+/* message */
+#alert {
+	p.msg-warn {
+		margin : 10px;
+		padding : 10px;
+		border-radius : 10px;
+		background : #f2dede;
+		color : #b94a48;
+		border-color : #eed3d7;
+	}
+	p.msg-info {
+		margin : 10px;
+		padding : 10px;
+		border-radius : 10px;
+		background : #d9edf7;
+		color : #3a87ad;
+		border-color : #bce8f1;
+	}
+	p.msg-dynamic {
+		position : fixed;
+		top : 50%;
+		left : 50%;
+		width : 12em;
+		margin-left : -6em;
+		text-align : center;
+		display : none;
+		padding : 10px;
+		border-radius : 10px;
+		background : #d9edf7;
+		color : #3a87ad;
+		border-color : #bce8f1;
+		z-index : 10;
+	}
+
+	p.msg-dynamic.warn {
+		width : 30em;
+		margin-left : -15em;
+		background : #f2dede;
+		color : #b94a48;
+		border-color : #eed3d7;
+	}
+}
+
+#wapper {
+	padding-top : 70px;
+	background : white;
+}
+
+#wapper>article, section#plugins {
+	font-family : @body-font;
+	padding : 10px 50px;
+}
+
+#wapper>article {
+	img {
+		max-width : 100%;
+	}
+	a {
+		text-decoration : none;
+		color : @light-blue;
+
+		&:hover {
+			text-decoration : underline;
+		}
+	}
+	h1, h2, h3, h4, h5, h6 {
+		margin : 0em;
+		margin-top : 1em;
+	}
+	h1 {
+		margin-top : 0em;
+		font-size: 2.5em;
+		font-weight: bolder;
+		text-shadow : 1px 1px 5px #ccc;
+	}
+	h2 {
+		font-weight : bold;
+		font-size: 1.8em;
+		border-bottom : 1px solid gray;
+		padding-bottom : 5px;
+	}
+	h3 {
+		font-weight : bold;
+		font-size : 1.5em;
+	}
+	h4 {
+		font-size: 1.3em;
+	}
+	h5 {
+		font-size: 1.2em;
+	}
+	h6 {
+		font-size: 1.1em;
+	}
+
+	dt {
+		font-style: italic;
+	}
+
+
+	.view {
+		blockquote{
+			font-style : italic;
+			margin-left : 0px;
+			padding-top : 20px;
+			overflow : hidden;
+			line-height : 100%;
+			color : #454545;
+
+			&:before {
+				display : block;
+				float : left;
+				content : open-quote;
+				color : #bababa;
+				font-size : 100px;
+				margin : 10px 15px 0px 0px;
+				text-shadow : 0 1px 1px #909090;
+			}
+			&:after {
+				display : block;
+				float : right;
+				content : close-quote;
+				color : #bababa;
+				font-size : 100px;
+				margin : 10px 15px 0px 0px;
+				text-shadow : 0 1px 1px #909090;
+			}
+			:first-child {
+				margin-top : 0px;
+			}
+			:last-child {
+				margin-bottom : 0px;
+			}
+			* {
+				margin-left : 100px;
+				margin-right : 80px;
+			}
+		}
+		table {
+			border-collapse : collapse;
+
+			th, td {
+				border : 1px solid gray;
+				padding : 5px;
+			}
+
+		}
+
+		code {
+			border : 1px solid gray;
+			border-radius : 3px;
+			padding : 2px;
+		}
+		pre>code, xmp {
+			display : block;
+			background : black;
+			color : white;
+			padding : 10px;
+			border : 1px solid gray;
+			border-radius : 3px;
+			word-wrap : break-word;
+
+			&:before {
+				content : "code";
+				display : block;
+				color : green;
+				margin-bottom : 10px;
+				border-bottom : 1px solid green;
+				padding : 2px;
+			}
+			&.lang-pic {
+				background : white;
+				color : black;
+				padding : 0px;
+				border : none;
+				display : inline;
+				font-size : 1.1em;
+
+			}
+			&.lang-pic:before, &.lang-not-code:before {
+				content : none;
+				display : none;
+			}
+		}
+		p, li{
+			line-height : 1.2em;
+		}
+		.right {
+			text-align : right;
+		}
+		.center {
+			text-align : center;
+		}
+		ol.footnotes {
+			&:before {
+				display : block;
+				background : #ccc;
+				content : "";
+				height : 2px;
+				margin-bottom : 5px;
+				margin-left : -20px;
+				width : 100px;
+				margin-left : -2em;
+			}
+
+			margin : 0px;
+			padding-left : 2em;
+			font-size : 0.8em;
+
+			p {
+				margin : 0px;
+			}
+		}
+	}
+	.edit {
+		textarea {
+			tab-size : 4;
+			width : 100%;
+			box-sizing: border-box;
+			overflow-x : hidden;
+		}
+		form>img {
+			cursor : pointer;
+			float : right;
+		}
+		.CodeMirror {
+			border : 1px solid gray;
+			width : 100%;
+			resize : vertical;
+			height : auto;
+			min-height : 300px;
+		}
+	}
+	.search {
+		table{
+			border-collapse : collapse;
+			border : 1px solid gray;
+			display : block;
+		}
+		th{
+			min-width : 50px;
+			text-align : right;
+			padding-right : 5px;
+			border-right : 1px solid gray;
+		}
+		td {
+			padding-left : 10px;
+		}
+	}
+	.history {
+		table{
+			width : 100%;
+			border-collapse : collapse;
+		}
+		th, td {
+			border : 1px solid gray;
+			padding : 3px;
+		}
+		td.id {
+			text-align : center;
+		}
+	}
+}
+
+section#plugins {
+}
+
+/*	color : #04D3F5;
+color : #3404F5;
+color : #0853E8;
+color : #049AFF;
+color : #0416FF; */
+
+body>footer {
+	text-align : center;
+	font-size : 0.8em;
+	p {
+		margin : 10px;
+	}
+	a {
+		color : white;
+		padding : 2px 4px;
+		border-radius : 5px;
+		text-decoration : none;
+		background: @light-blue;
+	}
+}

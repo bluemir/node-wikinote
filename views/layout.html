@@ -1,6 +1,9 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         {% block title %}
         {{ config.wikiname }}
@@ -11,13 +14,13 @@
     {% endblock %}
 </head>
 <body>
-    <div id="wapper">
-        <header>
+    <header>
+        <div class="row">
             <a id="wikiname" href="/">{{ config.wikiname }}</a>
             {% if config.security %}
             <div id="user">
                 {% if user.id %}
-                {{ user.id }}
+                <span class="username">{{ user.id }}</span>
                 <a href="/!logout?redirect={{ wikipath.encode() }}">logout</a>
                 {% else %}
                 <form action="/!login?redirect={{ wikipath.encode() }}" method="post">
@@ -29,33 +32,36 @@
             </div>
             {% endif %}
             {% if !disableMenu %}
-            <div>
-                <ul>
-                    <li><a href="{{ wikipath.toString() }}">View</a></li>
-                    <li><a href="{{ wikipath.toString() }}?edit">Edit</a></li>
-                    <li>
-                        <a href="#">More</a>
-                        <ul>
-                            <li><a href="{{ wikipath.toString() }}?delete">Delete</a></li>
-                            <li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
-                            <li><a href="{{ wikipath.toString() }}?move">Move</a></li>
-                            <li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
-							{% for menu in menus %}
-							<li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
-							{% endfor %}
-                            <li class="seperater"></li>
-                            <li><a href="/!search">Search</a></li>
-                            <li><a href="/!signup?redirect={{ wikipath.encode() }}">SignUp</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <div id="breadcrumbs">
-                    {% for key, val in wikipath.bread() %}
-                    <span>/ </span><a href="{{ val.path }}">{{ val.name }}</a>
-                    {% endfor %}
-                </div>
-            </div>
+            <ul class="menu">
+                <li><a href="{{ wikipath.toString() }}">View</a></li>
+                <li><a href="{{ wikipath.toString() }}?edit">Edit</a></li>
+                <li>
+                    <a href="#">More</a>
+                    <ul class="submenu">
+                        <li><a href="{{ wikipath.toString() }}?delete">Delete</a></li>
+                        <li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
+                        <li><a href="{{ wikipath.toString() }}?move">Move</a></li>
+                        <li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
+						{% for menu in menus %}
+						<li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
+						{% endfor %}
+                        <li class="seperater"></li>
+                        <li><a href="/!search">Search</a></li>
+                        <li><a href="/!signup?redirect={{ wikipath.encode() }}">Sign Up</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <nav id="breadcrumbs">
+                {% for key, val in wikipath.bread() %}
+                <span>/ </span><a href="{{ val.path }}">{{ val.name }}</a>
+                {% endfor %}
+            </nav>
             {% endif %}
+        </div>
+    </header>
+
+    <div class="row" id="wapper">
+        <aside id="alert">
             {% set warn = utils.flash("warn") %}
             {% if warn != "" %}
             <p class="msg-warn">{{ warn }}</p>
@@ -65,13 +71,16 @@
             <p class="msg-info">{{ info }}</p>
             {% endif %}
             <p class="msg-dynamic" id="message"></p>
-        </header>
+        </aside>
         {% block contents %}
         {% endblock %}
-		<footer>
-			<p>Powered By <a href="http://github.com/bluemir/wikinote">wikinote</a></p>
-		</footer>
     </div>
+    <footer>
+        <div class="row">
+            <p>Powered By <a href="http://github.com/bluemir/wikinote">wikinote</a></p>
+        </div>
+    </footer>
+
     <script src="/!public/shotcut.js"></script>
     {% block scripts %}
     {% endblock %}
