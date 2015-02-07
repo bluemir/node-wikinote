@@ -1,1 +1,1 @@
-module.exports = ["comment", "presentation"]
+module.exports = [ "disqus", "presentation" /*,"config"*/];
