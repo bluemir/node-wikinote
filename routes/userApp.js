@@ -2,6 +2,9 @@ var config = require("../config");
 
 var user = require("../app/user");
 
+exports.loginForm = function(req, res){
+	res.render("login", {});
+}
 exports.login = function(req, res){
 	var id = req.param("id");
 	var password = req.param("password");

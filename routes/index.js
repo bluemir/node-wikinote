@@ -17,6 +17,7 @@ exports.init = function(app){
 	app.get("/", redirectToFront);
 	app.get("/!logout", disableMenu, user.logout);
 	app.get("/!signup", disableMenu, user.signupForm);
+	app.get("/!login", disableMenu, user.loginForm);
 	app.post("/!login", disableMenu, user.login);
 	app.post("/!signup", disableMenu, user.signup);
 	app.get("/!search", disableMenu, wikiApp.search);

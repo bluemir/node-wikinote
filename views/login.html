@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Log In - {{ config.wikiname }}
+{% endblock %}
+
+{% block contents %}
+<article class="login">
+	<form method="post" id="login">
+		<dl>
+			<dt>ID</dt>
+			<dd>
+				<input type="text" placeholder="id" name="id" id="login.id" />
+			</dd>
+			<dt>Password</dt>
+			<dd>
+				<input type="password" placeholder="password" name="password" id="login.password" />
+			</dd>
+		</dl>
+		<p><input type="submit" value="login" /></p>
+	</form>
+</article>
+{% endblock %}
