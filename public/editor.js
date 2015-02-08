@@ -23,7 +23,8 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 	indentUnit : 4,
 	tabSize : 4,
 	indentWithTabs : true,
-	profile: "html"
+	profile: "html",
+	lineWrapping: true
 });
 emmetPlugin.clearKeymap();
 emmetPlugin.setKeymap({
@@ -43,7 +44,7 @@ function showMsg(level, message){
 		op -= 0.02;
 		if(op > 0)
 			setTimeout(loop, 20);
-		else 
+		else
 			$msg.style.display = "none";
 		$msg.classList.remove(level);
 	}, 0.5 * 1000);

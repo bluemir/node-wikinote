@@ -18,6 +18,7 @@ body>header {
 	background : black;
 	box-shadow : 0px 5px 3px rgba(128,128,128, 0.5);
 	position : fixed;
+	z-index : 100;
 
 	.row {
 		position : relative;
@@ -280,7 +281,7 @@ body>header {
 	}
 
 
-	.view {
+	&.view {
 		blockquote{
 			font-style : italic;
 			margin-left : 0px;
@@ -394,26 +395,22 @@ body>header {
 			}
 		}
 	}
-	.edit {
+	&.edit {
 		textarea {
 			tab-size : 4;
 			width : 100%;
 			box-sizing: border-box;
 			overflow-x : hidden;
 		}
-		form>img {
-			cursor : pointer;
-			float : right;
-		}
 		.CodeMirror {
 			border : 1px solid gray;
-			width : 100%;
-			resize : vertical;
 			height : auto;
+		}
+		.CodeMirror-scroll {
 			min-height : 300px;
 		}
 	}
-	.search {
+	&.search {
 		table{
 			border-collapse : collapse;
 			border : 1px solid gray;
@@ -429,7 +426,7 @@ body>header {
 			padding-left : 10px;
 		}
 	}
-	.history {
+	&.history {
 		table{
 			width : 100%;
 			border-collapse : collapse;
