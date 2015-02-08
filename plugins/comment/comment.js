@@ -90,14 +90,12 @@ function parseData(data){
 
 function captchaVerify(_req, callback){
 	var reqData = "";
-	reqData += "privatekey=" + config.recaptcha.privateKey + "&";
-	reqData += "remoteip=" + _req.ip + "&";
-	reqData += "challenge=" + _req.param("recaptcha_challenge_field") + "&";
-	reqData += "response=" + _req.param("recaptcha_response_field");
+	reqData += "secret=" + config.recaptcha.privateKey + "&";
+	reqData += "response=" + _req.param("g-recaptcha-response");
 
 	var req = https.request({
 		host : "www.google.com",
-		path : "/recaptcha/api/verify",
+		path : "/recaptcha/api/siteverify",
 		method : "POST",
 		headers : {
 			"Content-Type" : "application/x-www-form-urlencoded",
@@ -109,10 +107,10 @@ function captchaVerify(_req, callback){
 		res.on("data", function(data){
 			str += data;
 		}).on("end", function(){
-			if(/^true/.test(str)){
-				callback(null, true);
-			} else {
-				callback(null, false);
+			try {
+				callback(null, JSON.parse(str).success);
+			} catch (e) {
+				callback(e);
 			}
 		});
 	}).on('error', function(e){

@@ -49,6 +49,7 @@
 #comment article .contents {
 	margin-left : 100px;
 	margin-right : 120px;
+	word-wrap: break-word;
 }
 #comment article .time {
 	font-size : 0.8em;
@@ -58,4 +59,3 @@
 	border-left : 1px dotted gray;
 	padding-left : 10px;
 }
-
