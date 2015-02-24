@@ -116,8 +116,10 @@ wikiApp.deleteConfirm = function(req, res){
 	});
 }
 wikiApp.history = function(req, res){
-	wikiFS.history(req.wikipath, function(e, logs){
+	wikiFS.history(req.wikipath).then(function(logs){
 		res.render("history", {logs : logs});
+	}).fail(function(){
+		res.render("history", {logs : []});
 	});
 }
 module.exports = wikiApp;

@@ -80,7 +80,8 @@ exports.history = function(path, callback){
 	//%ae : author email
 	var logFormat = "%cD%x01%s%x01%h%x01%an%x01%ae"
 	var command = "git log --pretty=format:'" + logFormat + "' -- " + config.wikiDir + path + ".md";
-	exec(command, {cwd : config.wikiDir}, function(e, stdout, stderr){
+
+	return exec(command, {cwd : config.wikiDir}).spread(function(stdout, stderr){
 		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
 			var tmp = log.split("\x01");
 			return {
@@ -93,7 +94,7 @@ exports.history = function(path, callback){
 				}
 			};
 		});
-		callback(null, logs);
+		return logs;
 	});
 }
 function backup(method, fullname, author, callback){
