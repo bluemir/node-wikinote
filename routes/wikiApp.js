@@ -57,6 +57,7 @@ wikiApp.save = function(req, res){
 	wikiFS.writeWiki(req.wikipath, data, req.user).then(function(){
 		res.redirect(req.path);
 	}).fail(function(err){
+		console.log(err);
 		req.flash("warn", "fail to save");
 		res.redirect(req.path);
 	});
@@ -113,15 +114,12 @@ wikiApp.deleteConfirm = function(req, res){
 		res.redirect(req.wikipath + "?delete" );
 		return;
 	}
-	wikiFS.deleteWiki(req.wikipath, function(e){
-		if(e) {
-			console.log(e);
-			req.flash("warn","fail to delete");
-			res.redirect(req.wikipath);
-		} else {
-			req.flash("info", "delete!");
-			res.redirect("/" + config.frontPage);
-		}
+	wikiFS.deleteWiki(req.wikipath).then(function(){
+		req.flash("info", "delete!");
+		res.redirect("/" + config.frontPage);
+	}).fail(function(e){
+		req.flash("warn","fail to delete");
+		res.redirect(req.wikipath);
 	});
 }
 wikiApp.history = function(req, res){

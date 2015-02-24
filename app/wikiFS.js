@@ -21,13 +21,7 @@ exports.readWiki = function(path){
 exports.writeWiki = function(path, data, author){
 	return mkdirp(config.wikiDir + path.toString())
 		.then(nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8"))
-		.then(backup("update", path.full, author))
-		.then(function(){
-			callback();
-		})
-		.fail(function(err){
-			callback(err);
-		});
+		.then(backup("update", path.full, author));
 }
 exports.readFile = function(path){
 	return nfs.readFile(config.wikiDir + path.full, "utf8");
@@ -47,7 +41,7 @@ exports.fileList = function(path, callback){
 		return filename[0] != ".";
 	}
 }
-exports.acceptFile  = function(srcPath, path, name, callback){
+exports.acceptFile  = function(srcPath, path, name){
 	return mkdirp(config.wikiDir + path.toString()).then(function(){
 		return Q.promise(function(resolve, reject){
 			var readStream = fs.createReadStream(srcPath)
@@ -59,13 +53,13 @@ exports.acceptFile  = function(srcPath, path, name, callback){
 		});
 	});
 }
-exports.deleteWiki = function(path, callback){
-	fs.unlink(config.wikiDir + path.toString(), function(e){
-		console.log(e);
-		fs.unlink(config.wikiDir + path + ".md", callback );
-	});
+exports.deleteWiki = function(path){
+	return Q.all([
+		nfs.unlink(config.wikiDir + path.toString()),
+		nfs.unlink(config.wikiDir + path + ".md")
+	]);
 }
-exports.move = function(srcPath, targetPath, callback){
+exports.move = function(srcPath, targetPath){
 	return mkdirp(config.wikiDir + targetPath.toString())
 		.all([
 			nfs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full),
@@ -75,7 +69,7 @@ exports.move = function(srcPath, targetPath, callback){
 exports.find = function(path, word, callback){
 	searchEngine.search(word, path, callback);
 }
-exports.history = function(path, callback){
+exports.history = function(path){
 	//%c  : date
 	//%s  : subject
 	//%h  : hash id
@@ -100,10 +94,9 @@ exports.history = function(path, callback){
 		return logs;
 	});
 }
-function backup(method, fullname, author, callback){
+function backup(method, fullname, author){
 	if(!config.autoBackup){
-		callback();
-		return;
+		return Q();
 	}
 
 	var message = method + " : " + fullname
