@@ -17,7 +17,7 @@ var searchEngine = new SearchEngine(config.wikiDir);
 exports.readWiki = function(path){
 	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
 }
-exports.writeWiki = function(path, data, author, callback){
+exports.writeWiki = function(path, data, author){
 	return mkdirp(config.wikiDir + path.toString())
 		.then(nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8"))
 		.then(backup("update", path.full, author))
@@ -28,20 +28,13 @@ exports.writeWiki = function(path, data, author, callback){
 			callback(err);
 		});
 }
-exports.readFile = function(path, callback){
-	fs.readFile(config.wikiDir + path.full, "utf8", callback);
+exports.readFile = function(path){
+	return nfs.readFile(config.wikiDir + path.full, "utf8");
 }
 exports.writeFile = function(path, data, author, callback){
-	mkdirp(config.wikiDir + path.path, function(){
-		fs.writeFile(config.wikiDir + path.full, data, "utf8", function(err){
-			if(err){
-				callback(err);
-				return;
-			}
-
-			backup("update", path.full, author, callback);
-		});
-	});
+	return mkdirp(config.wikiDir + path.path)
+		.then(nfs.writeFile(config.wikiDir + path.full, data, "utf8"))
+		.then(backup("update", path.full, author));
 }
 exports.fileList = function(path, callback){
 	fs.readdir(config.wikiDir + path.toString(), function(err, files){

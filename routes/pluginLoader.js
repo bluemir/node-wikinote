@@ -90,11 +90,11 @@ function Loader(){
 		},
 		readfile : function(path, callback){
 			//TODO Check argument
-			wikiFS.readFile(path, callback);
+			wikiFS.readFile(path).nodeify(callback);
 		},
 		writefile : function(path, data, user, callback){
 			//TODO Check argument
-			wikiFS.writeFile(path, data, user, callback);
+			wikiFS.writeFile(path, data, user).nodeify(callback);
 		},
 		readwiki : function(path, callback){
 			//TODO Check argument
