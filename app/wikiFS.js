@@ -37,12 +37,14 @@ exports.writeFile = function(path, data, author, callback){
 		.then(backup("update", path.full, author));
 }
 exports.fileList = function(path, callback){
-	fs.readdir(config.wikiDir + path.toString(), function(err, files){
-		if(err) return callback(err);
-		callback(null, files.filter(function(filename){
-			return filename[0] != ".";
-		}));
-	});
+	return nfs.readdir(config.wikiDir + path.toString())
+		.then(function(files){
+			return files.filter(notStartDot);
+		});
+
+	function notStartDot(filename){
+		return filename[0] != ".";
+	}
 }
 exports.acceptFile  = function(srcPath, path, name, callback){
 	mkdirp(config.wikiDir + path.toString(), function(){

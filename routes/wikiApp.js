@@ -69,8 +69,10 @@ wikiApp.move = function(req, res){
 	});
 }
 wikiApp.attach = function(req, res){
-	wikiFS.fileList(req.wikipath, function(err, files){
-		res.render("attach", {files: files || []});
+	wikiFS.fileList(req.wikipath).then(function(files){
+		res.render("attach", {files: files});
+	}, function(err){
+		res.render("attach", {files: []});
 	});
 }
 wikiApp.upload = function(req, res){
