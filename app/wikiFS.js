@@ -47,10 +47,14 @@ exports.fileList = function(path, callback){
 	}
 }
 exports.acceptFile  = function(srcPath, path, name, callback){
-	mkdirp(config.wikiDir + path.toString(), function(){
-		fs.readFile(srcPath, function(e, data){
-			if(e) return callback(e);
-			fs.writeFile(config.wikiDir + path.full + "/" + name, data, callback);
+	return mkdirp(config.wikiDir + path.toString()).then(function(){
+		return Q.promise(function(resolve, reject){
+			var readStream = fs.createReadStream(srcPath)
+			var writeStream = fs.createWriteStream(config.wikiDir + path.full + "/" + name);
+
+			readStream.pipe(writeStream);
+
+			writeStream.on("finish", resolve).on("error", reject);
 		});
 	});
 }

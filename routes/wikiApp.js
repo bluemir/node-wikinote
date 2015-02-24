@@ -53,7 +53,7 @@ wikiApp.edit = function(req, res){
 }
 wikiApp.save = function(req, res){
 	var data = req.param("data");
-	wikiFS.writeWiki(req.wikipath, data, req.session.user).then(function(){
+	wikiFS.writeWiki(req.wikipath, data, req.user).then(function(){
 		res.redirect(req.path);
 	}).fail(function(err){
 		req.flash("warn", "fail to save");
@@ -77,9 +77,10 @@ wikiApp.attach = function(req, res){
 }
 wikiApp.upload = function(req, res){
 	var file = req.files.upload;
-	wikiFS.acceptFile(file.path, req.wikipath, file.name, function(err){
-		if(err) {console.log(err); res.send(500); return;}
+	wikiFS.acceptFile(file.path, req.wikipath, file.name).then(function(){
 		res.redirect(req.path + "?attach");
+	}).fail(function(err){
+		res.send(500);
 	});
 }
 wikiApp.staticFiles = function(req, res){
