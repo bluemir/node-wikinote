@@ -8,7 +8,7 @@
 <article class="attach">
     <ul>
         {% for file in files %}
-        <li><a href="{{ path.toString() }}/{{ file }}">{{file}}</a></li>
+        <li><a href="{{ wikipath.toString() }}/{{ file }}">{{file}}</a></li>
         {% endfor %}
     </ul>
     <form enctype="multipart/form-data" method="post">
