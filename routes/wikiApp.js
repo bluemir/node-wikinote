@@ -45,9 +45,10 @@ wikiApp.view = function(req, res){
 
 }
 wikiApp.edit = function(req, res){
-	wikiFS.readWiki(req.wikipath).then(function(){
+	wikiFS.readWiki(req.wikipath).then(function(data){
 		res.render("edit", {wikiData: data});
-	}).fail(function(){
+	}).fail(function(err){
+		//TODO Error Handling
 		res.render("edit", {wikiData: null});
 	})
 }
