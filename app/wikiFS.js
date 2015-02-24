@@ -8,7 +8,8 @@ var nfs = {
 	readFile : Q.denodeify(fs.readFile),
 	writeFile : Q.denodeify(fs.writeFile),
 	readdir : Q.denodeify(fs.readdir),
-	unlink : Q.denodeify(fs.unlink)
+	unlink : Q.denodeify(fs.unlink),
+	rename : Q.denodeify(fs.rename)
 }
 
 var SearchEngine = require("./searchEngine")
@@ -65,15 +66,11 @@ exports.deleteWiki = function(path, callback){
 	});
 }
 exports.move = function(srcPath, targetPath, callback){
-	mkdirp(config.wikiDir + targetPath.toString(), function(){
-		fs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full,function(e){
-			console.log(e);
-		});
-		fs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md", function(e){
-			console.log(e);
-			callback(null);
-		});
-	});
+	return mkdirp(config.wikiDir + targetPath.toString())
+		.all([
+			nfs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full),
+			nfs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md")
+		]);
 }
 exports.find = function(path, word, callback){
 	searchEngine.search(word, path, callback);
