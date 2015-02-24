@@ -9,8 +9,9 @@ exports.save = function(req, res){
 	var location = req.param("location");
     var wikipath = new WikiPath(location);
 
-	wikiFS.writeWiki(wikipath, data, req.session.user, function(err){
-		if(err) return res.status(500).json(err);
+	wikiFS.writeWiki(wikipath, data, req.session.user).then(function(){
 		res.status(200).json({});
+	}).fail(function(err){
+		return res.status(500).json(err);
 	});
 }

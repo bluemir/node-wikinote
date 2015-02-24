@@ -29,26 +29,34 @@ marked.setOptions({
 var wikiApp = {};
 
 wikiApp.view = function(req, res){
-	wikiFS.readWiki(req.wikipath, function(err, data){
-		if(err) {
-			res.status(404);
-			data = null;
-		} else {
-			data = marked(data);
-		}
+	wikiFS.readWiki(req.wikipath).then(function(data){
+		data = marked(data);
+		loader.postArticle(req.wikipath, req.user, function(err, html){
+			res.render("view", {wikiData: data, pluginsData : html});
+		});
+	}).fail(function(err){
+		res.status(404);
+		data = null;
 		loader.postArticle(req.wikipath, req.user, function(err, html){
 			res.render("view", {wikiData: data, pluginsData : html});
 		});
 	});
+
+
 }
 wikiApp.edit = function(req, res){
-	wikiFS.readWiki(req.wikipath, function(err, data){
+	wikiFS.readWiki(req.wikipath).then(function(){
 		res.render("edit", {wikiData: data});
-	});
+	}).fail(function(){
+		res.render("edit", {wikiData: null});
+	})
 }
 wikiApp.save = function(req, res){
 	var data = req.param("data");
-	wikiFS.writeWiki(req.wikipath, data, req.session.user, function(err){
+	wikiFS.writeWiki(req.wikipath, data, req.session.user).then(function(){
+		res.redirect(req.path);
+	}).fail(function(err){
+		req.flash("warn", "fail to save");
 		res.redirect(req.path);
 	});
 }
@@ -75,16 +83,6 @@ wikiApp.upload = function(req, res){
 wikiApp.staticFiles = function(req, res){
 	res.sendfile(saveDir + decodeURIComponent(req.path));
 }
-wikiApp.presentation = function(req, res){
-	wikiFS.readWiki(req.wikipath, function(err, data){
-		var option = {};
-		try {
-			option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
-		} catch (e){
-		}
-		res.render("presentation", {wikiData: data, option : option});
-	});
-}
 
 wikiApp.search = function(req, res){
 	var word = req.param("q");
@@ -106,7 +104,7 @@ wikiApp.deleteConfirm = function(req, res){
 		res.redirect(req.wikipath + "?delete" );
 		return;
 	}
-	wikiFS.deleteFile(req.wikipath, function(e){
+	wikiFS.deleteWiki(req.wikipath, function(e){
 		if(e) {
 			console.log(e);
 			req.flash("warn","fail to delete");

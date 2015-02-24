@@ -1,23 +1,32 @@
+var Q = require("q");
 var fs = require("fs");
-var mkdirp = require("mkdirp");
-var exec = require("child_process").exec;
+var mkdirp = Q.denodeify(require("mkdirp"));
+var exec = Q.denodeify(require("child_process").exec);
 var config = require("../config");
+
+var nfs = {
+	readFile : Q.denodeify(fs.readFile),
+	writeFile : Q.denodeify(fs.writeFile),
+	readdir : Q.denodeify(fs.readdir),
+	unlink : Q.denodeify(fs.unlink)
+}
 
 var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
 
-exports.readWiki = function(path, callback){
-	fs.readFile(config.wikiDir + path.full + ".md", "utf8", callback);
+exports.readWiki = function(path){
+	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
 }
 exports.writeWiki = function(path, data, author, callback){
-	mkdirp(config.wikiDir + path.toString(), function(){
-		fs.writeFile(config.wikiDir + path.full + ".md", data, "utf8", function(err){
-			if(!err)
-				backup("update", path.full, author, callback);
-			else
-				callback(err);
+	return mkdirp(config.wikiDir + path.toString())
+		.then(nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8"))
+		.then(backup("update", path.full, author))
+		.then(function(){
+			callback();
+		})
+		.fail(function(err){
+			callback(err);
 		});
-	})
 }
 exports.readFile = function(path, callback){
 	fs.readFile(config.wikiDir + path.full, "utf8", callback);
@@ -25,10 +34,12 @@ exports.readFile = function(path, callback){
 exports.writeFile = function(path, data, author, callback){
 	mkdirp(config.wikiDir + path.path, function(){
 		fs.writeFile(config.wikiDir + path.full, data, "utf8", function(err){
-			if(!err)
-				backup("update", path.full, author, callback);
-			else 
+			if(err){
 				callback(err);
+				return;
+			}
+
+			backup("update", path.full, author, callback);
 		});
 	});
 }
@@ -48,7 +59,7 @@ exports.acceptFile  = function(srcPath, path, name, callback){
 		});
 	});
 }
-exports.deleteFile = function(path, callback){
+exports.deleteWiki = function(path, callback){
 	fs.unlink(config.wikiDir + path.toString(), function(e){
 		console.log(e);
 		fs.unlink(config.wikiDir + path + ".md", callback );
@@ -79,9 +90,9 @@ exports.history = function(path, callback){
 	exec(command, {cwd : config.wikiDir}, function(e, stdout, stderr){
 		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
 			var tmp = log.split("\x01");
-			return { 
-				date : tmp[0], 
-				subject : tmp[1], 
+			return {
+				date : tmp[0],
+				subject : tmp[1],
 				id : tmp[2],
 				author : {
 					name : tmp[3],
@@ -91,24 +102,22 @@ exports.history = function(path, callback){
 		});
 		callback(null, logs);
 	});
-} 
+}
 function backup(method, fullname, author, callback){
 	if(!config.autoBackup){
 		callback();
 		return;
 	}
-	
+
 	var message = method + " : " + fullname
-	
+
 	var command = "git add .;"
 	command += "git commit -a ";
 	command += "-m" + wapper(buildMessage(method, fullname));
 	command += "--author" + wapper(signature(author));
 
-	exec(command, {cwd : config.wikiDir}, function(e, stdout, stderr){
-		callback();			
-	});
-	
+	return exec(command, {cwd : config.wikiDir});
+
 	function wapper(str){
 		return " '" + str + "' ";
 	}
@@ -118,7 +127,7 @@ function backup(method, fullname, author, callback){
 		}
 		var id = author.id || "anomymous";
 		var email = author.email || id + "@wikinote";
-		
+
 		return id + " <" + email + ">";
 	}
 	function buildMessage(method, notename){
