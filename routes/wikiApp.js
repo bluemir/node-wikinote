@@ -100,10 +100,13 @@ wikiApp.search = function(req, res){
 		res.render("search", {result : null});
 		return;
 	}
-	wikiFS.find("", word, function(e, data){
+	wikiFS.find(word, "").then(function(data){
+		//console.log(data);
 		res.render("search", {result :data, word : word});
+	}).fail(function(e){
+		//console.log(e.stack);
+		res.status(500).end();
 	});
-
 }
 wikiApp.deleteForm = function(req, res){
 	res.render("delete", {});

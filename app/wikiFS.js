@@ -66,11 +66,11 @@ exports.move = function(srcPath, targetPath){
 			nfs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md")
 		]);
 }
-exports.find = function(path, word, callback){
-	searchEngine.search(word, path, callback);
+exports.find = function(word, path){
+	return searchEngine.search(word, path + "");
 }
 exports.history = function(path){
-	//%c  : date
+	//%cD : date
 	//%s  : subject
 	//%h  : hash id
 	//%an : author name
