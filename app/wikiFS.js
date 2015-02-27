@@ -26,12 +26,12 @@ exports.writeWiki = function(path, data, author){
 exports.readFile = function(path){
 	return nfs.readFile(config.wikiDir + path.full, "utf8");
 }
-exports.writeFile = function(path, data, author, callback){
+exports.writeFile = function(path, data, author){
 	return mkdirp(config.wikiDir + path.path)
 		.then(nfs.writeFile(config.wikiDir + path.full, data, "utf8"))
 		.then(backup("update", path.full, author));
 }
-exports.fileList = function(path, callback){
+exports.fileList = function(path){
 	return nfs.readdir(config.wikiDir + path.toString())
 		.then(function(files){
 			return files.filter(notStartDot);
@@ -123,4 +123,14 @@ function backup(method, fullname, author){
 	function buildMessage(method, notename){
 		return method + " : " + notename;
 	}
+}
+
+function updateBacklinks(wikipath, data){
+	//marked lexer
+	//links resolve
+	//update .backlinks
+
+}
+function updateLink(from, to){
+	//add back index
 }
