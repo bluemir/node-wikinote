@@ -1,17 +1,7 @@
 var Q = require("q");
-var fs = require("fs");
-var mkdirp = Q.denodeify(require("mkdirp"));
+var nfs = require("./nfs");
 var exec = Q.denodeify(require("child_process").exec);
 var config = require("../config");
-
-var nfs = {
-	readFile : Q.denodeify(fs.readFile),
-	writeFile : Q.denodeify(fs.writeFile),
-	readdir : Q.denodeify(fs.readdir),
-	unlink : Q.denodeify(fs.unlink),
-	rename : Q.denodeify(fs.rename)
-}
-
 var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
 
@@ -19,17 +9,26 @@ exports.readWiki = function(path){
 	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
 }
 exports.writeWiki = function(path, data, author){
-	return mkdirp(config.wikiDir + path.toString())
-		.then(nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8"))
-		.then(backup("update", path.full, author));
+
+	return nfs.mkdirp(config.wikiDir + path.toString())
+		.then(function(){
+			return nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8")
+		})
+		.then(function(){
+			backup("update", path.full, author)
+		});
 }
 exports.readFile = function(path){
 	return nfs.readFile(config.wikiDir + path.full, "utf8");
 }
 exports.writeFile = function(path, data, author){
-	return mkdirp(config.wikiDir + path.path)
-		.then(nfs.writeFile(config.wikiDir + path.full, data, "utf8"))
-		.then(backup("update", path.full, author));
+	return nfs.mkdirp(config.wikiDir + path.path)
+		.then(function(){
+			return nfs.writeFile(config.wikiDir + path.full, data, "utf8")
+		})
+		.then(function(){
+			backup("update", path.full, author)
+		});
 }
 exports.fileList = function(path){
 	return nfs.readdir(config.wikiDir + path.toString())
@@ -42,7 +41,7 @@ exports.fileList = function(path){
 	}
 }
 exports.acceptFile  = function(srcPath, path, name){
-	return mkdirp(config.wikiDir + path.toString()).then(function(){
+	return nfs.mkdirp(config.wikiDir + path.toString()).then(function(){
 		return Q.promise(function(resolve, reject){
 			var readStream = fs.createReadStream(srcPath)
 			var writeStream = fs.createWriteStream(config.wikiDir + path.full + "/" + name);
@@ -60,7 +59,7 @@ exports.deleteWiki = function(path){
 	]);
 }
 exports.move = function(srcPath, targetPath){
-	return mkdirp(config.wikiDir + targetPath.toString())
+	return nfs.mkdirp(config.wikiDir + targetPath.toString())
 		.all([
 			nfs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full),
 			nfs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md")
