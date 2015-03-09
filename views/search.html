@@ -16,7 +16,7 @@ Search - {{ config.wikiname }}
     <ul>
         {% for key, value in result %}
         <li>
-            <a href="{{ value.path }}">{{ value.name }}</a>
+            <a href="{{ value.path }}">{{ value.path }}</a>
             {% if value.lines %}
             <table>
                 {% for line in value.lines %}

@@ -1,4 +1,5 @@
 var async = require("async");
+var Q = require("q");
 var express = require("express");
 var wikiFS = require("../app/wikiFS");
 var PREFIXS = ["", "../plugins/"];
@@ -89,19 +90,19 @@ function Loader(){
 		},
 		readfile : function(path, callback){
 			//TODO Check argument
-			wikiFS.readFile(path, callback);
+			wikiFS.readFile(path).nodeify(callback);
 		},
 		writefile : function(path, data, user, callback){
 			//TODO Check argument
-			wikiFS.writeFile(path, data, user, callback);
+			wikiFS.writeFile(path, data, user).nodeify(callback);
 		},
 		readwiki : function(path, callback){
 			//TODO Check argument
-			wikiFS.readWiki(path, callback);
+			return wikiFS.readWiki(path).nodeify(callback);
 		},
 		writewiki : function(path, callback){
 			//TODO Checkargument
-			wikiFS.writeFile(path, data, user, callback);
+			return wikiFS.writeWiki(path, data, user).nodeify(callback);
 		}
 	};
 	this.postArticle = postArticle;
