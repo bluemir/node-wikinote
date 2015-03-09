@@ -1,0 +1,45 @@
+@import "color.less";
+
+/* fonts */
+@import url(font/wikinote_logo_font.css);
+@import url(font/NanumBarunGothic/NanumBarunGothic.css);
+@import url(font/NotoSans/NotoSans.css);
+
+// 320 ~ 400 ~ 600
+// min-width를 미디어 쿼리 크기보다 작게 하는것은 스크롤바로 인한 fixed 버그를 없에기 위함 임
+// (가로스크롤바가 생겼는데 막상 가로 스크롤링은 안됨).
+// 600 이하는 fixed로 하지 않는것도 고려해볼수 있음. (페북이 그렇게 동작함.)
+// 모바일 환경에서는 글씨 크기와 h1의 크기를 줄이는 것을 고려할수 있음.
+// 모바일 브라우져중 자바스크립트가 되지 않는 경우는 없기 때문에 모바일에서 자바스크립트 적극 활용해도 됨
+
+//@title-font : 'Alegreya Sans SC', sans-serif;
+@title-font : "Noto Sans", Helvetica, Arial, sans-serif;
+@body-font : "Noto Sans", Helvetica, Arial, sans-serif;
+
+@import "wide-pc.less";
+
+@media screen and (max-width: 900px) {
+	@import "narrow-pc.less";
+}
+@media screen and (max-width: 650px) {
+	@import "tablet.less";
+}
+@media screen and (max-width: 450px) {
+	@import "phone.less";
+}
+
+/*Print*/
+@media print {
+	#wapper header{
+		display : none;
+	}
+	#wapper footer{
+		display : none;
+	}
+	#wapper {
+	}
+	article.view code {
+		color : black;
+		background : white;
+	}
+}

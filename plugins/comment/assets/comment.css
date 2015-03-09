@@ -1,0 +1,61 @@
+#comment header {
+	border-bottom : 1px solid gray;
+	margin-bottom : 5px;
+	padding-left : 0.5em;
+}
+#comment textarea {
+	box-sizing : border-box;
+	width : 100%;
+	resize : vertical;
+}
+#comment-buttons {
+	text-align :right;
+}
+#comment form {
+	border-bottom : 1px solid gray;
+	padding-bottom : 10px;
+}
+#comment form input {
+	vertical-align : top;
+}
+#comment #captcha {
+	text-align : right;
+}
+#comment #captcha>div{
+	display : inline-block;
+	text-align : left;
+}
+
+#comment article {
+	margin : 0px;
+	border-bottom : 1px solid gray;
+}
+#comment article:after {
+	display : block;
+	content :"";
+	clear : both;
+}
+#comment article div {
+	vertical-align : top;
+}
+#comment article .author {
+	width : 80px;
+	border-right : 1px dotted gray;
+	float : left;
+	overflow-x : hidden;
+	text-overflow : ellipsis;
+	padding-right : 10px;
+}
+#comment article .contents {
+	margin-left : 100px;
+	margin-right : 120px;
+	word-wrap: break-word;
+}
+#comment article .time {
+	font-size : 0.8em;
+	float : right;
+	width : 100px;
+	top : 0px;
+	border-left : 1px dotted gray;
+	padding-left : 10px;
+}

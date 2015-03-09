@@ -1,22 +1,29 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
-    <title>{{ notename }}::{{ title }}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        {% block title %}
+        {{ config.wikiname }}
+        {% endblock %}
+    </title>
     {% block style %}
-    <link rel="stylesheet" href="/!public/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/!public/stylesheets/main.css"/>
     {% endblock %}
 </head>
 <body>
-    <div id="wapper">
-        <header>
-            <a id="wikiname" href="/">{{ wikiname }}</a>
+    <header>
+        <div class="row">
+            <a id="wikiname" href="/">{{ config.wikiname }}</a>
             {% if config.security %}
             <div id="user">
-                {% if session.user.id %}
-                {{ session.user.id }}
-                <a href="/!logout?redirect={{ path.encode() }}">logout</a>
+                {% if user.isLogin() %}
+                <span class="username">{{ user.id }}</span>
+                <a href="/!logout?redirect={{ wikipath.encode() }}">logout</a>
                 {% else %}
-                <form action="/!login?redirect={{ path.encode() }}" method="post">
+                <form action="/!login?redirect={{ wikipath.encode() }}" method="post">
                     <input type="text" placeholder="id" name="id"/>
                     <input type="password" placeholder="password" name="password"/>
                     <input type="submit", value="login"/>
@@ -25,42 +32,60 @@
             </div>
             {% endif %}
             {% if !disableMenu %}
-            <div>
-                <ul>
-                    <li><a href="{{ path.toString() }}">View</a></li>
-                    <li><a href="{{ path.toString() }}?edit">Edit</a></li>
-                    <li>
-                        <a href="#">More</a>
-                        <ul>
-                            <li><a href="{{ path.toString() }}?delete">Delete</a></li>
-                            <li><a href="{{ path.toString() }}?attach">Attach</a></li>
-                            <li><a href="{{ path.toString() }}?move">Move</a></li>
-                            <li><a href="{{ path.toString() }}?find">Find</a></li>
-                            <li><a href="{{ path.toString() }}?history">Histroy</a></li>
-                            <li><a href="{{ path.toString() }}?presentation">Presentation</a></li>
-                            <li class="seperater"></li>
-                            <li><a href="/!signup?redirect={{ path.encode() }}">SignUp</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <div id="breadcrumbs">
-                    {% for key, val in path.bread() %}
-                    <span>/ </span><a href="/{{ val.path }}">{{ val.name }}</a>
-                    {% endfor %}
-                </div>
-            </div>
+            <ul class="menu">
+                <li><a href="{{ wikipath.toString() }}">View</a></li>
+                <li><a href="{{ wikipath.toString() }}?edit">Edit</a></li>
+                <li>
+                    <a href="#">More</a>
+                    <ul class="submenu">
+                        <li><a href="{{ wikipath.toString() }}?delete">Delete</a></li>
+                        <li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
+                        <li><a href="{{ wikipath.toString() }}?move">Move</a></li>
+                        <li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
+						{% for menu in menus %}
+						<li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
+						{% endfor %}
+                        <li class="seperater"></li>
+                        <li><a href="/!search">Search</a></li>
+                        {% if user.isLogin() %}
+                        <li><a href="/!logout?redirect={{ wikipath.encode() }}">Log Out</a></li>
+                        {% else %}
+                        <li><a href="/!login?redirect={{ wikipath.encode() }}">Log In</a></li>
+                        <li><a href="/!signup?redirect={{ wikipath.encode() }}">Sign Up</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+            <nav id="breadcrumbs">
+                {% for key, val in wikipath.bread() %}
+                <span>/ </span><a href="{{ val.path }}">{{ val.name }}</a>
+                {% endfor %}
+            </nav>
             {% endif %}
-            {% if msg.warn.length != 0 %}
-            <p class="msg-warn">{{ msg.warn }}</p>
-            {% elseif msg.info.length != 0 %}
-            <p class="msg-info">{{ msg.info }}</p>
-            {% else %}
+        </div>
+    </header>
+
+    <div class="row" id="wapper">
+        <aside id="alert">
+            {% set warn = utils.flash("warn") %}
+            {% if warn != "" %}
+            <p class="msg-warn">{{ warn }}</p>
+            {% endif %}
+            {% set info = utils.flash("info") %}
+            {% if info != "" %}
+            <p class="msg-info">{{ info }}</p>
+            {% endif %}
             <p class="msg-dynamic" id="message"></p>
-            {% endif %}
-        </header>
+        </aside>
         {% block contents %}
         {% endblock %}
     </div>
+    <footer>
+        <div class="row">
+            <p>Powered By <a href="http://github.com/bluemir/wikinote">wikinote</a></p>
+        </div>
+    </footer>
+
     <script src="/!public/shotcut.js"></script>
     {% block scripts %}
     {% endblock %}

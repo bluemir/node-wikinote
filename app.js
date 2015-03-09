@@ -8,13 +8,15 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var errorHandler = require('errorhandler');
-var routes = require('./routes');
 var swig = require("swig");
+
+var routes = require('./routes');
+var config = require("./config")
 
 var app = express();
 app.engine("html", swig.renderFile)
 
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || config.PORT || 4000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 

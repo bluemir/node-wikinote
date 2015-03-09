@@ -1,80 +1,88 @@
-var fs = require("fs");
-var mkdirp = require("mkdirp");
-var exec = require("child_process").exec;
+var Q = require("q");
+var nfs = require("./nfs");
+var exec = Q.denodeify(require("child_process").exec);
 var config = require("../config");
-
 var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
 
-exports.readWiki = function(path, callback){
-	fs.readFile(config.wikiDir + path.full + ".md", "utf8", function(err, data){
-		if(err){
-			callback(err);
-			return;
-		}
-		callback(null, data);
-	});
+exports.readWiki = function(path){
+	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
 }
-exports.writeWiki = function(path, data, author, callback){
-	mkdirp(config.wikiDir + path.toString(), function(){
-		fs.writeFile(config.wikiDir + path.full + ".md", data, "utf8", function(err){
-			if(!err)
-				backup("update", path.full, author, callback);
-			else
-				callback(err);
+exports.writeWiki = function(path, data, author){
+
+	return nfs.mkdirp(config.wikiDir + path.toString())
+		.then(function(){
+			return nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8")
+		})
+		.then(function(){
+			backup("update", path.full, author)
 		});
-	})
 }
-exports.fileList = function(path, callback){
-	fs.readdir(config.wikiDir + path.toString(), function(err, files){
-		if(err) return callback(err);
-		callback(null, files.filter(function(filename){
-			return filename[0] != ".";
-		}));
-	});
+exports.readFile = function(path){
+	return nfs.readFile(config.wikiDir + path.full, "utf8");
 }
-exports.acceptFile  = function(srcPath, path, name, callback){
-	mkdirp(config.wikiDir + path.toString(), function(){
-		fs.readFile(srcPath, function(e, data){
-			if(e) return callback(e);
-			fs.writeFile(config.wikiDir + path.full + "/" + name, data, callback);
+exports.writeFile = function(path, data, author){
+	return nfs.mkdirp(config.wikiDir + path.path)
+		.then(function(){
+			return nfs.writeFile(config.wikiDir + path.full, data, "utf8")
+		})
+		.then(function(){
+			backup("update", path.full, author)
 		});
-	});
 }
-exports.deleteFile = function(path, callback){
-	fs.unlink(config.wikiDir + path.toString(), function(e){
-		console.log(e);
-		fs.unlink(config.wikiDir + path + ".md", callback );
-	});
-}
-exports.move = function(srcPath, targetPath, callback){
-	mkdirp(config.wikiDir + targetPath.toString(), function(){
-		fs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full,function(e){
-			console.log(e);
+exports.fileList = function(path){
+	return nfs.readdir(config.wikiDir + path.toString())
+		.then(function(files){
+			return files.filter(notStartDot);
 		});
-		fs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md", function(e){
-			console.log(e);
-			callback(null);
+
+	function notStartDot(filename){
+		return filename[0] != ".";
+	}
+}
+exports.acceptFile  = function(srcPath, path, name){
+	return nfs.mkdirp(config.wikiDir + path.toString()).then(function(){
+		return Q.promise(function(resolve, reject){
+			var readStream = fs.createReadStream(srcPath)
+			var writeStream = fs.createWriteStream(config.wikiDir + path.full + "/" + name);
+
+			readStream.pipe(writeStream);
+
+			writeStream.on("finish", resolve).on("error", reject);
 		});
 	});
 }
-exports.find = function(path, word, callback){
-	searchEngine.search(word, path, callback);
+exports.deleteWiki = function(path){
+	return Q.all([
+		nfs.unlink(config.wikiDir + path.toString()),
+		nfs.unlink(config.wikiDir + path + ".md")
+	]);
 }
-exports.history = function(path, callback){
-	//%c  : date
+exports.move = function(srcPath, targetPath){
+	return nfs.mkdirp(config.wikiDir + targetPath.toString())
+		.all([
+			nfs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full),
+			nfs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md")
+		]);
+}
+exports.find = function(word, path){
+	return searchEngine.search(word, path + "");
+}
+exports.history = function(path){
+	//%cD : date
 	//%s  : subject
 	//%h  : hash id
 	//%an : author name
 	//%ae : author email
 	var logFormat = "%cD%x01%s%x01%h%x01%an%x01%ae"
 	var command = "git log --pretty=format:'" + logFormat + "' -- " + config.wikiDir + path + ".md";
-	exec(command, {cwd : config.wikiDir}, function(e, stdout, stderr){
+
+	return exec(command, {cwd : config.wikiDir}).spread(function(stdout, stderr){
 		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
 			var tmp = log.split("\x01");
-			return { 
-				date : tmp[0], 
-				subject : tmp[1], 
+			return {
+				date : tmp[0],
+				subject : tmp[1],
 				id : tmp[2],
 				author : {
 					name : tmp[3],
@@ -82,26 +90,23 @@ exports.history = function(path, callback){
 				}
 			};
 		});
-		callback(null, logs);
+		return logs;
 	});
-} 
-function backup(method, fullname, author, callback){
+}
+function backup(method, fullname, author){
 	if(!config.autoBackup){
-		callback();
-		return;
+		return Q();
 	}
-	
+
 	var message = method + " : " + fullname
-	
+
 	var command = "git add .;"
 	command += "git commit -a ";
 	command += "-m" + wapper(buildMessage(method, fullname));
 	command += "--author" + wapper(signature(author));
 
-	exec(command, {cwd : config.wikiDir}, function(e, stdout, stderr){
-		callback();			
-	});
-	
+	return exec(command, {cwd : config.wikiDir});
+
 	function wapper(str){
 		return " '" + str + "' ";
 	}
@@ -111,10 +116,20 @@ function backup(method, fullname, author, callback){
 		}
 		var id = author.id || "anomymous";
 		var email = author.email || id + "@wikinote";
-		
+
 		return id + " <" + email + ">";
 	}
 	function buildMessage(method, notename){
 		return method + " : " + notename;
 	}
+}
+
+function updateBacklinks(wikipath, data){
+	//marked lexer
+	//links resolve
+	//update .backlinks
+
+}
+function updateLink(from, to){
+	//add back index
 }

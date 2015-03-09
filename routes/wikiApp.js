@@ -3,12 +3,13 @@ var marked = require("marked");
 var WikiPath = require("./wikipath");
 var config = require("../config");
 var userApp = require("./userApp");
+var loader = require("./pluginLoader");
 
-var externalLinkRenderer = new marked.Renderer();
+var customRender = new marked.Renderer();
 var protocolRegexp = /^https?:\/\/.+$/;
-externalLinkRenderer.link = function(href, title, text){
+customRender.link = function(href, title, text){
 	var external = protocolRegexp.test(href);
-	return "<a href=\"" + href + "\"" + 
+	return "<a href=\"" + href + "\"" +
 		(external ? " target=\"_blank\"" : "")+
 		(title ? " title=\"" + title + "\"" : "") +
 		">" + text + "</a>";
@@ -21,99 +22,114 @@ marked.setOptions({
 	pedantic: false,
 	sanitize: false,
 	smartLists: true,
-	renderer : externalLinkRenderer
+	footnotes : true,
+	renderer : customRender
 });
 
 var wikiApp = {};
 
 wikiApp.view = function(req, res){
-	wikiFS.readWiki(req.wikiPath, function(err, data){
-		if(err) {
-			console.log(err);
-			data = null;
-		} else {
-			data = marked(data);
-		}
-		res.render("view", {title : "Wiki Note", wikiData: data});
+	wikiFS.readWiki(req.wikipath).then(function(data){
+		data = marked(data);
+		loader.postArticle(req.wikipath, req.user, function(err, html){
+			res.render("view", {wikiData: data, pluginsData : html});
+		});
+	}).fail(function(err){
+		res.status(404);
+		data = null;
+		loader.postArticle(req.wikipath, req.user, function(err, html){
+			res.render("view", {wikiData: data, pluginsData : html});
+		});
 	});
+
+
 }
 wikiApp.edit = function(req, res){
-	wikiFS.readWiki(req.wikiPath, function(err, data){
-		res.render("edit", {title : "Wiki Note::Edit", wikiData: data});
-	});
+	wikiFS.readWiki(req.wikipath).then(function(data){
+		res.render("edit", {wikiData: data});
+	}).fail(function(err){
+		//TODO Error Handling
+		res.render("edit", {wikiData: null});
+	})
 }
 wikiApp.save = function(req, res){
 	var data = req.param("data");
-	wikiFS.writeWiki(req.wikiPath, data, req.session.user, function(err){
+	wikiFS.writeWiki(req.wikipath, data, req.user).then(function(){
+		res.redirect(req.path);
+	}).fail(function(err){
+		console.log(err);
+		req.flash("warn", "fail to save");
 		res.redirect(req.path);
 	});
 }
 wikiApp.moveForm = function(req, res){
-	res.render("move", {title : "Wiki Note::Move"});
+	res.render("move", {});
 }
 wikiApp.move = function(req, res){
-	wikiFS.move(req.wikiPath, new WikiPath(req.param("target")), function(){
-		res.redirect(req.param("target"));
-	});
+	wikiFS.move(req.wikipath, new WikiPath(req.param("target")))
+		.then(function(){
+			res.redirect(req.param("target"));
+		})
+		.fail(function(err){
+			req.flash("warn", "move fail");
+			res.redirect(req.wikipath);
+		});
 }
 wikiApp.attach = function(req, res){
-	wikiFS.fileList(req.wikiPath, function(err, files){
-		res.render("attach", {title : "Wiki Note::Attach", files: files || []});
+	wikiFS.fileList(req.wikipath).then(function(files){
+		res.render("attach", {files: files});
+	}, function(err){
+		res.render("attach", {files: []});
 	});
 }
 wikiApp.upload = function(req, res){
 	var file = req.files.upload;
-	wikiFS.acceptFile(file.path, req.wikiPath, file.name, function(err){
-		if(err) {console.log(err); res.send(500); return;}
+	wikiFS.acceptFile(file.path, req.wikipath, file.name).then(function(){
 		res.redirect(req.path + "?attach");
+	}).fail(function(err){
+		res.send(500);
 	});
 }
 wikiApp.staticFiles = function(req, res){
 	res.sendfile(saveDir + decodeURIComponent(req.path));
 }
-wikiApp.presentation = function(req, res){
-	wikiFS.readWiki(req.wikiPath, function(err, data){
-		var option = {};
-		try {
-			option = JSON.parse(data.match(/^<!--({.*})-->/)[1]);
-		} catch (e){
-		}
-		res.render("presentation", {title : "Wiki Note::Presentation", wikiData: data, option : option});
-	});
-}
-wikiApp.find = function(req, res){
-	var word = req.param("find");
-	if(word == ""){
-		res.render("find", {title : "Wiki Note::Find", result : null});
+
+wikiApp.search = function(req, res){
+	var word = req.param("q");
+	if(!word){
+		res.render("search", {result : null});
 		return;
 	}
-	wikiFS.find(req.wikiPath, word, function(e, data){
-		res.render("find", {title : "Wiki Note::Find", result : data});
+	wikiFS.find(word, "").then(function(data){
+		//console.log(data);
+		res.render("search", {result :data, word : word});
+	}).fail(function(e){
+		//console.log(e.stack);
+		res.status(500).end();
 	});
 }
 wikiApp.deleteForm = function(req, res){
-	res.render("delete", {title : "Wiki Note::Delete"});
+	res.render("delete", {});
 }
 wikiApp.deleteConfirm = function(req, res){
-	if(req.wikiPath.name != req.param("confirm")){
+	if(req.wikipath.name != req.param("confirm")){
 		req.flash("warn","note의 이름이 정확하지 않습니다.");
-		res.redirect(req.wikiPath + "?delete" );
+		res.redirect(req.wikipath + "?delete" );
 		return;
 	}
-	wikiFS.deleteFile(req.wikiPath, function(e){
-		if(e) {
-			console.log(e);
-			req.flash("warn","fail to delete");
-			res.redirect(req.wikiPath);
-		} else {
-			req.flash("info", "delete!");
-			res.redirect("/" + config.frontPage);
-		}
+	wikiFS.deleteWiki(req.wikipath).then(function(){
+		req.flash("info", "delete!");
+		res.redirect("/" + config.frontPage);
+	}).fail(function(e){
+		req.flash("warn","fail to delete");
+		res.redirect(req.wikipath);
 	});
 }
 wikiApp.history = function(req, res){
-	wikiFS.history(req.wikiPath, function(e, logs){
-		res.render("history", {title : "Wiki Note::History", logs : logs});
+	wikiFS.history(req.wikipath).then(function(logs){
+		res.render("history", {logs : logs});
+	}).fail(function(){
+		res.render("history", {logs : []});
 	});
 }
 module.exports = wikiApp;

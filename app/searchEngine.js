@@ -1,86 +1,103 @@
 module.exports = SearchEngine;
 
+var Q = require("q");
 var fs = require("fs");
 var pathutil = require("path");
-var SEP = require("path").sep;
+
+var nfs = {
+	join : pathutil.join,
+	readdir : Q.denodeify(fs.readdir),
+	readFile : Q.denodeify(fs.readFile),
+	stat : Q.denodeify(fs.stat),
+	extname : pathutil.extname,
+	basename : pathutil.basename
+};
 
 function SearchEngine(path){
-	this.rootPath = path;
+	this.rootpath = path;
 }
 
-SearchEngine.prototype.search = function(keywords, path, callback){
-	this.find(new RegExp(keywords), path, callback);	
+SearchEngine.prototype.search = function(keywords, path){
+	return find(this.rootpath, path, new RegExp(keywords)).all().then(function(result){
+		return result.filter(notNull);
+	});
 }
-SearchEngine.prototype.find = function(regex, wikiPath, callback){
-	var that = this;
-	var result = [];
-	
-	var realpath = that.rootPath + "/" + wikiPath + "/";
 
-	fs.readdir(realpath, function(err, names){
-		if(err) { console.log("#", err);return callback(err);}
-		
-		if(names.length === 0) callback(null, result);
-		var counter = names.length;
-		
-		for(var i = 0; i < names.length; i++){
-			var name = names[i];
-			if(/^[.]/.test(name)){
-				end();
-				continue;
-			}
-			handleFile(name, end)
-		}
-		
-		function end(){
-			counter--;
-			if(counter <= 0){
-				callback(null, result);
-			}
+function find(rootpath, wikipath, regexp){
+	return nfs.stat(nfs.join(rootpath, wikipath)).then(function(stat){
+		if(stat.isDirectory()){
+			return handleDirectory(rootpath, wikipath, regexp)
+		} else {
+			return [handleFile(rootpath, wikipath, regexp)].filter(notNull);
 		}
 	});
-	
-	function handleFile(name, callback){
-		if(pathutil.extname(name) == ".md"){
-			//find keyword in file
-			fs.readFile(realpath + "/" +  name, {encoding :"utf8"}, function(err, data){
-				if(err) return console.log("#", err);
-				//TODO improve performance	
-				var lines = data.split(/[\r\n]+/);
-				var findLines = [];
-				for(var i = 0; i < lines.length; i++){
-					var line = lines[i];
-					if(regex.test(line)){
-						findLines.push({num : i + 1, value : line})
-					}
-				}
-				if(findLines.length > 0){
-					var basename = pathutil.basename(name, ".md")
-					result.push({ path : wikiPath + "/" + basename, name : basename, lines : findLines});
-				}
-				callback();
-			});
-		} else if(regex.test(name)){
-			//add filename to result set
-			result.push({ path : wikiPath + "/" + name, name : name});
-			callback();
+}
+
+function handleDirectory(rootpath, wikipath, regexp){
+	return nfs.readdir(nfs.join(rootpath, wikipath)).then(function(names){
+		var results = names.filter(notStartWithDot).map(function(name){
+			return find(rootpath, nfs.join(wikipath, name), regexp);
+		});
+
+		return Q.all(results).then(function(results){
+			return results.reduce(concat, []);
+		});
+	});
+}
+function handleFile(rootpath, wikipath, regexp){
+	return Q.all([
+		checkFileName(wikipath, regexp),
+		checkFile(rootpath, wikipath, regexp)
+	]).spread(function(name, file){
+		return file || name;
+	});
+}
+function checkFileName(wikipath, regexp){
+	var name = nfs.basename(wikipath);
+
+	if(regexp.test(name)) {
+		if(nfs.extname(name) == ".md"){
+			return { path : wikipath.slice(0, -3)}; //for remove ext
 		} else {
-			//check is dir
-			var nextPath = wikiPath  + "/"  + name;
-			fs.stat(that.rootPath + "/" + nextPath, function(err, stat){
-				if(err) return console.log("#", err);
-				if(stat.isDirectory()){	
-					that.find(regex, nextPath, function(err, data){
-						if(err) console.log("#", err);
-						//add result to result set
-						result = result.concat(data);
-						callback();
-					});
-					//callback();
-				} else {
-					callback();
-				}
-			});
+			return { path : wikipath };
 		}
+
 	}
+	return null;
+}
+function checkFile(rootpath, wikipath, regexp){
+	if(nfs.extname(wikipath) != ".md"){
+		return null;
+	}
+
+	var filename = nfs.basename(wikipath);
+
+	//TODO improve performance with event stream
+	return nfs.readFile(nfs.join(rootpath, wikipath), {encoding :"utf8"}).then(function(data){
+		var lines = data.split(/[\r\n]+/).map(function(line, index){
+			if(regexp.test(line)){
+				return {num : index + 1, value : line};
+			}
+			return null;
+		}).filter(notNull);
+
+		if(lines.length != 0){
+			return {
+				path : wikipath.slice(0, -3), //for remove ext
+				lines : lines
+			}
+		} else {
+			return null;
+		}
+	});
+}
+
+function notStartWithDot(name){
+	return name[0] != ".";
+}
+function notNull(value){
+	return value != null;
+}
+function concat(a, b){
+	return a.concat(b);
 }

@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title %}
+{{ wikipath.name }} - {{config.wikiname}}
+{% endblock %}
+
 {% block contents %}
 <article class="view">
     {% if wikiData != null %}
@@ -8,4 +12,7 @@
     <h2><a href="{{ path.toString() }}?edit">create this page</a></h2>
     {% endif %}
 </article>
+<section id="plugins">
+	{{ pluginsData|safe }}
+</section>
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+Search - {{ config.wikiname }}
+
+{% block contents %}
+<article class="search">
+	<h1>Search</h1>
+    <p>여기서 wikinote의 내용을 검색할수 있습니다.</p>
+    <form>
+        <input type="search" name="q"/>
+        <input type="submit" value="검색"/>
+    </form>
+	{% if word %}
+    <h2>검색결과</h2>
+    {% if result != null %}
+    <ul>
+        {% for key, value in result %}
+        <li>
+            <a href="{{ value.path }}">{{ value.path }}</a>
+            {% if value.lines %}
+            <table>
+                {% for line in value.lines %}
+                <tr>
+                    <th>{{ line.num }}</th>
+                    <td>{{ line.value }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+	{% else %}
+	<p>검색결과가 없습니다.</p>
+    {% endif %}
+	{% endif %}
+</article>
+{% endblock %}

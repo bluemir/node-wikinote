@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title %}
+Sign Up - {{ config.wikiname }}
+{% endblock %}
+
 {% block contents %}
 <article class="signup">
     <form method="post" id="signup">
@@ -12,7 +16,7 @@
             <dd>
                 <input type="password" placeholder="password" name="password" id="signup.password" />
             </dd>
-            <dt>Password confirm</dt>
+            <dt>Password Confirm</dt>
             <dd>
                 <input type="password" placeholder="password confirm" name="confirm" id="signup.confirm" />
             </dd>
