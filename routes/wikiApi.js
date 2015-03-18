@@ -5,8 +5,8 @@ var user = require("../app/user");
 var WikiPath = require("./wikipath");
 
 exports.save = function(req, res){
-	var data = req.param("data");
-	var location = req.param("location");
+	var data = req.body.data;
+	var location = req.query.location;
     var wikipath = new WikiPath(location);
 
 	wikiFS.writeWiki(wikipath, data, req.session.user).then(function(){
@@ -17,7 +17,7 @@ exports.save = function(req, res){
 }
 exports.upload = function(req, res){
 	var file = req.files.file;
-	var location = req.param("location");
+	var location = req.query.location;
 	var wikipath = new WikiPath(location);
 
 	wikiFS.acceptFile(file.path, wikipath, file.name).then(function(){
@@ -27,7 +27,7 @@ exports.upload = function(req, res){
 	});
 }
 exports.files = function(req, res){
-	var wikipath = new WikiPath(req.param("location"));
+	var wikipath = new WikiPath(req.query.location);
 	wikiFS.fileList(wikipath).then(function(files){
 		res.status(200).jsonp(files);
 	}).fail(function(err){

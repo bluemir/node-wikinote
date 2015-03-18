@@ -53,7 +53,8 @@ wikiApp.edit = function(req, res){
 	})
 }
 wikiApp.save = function(req, res){
-	var data = req.param("data");
+	var data = req.body.data;
+
 	wikiFS.writeWiki(req.wikipath, data, req.user).then(function(){
 		res.redirect(req.path);
 	}).fail(function(err){
@@ -66,9 +67,9 @@ wikiApp.moveForm = function(req, res){
 	res.render("move", {});
 }
 wikiApp.move = function(req, res){
-	wikiFS.move(req.wikipath, new WikiPath(req.param("target")))
+	wikiFS.move(req.wikipath, new WikiPath(req.body.target))
 		.then(function(){
-			res.redirect(req.param("target"));
+			res.redirect(req.body.target);
 		})
 		.fail(function(err){
 			req.flash("warn", "move fail");
@@ -95,7 +96,8 @@ wikiApp.staticFiles = function(req, res){
 }
 
 wikiApp.search = function(req, res){
-	var word = req.param("q");
+	var word = req.query.q;
+
 	if(!word){
 		res.render("search", {result : null});
 		return;
@@ -112,7 +114,7 @@ wikiApp.deleteForm = function(req, res){
 	res.render("delete", {});
 }
 wikiApp.deleteConfirm = function(req, res){
-	if(req.wikipath.name != req.param("confirm")){
+	if(req.wikipath.name != req.body.confirm){
 		req.flash("warn","note의 이름이 정확하지 않습니다.");
 		res.redirect(req.wikipath + "?delete" );
 		return;
