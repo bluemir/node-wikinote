@@ -3,21 +3,20 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 	lineNumbers: true,
 	extraKeys : {
 		"Ctrl-S" : function(){
-			var ajax = new XMLHttpRequest();
-			ajax.open("POST", getApiUrl());
-			ajax.addEventListener("readystatechange", function(){
-				if(ajax.readyState == "4"){
-					if(ajax.status == 200){
-						showMsg("info", "Save successful!");
-					} else if(ajax.status == 401){
-						showMsg("warn", "Unauthorized");
-					} else {
-						showMsg("warn", "Unexpected Code : " + ajax.readState);
-					}
+			var data = "data=" + encodeURIComponent(cm.doc.getValue());
+			var options = {
+				data :data,
+				contentType : "application/x-www-form-urlencoded"
+			};
+			$ajax("POST", getSaveApiUrl(), options).then(function(){
+				showMsg("info", "Save successful!");
+			}).fail(function(code){
+				if(code == 401){
+					showMsg("warn", "Unauthorized");
+				} else {
+					showMsg("warn", "Unexpected Code : " + ajax.readState);
 				}
 			});
-			ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-			ajax.send("data=" + encodeURIComponent(cm.doc.getValue()));
 		}
 	},
 	indentUnit : 4,
@@ -31,24 +30,59 @@ emmetPlugin.setKeymap({
 	'Ctrl-Enter': 'expand_abbreviation'
 });
 function showMsg(level, message){
-	var $msg = document.getElementById("message");
+	var $msg = $("#message");
+	$msg.classList.add(level);
+
 	$msg.innerHTML = message;
 	$msg.style.display = "block";
 	$msg.style.opacity = 1;
 
-	$msg.classList.add(level);
 
-	var op = 1;
-	setTimeout(function loop(){
-		$msg.style.opacity = op;
-		op -= 0.02;
-		if(op > 0)
-			setTimeout(loop, 20);
-		else
-			$msg.style.display = "none";
+	Q.delay(500).step(20, 500).progress(function(ratio){
+		$msg.style.opacity = 1 - ratio;
+	}).then(function(){
 		$msg.classList.remove(level);
-	}, 0.5 * 1000);
+	});
 }
-function getApiUrl(){
+// TODO : refactor
+function getSaveApiUrl(){
 	return "/!api/1/save?location=" + location.pathname;
 }
+function getUploadApiUrl(){
+	return "/!api/1/upload?location=" + location.pathname;
+}
+function getFileListApiUrl(){
+	return "/!api/1/files?location=" + location.pathname;
+}
+function upload(){
+	var formData = new FormData(document.getElementById("upload"));
+	return $ajax("POST", getUploadApiUrl(), {data : formData}).then(function(){
+		showMsg("info", "Upload Success");
+	}).fail(function(err){
+		showMsg("warn", "Fail to Uplaod");
+	}).fin(function(err){
+		$("#upload input").value = "";
+	});
+}
+function getFileList(){
+	return $ajax("GET", getFileListApiUrl()).then(function(res){
+		return JSON.parse(res.text);
+	}).then(function(files){
+		var $list = $("#filelist");
+		files.forEach(function(file){
+			$list.appendChild($create("li", file));
+		});
+	}).fail(function(err){
+		console.error(err);
+	});
+}
+$("#upload input").addEventListener("change", function (){
+	upload().then(function(){
+		var $list = $("#filelist");
+
+		while ($list.firstChild) {
+			  $list.removeChild($list.firstChild);
+		}
+	}).then(getFileList);
+});
+getFileList();

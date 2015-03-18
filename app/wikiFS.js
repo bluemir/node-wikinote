@@ -1,4 +1,5 @@
 var Q = require("q");
+var fs = require("fs");
 var nfs = require("./nfs");
 var exec = Q.denodeify(require("child_process").exec);
 var config = require("../config");
@@ -34,10 +35,25 @@ exports.fileList = function(path){
 	return nfs.readdir(config.wikiDir + path.toString())
 		.then(function(files){
 			return files.filter(notStartDot);
+		})
+		.then(function(files){
+			return Q.all(files.map(function(file){
+				return nfs.stat(nfs.join(config.wikiDir, path.toString(), file)).then(function(stat){
+					if(stat.isDirectory()){
+						return null;
+					} else {
+						return file;
+					}
+				});
+			})).then(function(files){
+				return files.filter(notNull);
+			});
 		});
-
 	function notStartDot(filename){
 		return filename[0] != ".";
+	}
+	function notNull(e){
+		return e != null;
 	}
 }
 exports.acceptFile  = function(srcPath, path, name){
