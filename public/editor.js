@@ -3,21 +3,20 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 	lineNumbers: true,
 	extraKeys : {
 		"Ctrl-S" : function(){
-			var ajax = new XMLHttpRequest();
-			ajax.open("POST", getApiUrl());
-			ajax.addEventListener("readystatechange", function(){
-				if(ajax.readyState == "4"){
-					if(ajax.status == 200){
-						showMsg("info", "Save successful!");
-					} else if(ajax.status == 401){
-						showMsg("warn", "Unauthorized");
-					} else {
-						showMsg("warn", "Unexpected Code : " + ajax.readState);
-					}
+			var data = "data=" + encodeURIComponent(cm.doc.getValue());
+			var options = {
+				data :data,
+				contentType : "application/x-www-form-urlencoded"
+			};
+			$ajax("POST", getSaveApiUrl(), options).then(function(){
+				showMsg("info", "Save successful!");
+			}).fail(function(code){
+				if(code == 401){
+					showMsg("warn", "Unauthorized");
+				} else {
+					showMsg("warn", "Unexpected Code : " + ajax.readState);
 				}
 			});
-			ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-			ajax.send("data=" + encodeURIComponent(cm.doc.getValue()));
 		}
 	},
 	indentUnit : 4,
@@ -31,7 +30,7 @@ emmetPlugin.setKeymap({
 	'Ctrl-Enter': 'expand_abbreviation'
 });
 function showMsg(level, message){
-	var $msg = document.getElementById("message");
+	var $msg = $("#message");
 	$msg.classList.add(level);
 
 	$msg.innerHTML = message;
@@ -45,7 +44,7 @@ function showMsg(level, message){
 		$msg.classList.remove(level);
 	});
 }
-function getApiUrl(){
+function getSaveApiUrl(){
 	return "/!api/1/save?location=" + location.pathname;
 }
 function getUploadApiUrl(){
@@ -53,7 +52,7 @@ function getUploadApiUrl(){
 }
 function upload(){
 	var formData = new FormData(document.getElementById("upload"));
-	$ajax("POST", getUploadApiUrl(), formData).then(function(){
+	$ajax("POST", getUploadApiUrl(), {data : formData}).then(function(){
 		showMsg("info", "Upload Success");
 	}).fail(function(err){
 		showMsg("warn", "Fail to Uplaod");
