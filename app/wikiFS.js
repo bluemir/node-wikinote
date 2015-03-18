@@ -1,4 +1,5 @@
 var Q = require("q");
+var fs = require("fs");
 var nfs = require("./nfs");
 var exec = Q.denodeify(require("child_process").exec);
 var config = require("../config");

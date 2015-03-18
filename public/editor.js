@@ -32,23 +32,33 @@ emmetPlugin.setKeymap({
 });
 function showMsg(level, message){
 	var $msg = document.getElementById("message");
+	$msg.classList.add(level);
+
 	$msg.innerHTML = message;
 	$msg.style.display = "block";
 	$msg.style.opacity = 1;
 
-	$msg.classList.add(level);
 
-	var op = 1;
-	setTimeout(function loop(){
-		$msg.style.opacity = op;
-		op -= 0.02;
-		if(op > 0)
-			setTimeout(loop, 20);
-		else
-			$msg.style.display = "none";
+	Q.delay(500).step(20, 500).progress(function(ratio){
+		$msg.style.opacity = 1 - ratio;
+	}).then(function(){
 		$msg.classList.remove(level);
-	}, 0.5 * 1000);
+	});
 }
 function getApiUrl(){
 	return "/!api/1/save?location=" + location.pathname;
 }
+function getUploadApiUrl(){
+	return "/!api/1/upload?location=" + location.pathname;
+}
+function upload(){
+	var formData = new FormData(document.getElementById("upload"));
+	$ajax("POST", getUploadApiUrl(), formData).then(function(){
+		showMsg("info", "Upload Success");
+	}).fail(function(err){
+		showMsg("warn", "Fail to Uplaod");
+	}).fin(function(err){
+		$("#upload input").value = "";
+	});
+}
+$("#upload input").addEventListener("change", upload);
