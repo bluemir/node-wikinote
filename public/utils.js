@@ -28,4 +28,11 @@ function $ajax(method, url, options){
 		req.send(options.data);
 	});
 }
+function $create(tagname, text){
+	var newTag = document.createElement(tagname);
 
+	if (text){
+		newTag.appendChild(document.createTextNode(text));
+	}
+	return newTag;
+}

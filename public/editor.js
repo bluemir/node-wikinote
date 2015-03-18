@@ -44,15 +44,19 @@ function showMsg(level, message){
 		$msg.classList.remove(level);
 	});
 }
+// TODO : refactor
 function getSaveApiUrl(){
 	return "/!api/1/save?location=" + location.pathname;
 }
 function getUploadApiUrl(){
 	return "/!api/1/upload?location=" + location.pathname;
 }
+function getFileListApiUrl(){
+	return "/!api/1/files?location=" + location.pathname;
+}
 function upload(){
 	var formData = new FormData(document.getElementById("upload"));
-	$ajax("POST", getUploadApiUrl(), {data : formData}).then(function(){
+	return $ajax("POST", getUploadApiUrl(), {data : formData}).then(function(){
 		showMsg("info", "Upload Success");
 	}).fail(function(err){
 		showMsg("warn", "Fail to Uplaod");
@@ -60,4 +64,25 @@ function upload(){
 		$("#upload input").value = "";
 	});
 }
-$("#upload input").addEventListener("change", upload);
+function getFileList(){
+	return $ajax("GET", getFileListApiUrl()).then(function(res){
+		return JSON.parse(res.text);
+	}).then(function(files){
+		var $list = $("#filelist");
+		files.forEach(function(file){
+			$list.appendChild($create("li", file));
+		});
+	}).fail(function(err){
+		console.error(err);
+	});
+}
+$("#upload input").addEventListener("change", function (){
+	upload().then(function(){
+		var $list = $("#filelist");
+
+		while ($list.firstChild) {
+			  $list.removeChild($list.firstChild);
+		}
+	}).then(getFileList);
+});
+getFileList();

@@ -14,9 +14,15 @@
         <textarea name="data" cols="80" rows="25">{{ wikiData|safe }}</textarea>
 		<button type="submit">저장</button>
     </form>
-	<form id="upload" method="post" enctype="multipart/form-data">
-		<input name="file" type="file" multiple />
-	</form>
+	<section>
+		<h3>Uploaded Files</h3>
+		<ul id="filelist">
+			<!--<li></li>-->
+		</ul>
+		<form id="upload" method="post" enctype="multipart/form-data">
+			<input name="file" type="file" multiple />
+		</form>
+	</section>
 </article>
 {% endblock %}
 
