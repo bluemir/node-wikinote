@@ -5,11 +5,16 @@ var exec = Q.denodeify(require("child_process").exec);
 var config = require("../config");
 var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
+var backlink = require("./backlink");
 
 exports.readWiki = function(path){
 	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
 }
 exports.writeWiki = function(path, data, author){
+
+	backlink.update(path.toString(), data).fail(function(err){
+		console.log(err);
+	});
 
 	return nfs.mkdirp(config.wikiDir + path.toString())
 		.then(function(){
@@ -138,14 +143,4 @@ function backup(method, fullname, author){
 	function buildMessage(method, notename){
 		return method + " : " + notename;
 	}
-}
-
-function updateBacklinks(wikipath, data){
-	//marked lexer
-	//links resolve
-	//update .backlinks
-
-}
-function updateLink(from, to){
-	//add back index
 }
