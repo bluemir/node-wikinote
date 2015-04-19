@@ -44,14 +44,18 @@ wikiApp.moveForm = function(req, res){
 	res.render("move", {});
 }
 wikiApp.move = function(req, res){
-	wikiFS.move(req.wikipath, new WikiPath(req.body.target))
-		.then(function(){
-			res.redirect(req.body.target);
-		})
-		.fail(function(err){
-			req.flash("warn", "move fail");
-			res.redirect(req.wikipath);
-		});
+	var target = req.body.target;
+
+	if(!/^\//.test(target)){
+		target = "/" + target;
+	}
+
+	wikiFS.move(req.wikipath, new WikiPath(target)).then(function(){
+		res.redirect(target);
+	}).fail(function(err){
+		req.flash("warn", "move fail");
+		res.redirect(req.wikipath);
+	});
 }
 wikiApp.attach = function(req, res){
 	wikiFS.fileList(req.wikipath).then(function(files){
