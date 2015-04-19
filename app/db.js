@@ -6,3 +6,4 @@ var db = module.exports = {
 }
 
 db.users.ensureIndex({fieldName : "id", unique : true});
+db.backlinks.ensureIndex({fieldName : "path", unique : true});

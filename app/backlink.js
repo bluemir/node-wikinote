@@ -9,6 +9,8 @@ exports.get = function(wikipath){
 	db.backlinks.findOne({path : wikipath.toString()}, function(err, doc){
 		if(err){
 			defer.reject(err);
+		} else if(!doc){
+			defer.resolve([]);
 		} else {
 			defer.resolve(doc.links);
 		}
@@ -35,4 +37,29 @@ exports.update = function(wikipath, data){
 	function resolveUrl(path){
 		return url.resolve(wikipath.toString(), path);
 	}
+}
+exports.move = function(from, to){
+	from = from.toString();
+	to = to.toString();
+
+	return Q.promise(function(resolve, reject){
+		var defer = Q.defer();
+		db.backlinks.update({links : from}, {$pull : {links : from}, $addToSet : {links : to}}, {multi : true}, function(err){
+			if(err){
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	}).then(function(){
+		var defer = Q.defer();
+		db.backlinks.update({path : from}, {$set : {path : to}}, function(err){
+			if(err){
+				defer.reject(err);
+			} else {
+				defer.resolve();
+			}
+		})
+		return defer.promise;
+	});
 }

@@ -80,6 +80,8 @@ exports.deleteWiki = function(path){
 	]);
 }
 exports.move = function(srcPath, targetPath){
+	backlink.move(srcPath, targetPath);
+
 	return nfs.mkdirp(config.wikiDir + targetPath.toString())
 		.all([
 			nfs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full),
