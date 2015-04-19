@@ -39,6 +39,7 @@ exports.init = function(app){
 	appRouter.get("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.moveForm);
 	appRouter.get("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteForm);
 	appRouter.get("history", user.checkPermission(user.PERMISSION.READ), wikiApp.history);
+	appRouter.get("backlinks", user.checkPermission(user.PERMISSION.READ), wikiApp.backlinks);
 
 	appRouter.post("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.save);
 	appRouter.post("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.upload);

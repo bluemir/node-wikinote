@@ -10,7 +10,7 @@ exports.get = function(wikipath){
 		if(err){
 			defer.reject(err);
 		} else {
-			defer.resolve(doc);
+			defer.resolve(doc.links);
 		}
 	});
 

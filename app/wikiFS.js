@@ -114,6 +114,9 @@ exports.history = function(path){
 		return logs;
 	});
 }
+exports.backlinks = function(path){
+	return backlink.get(path);
+}
 function backup(method, fullname, author){
 	if(!config.autoBackup){
 		return Q();

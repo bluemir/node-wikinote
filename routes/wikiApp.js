@@ -111,4 +111,9 @@ wikiApp.history = function(req, res){
 		res.render("history", {logs : []});
 	});
 }
+wikiApp.backlinks = function(req, res){
+	wikiFS.backlinks(req.wikipath).then(function(links){
+		res.render("backlinks", {backlinks: links});
+	});
+}
 module.exports = wikiApp;
