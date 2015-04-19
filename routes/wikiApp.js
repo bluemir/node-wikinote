@@ -1,36 +1,15 @@
 var wikiFS = require("../app/wikiFS");
-var marked = require("marked");
+var markdown = require("../app/markdown");
 var WikiPath = require("./wikipath");
 var config = require("../config");
 var userApp = require("./userApp");
 var loader = require("./pluginLoader");
 
-var customRender = new marked.Renderer();
-var protocolRegexp = /^https?:\/\/.+$/;
-customRender.link = function(href, title, text){
-	var external = protocolRegexp.test(href);
-	return "<a href=\"" + href + "\"" +
-		(external ? " target=\"_blank\"" : "")+
-		(title ? " title=\"" + title + "\"" : "") +
-		">" + text + "</a>";
-}
-
-marked.setOptions({
-	gfm: true,
-	tables: true,
-	breaks: false,
-	pedantic: false,
-	sanitize: false,
-	smartLists: true,
-	footnotes : true,
-	renderer : customRender
-});
-
 var wikiApp = {};
 
 wikiApp.view = function(req, res){
 	wikiFS.readWiki(req.wikipath).then(function(data){
-		data = marked(data);
+		data = markdown.html(data);
 		loader.postArticle(req.wikipath, req.user, function(err, html){
 			res.render("view", {wikiData: data, pluginsData : html});
 		});
@@ -41,8 +20,6 @@ wikiApp.view = function(req, res){
 			res.render("view", {wikiData: data, pluginsData : html});
 		});
 	});
-
-
 }
 wikiApp.edit = function(req, res){
 	wikiFS.readWiki(req.wikipath).then(function(data){
@@ -132,6 +109,11 @@ wikiApp.history = function(req, res){
 		res.render("history", {logs : logs});
 	}).fail(function(){
 		res.render("history", {logs : []});
+	});
+}
+wikiApp.backlinks = function(req, res){
+	wikiFS.backlinks(req.wikipath).then(function(links){
+		res.render("backlinks", {backlinks: links});
 	});
 }
 module.exports = wikiApp;
