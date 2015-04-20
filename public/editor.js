@@ -33,6 +33,18 @@ cm.on("change", function(){
 	cm.save();
 });
 
+var socket = new BCSocket("/!public/channel", {reconnect: true});
+var sjs = new window.sharejs.Connection(socket);
+var doc = sjs.get('wiki', note.path);
+
+doc.subscribe();
+doc.whenReady(function () {
+	if (!doc.type) doc.create('text', cm.getValue());
+	if (doc.type && doc.type.name === 'text') {
+		doc.attachCodeMirror(cm);
+	}
+});
+
 function showMsg(level, message){
 	var $msg = $("#message");
 	$msg.classList.add(level);

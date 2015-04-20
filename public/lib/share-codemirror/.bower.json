@@ -1,0 +1,19 @@
+{
+  "name": "share-codemirror",
+  "version": "0.1.0",
+  "main": "share-codemirror.js",
+  "ignore": [
+    "node_modules"
+  ],
+  "homepage": "https://github.com/share/share-codemirror",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "46b9d41305431d5525bcd7b94f576454bdcb9573"
+  },
+  "_source": "git://github.com/share/share-codemirror.git",
+  "_target": "~0.1.0",
+  "_originalSource": "share-codemirror",
+  "_direct": true
+}
