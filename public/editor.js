@@ -29,6 +29,10 @@ emmetPlugin.clearKeymap();
 emmetPlugin.setKeymap({
 	'Ctrl-Enter': 'expand_abbreviation'
 });
+cm.on("change", function(){
+	cm.save();
+});
+
 function showMsg(level, message){
 	var $msg = $("#message");
 	$msg.classList.add(level);
