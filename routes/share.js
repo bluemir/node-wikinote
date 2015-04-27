@@ -8,6 +8,7 @@ var share = sharejs.server.createClient({backend: backend});
 
 var users = {};
 var noop = function(){};
+var DELAY= 15 * 60 * 1000;
 
 function attech(name, id){
 	if(!users[name]){
@@ -17,10 +18,12 @@ function attech(name, id){
 	users[name][id] = 1;
 }
 function detech(name, id){
-	delete users[name][id];
+	if(users[name]){
+		delete users[name][id];
+	}
 }
 function isThere(name){
-	return Object.keys(users[name]).length != 0;
+	return users[name] && Object.keys(users[name]).length != 0;
 }
 
 exports.static = sharejs.scriptsDir;
@@ -28,6 +31,8 @@ exports.middleware = browserChannel(function (client) {
 	var stream = new Duplex({objectMode: true});
 	var docName = null;
 	var agent = null;
+	var timer = null;
+
 	stream._write = function (chunk, encoding, callback) {
 		if (client.state !== 'closed') {
 			client.send(chunk);
@@ -48,6 +53,13 @@ exports.middleware = browserChannel(function (client) {
 		if(data.a == "sub"){
 			docName = data.d;
 		}
+		clearTimeout(timer);
+		timer = setTimeout(function(){
+			if(timer){
+				client.close();
+			}
+			timer = null;
+		}, DELAY);
 	});
 
 	client.on('close', function(reason) {
@@ -68,15 +80,14 @@ share.use(function (req, next){
 		case "subscribe" :
 			//console.log("subscribe", req.docName, req.agent.sessionId);
 			attech(req.docName, req.agent.sessionId);
-			return;
+			break;
 		case "disconnect":
 			//console.log("disconnect", req.docName, req.agent.sessionId);
 			detech(req.docName, req.agent.sessionId);
 			if(!isThere(req.docName)){
 				req.agent.submit(req.collection, req.docName, {del : true}, noop);
-				console.log("delete", req.docName);
 			}
-			return;
+			break;
 	}
 	next();
 });

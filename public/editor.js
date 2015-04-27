@@ -46,6 +46,11 @@ doc.whenReady(function () {
 		doc.attachCodeMirror(cm);
 	}
 });
+doc.on("del", function(){
+	console.log("del", arguments);
+	socket.close();
+	doc.destroy();
+})
 
 function showMsg(level, message){
 	var $msg = $("#message");
