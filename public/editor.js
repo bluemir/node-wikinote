@@ -39,6 +39,8 @@ var doc = sjs.get('wiki', note.path);
 
 doc.subscribe();
 doc.whenReady(function () {
+	console.log(doc);
+
 	if (!doc.type) doc.create('text', cm.getValue());
 	if (doc.type && doc.type.name === 'text') {
 		doc.attachCodeMirror(cm);

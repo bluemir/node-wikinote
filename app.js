@@ -10,16 +10,10 @@ var session = require('express-session');
 var errorHandler = require('errorhandler');
 var swig = require("swig");
 
-var Duplex = require('stream').Duplex;
-var sharejs = require('share');
-var browserChannel = require('browserchannel').server;
-var livedb = require('livedb');
-
-var backend = livedb.client(livedb.memory());
-var share = sharejs.server.createClient({backend: backend});
+var share = require("./routes/share");
 
 var routes = require('./routes');
-var config = require("./config")
+var config = require("./config");
 
 var app = express();
 app.engine("html", swig.renderFile)
@@ -36,33 +30,9 @@ app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}))
 app.use(flash());
 
 app.use("/!public", express.static(__dirname + "/public"));
-app.use("/!public/lib/share", express.static(sharejs.scriptsDir));
+app.use("/!public/lib/share", express.static(share.static));
 
-app.use("/!public", browserChannel(function (client) {
-	var stream = new Duplex({objectMode: true});
-	stream._write = function (chunk, encoding, callback) {
-		if (client.state !== 'closed') {
-			client.send(chunk);
-		}
-		callback();
-	};
-	stream._read = function () {
-	};
-	stream.headers = client.headers;
-	stream.remoteAddress = stream.address;
-	client.on('message', function (data) {
-		stream.push(data);
-	});
-	stream.on('error', function (msg) {
-		client.stop();
-	});
-	client.on('close', function (reason) {
-		stream.emit('close');
-		stream.emit('end');
-		stream.end();
-	});
-	return share.listen(stream);
-}));
+app.use("/!public", share.middleware);
 
 routes.init(app);
 
