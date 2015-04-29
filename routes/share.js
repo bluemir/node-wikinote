@@ -8,7 +8,6 @@ var share = sharejs.server.createClient({backend: backend});
 
 var users = {};
 var noop = function(){};
-var DELAY= 15 * 60 * 1000;
 
 function attech(name, id){
 	if(!users[name]){
@@ -31,7 +30,6 @@ exports.middleware = browserChannel(function (client) {
 	var stream = new Duplex({objectMode: true});
 	var docName = null;
 	var agent = null;
-	var timer = null;
 
 	stream._write = function (chunk, encoding, callback) {
 		if (client.state !== 'closed') {
@@ -53,18 +51,10 @@ exports.middleware = browserChannel(function (client) {
 		if(data.a == "sub"){
 			docName = data.d;
 		}
-		clearTimeout(timer);
-		timer = setTimeout(function(){
-			if(timer){
-				client.close();
-			}
-			timer = null;
-		}, DELAY);
 	});
 
 	client.on('close', function(reason) {
-		agent.trigger("disconnect", "wiki", docName, noop)
-
+		agent.trigger("disconnect", "wiki", docName, noop);
 		stream.push(null);
 		stream.emit('close');
 	});

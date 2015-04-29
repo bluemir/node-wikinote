@@ -29,7 +29,16 @@ emmetPlugin.clearKeymap();
 emmetPlugin.setKeymap({
 	'Ctrl-Enter': 'expand_abbreviation'
 });
+
+var timer = null;
+
+
 cm.on("change", function(){
+	clearTimeout(timer);
+	timer = setTimeout(function(){
+		socket.close();
+		doc.destroy();
+	}, 15 * 60 * 1000);
 	cm.save();
 });
 
@@ -39,19 +48,23 @@ var doc = sjs.get('wiki', note.path);
 
 doc.subscribe();
 doc.whenReady(function () {
-	console.log(doc);
-
 	if (!doc.type) doc.create('text', cm.getValue());
 	if (doc.type && doc.type.name === 'text') {
 		doc.attachCodeMirror(cm);
 	}
 });
+console.log(socket);
+doc.on("error"), function(){
+	console.log("asdf")
+}
+
+/*
 doc.on("del", function(){
 	console.log("del", arguments);
 	socket.close();
 	doc.destroy();
 })
-
+*/
 function showMsg(level, message){
 	var $msg = $("#message");
 	$msg.classList.add(level);
