@@ -10,8 +10,10 @@ var session = require('express-session');
 var errorHandler = require('errorhandler');
 var swig = require("swig");
 
+var share = require("./routes/share");
+
 var routes = require('./routes');
-var config = require("./config")
+var config = require("./config");
 
 var app = express();
 app.engine("html", swig.renderFile)
@@ -28,6 +30,9 @@ app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}))
 app.use(flash());
 
 app.use("/!public", express.static(__dirname + "/public"));
+app.use("/!public/lib/share", express.static(share.static));
+
+app.use("/!public", share.middleware);
 
 routes.init(app);
 
