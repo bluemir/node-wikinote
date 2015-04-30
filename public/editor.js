@@ -32,15 +32,20 @@ emmetPlugin.setKeymap({
 
 var timer = null;
 
-
 cm.on("change", function(){
 	clearTimeout(timer);
 	timer = setTimeout(function(){
 		socket.close();
 		doc.destroy();
+		cm.setOption("readOnly", "nocursor");
 	}, 15 * 60 * 1000);
 	cm.save();
 });
+cm.on("mousedown", function(){
+	if(cm.getOption("readOnly") == "nocursor"){
+		showMsg("WARN", "Connection lost. please <a href='"+location.href+"'>reload this page</a>");
+	}
+})
 
 var socket = new BCSocket("/!public/channel", {reconnect: true});
 var sjs = new window.sharejs.Connection(socket);
@@ -53,18 +58,7 @@ doc.whenReady(function () {
 		doc.attachCodeMirror(cm);
 	}
 });
-console.log(socket);
-doc.on("error"), function(){
-	console.log("asdf")
-}
 
-/*
-doc.on("del", function(){
-	console.log("del", arguments);
-	socket.close();
-	doc.destroy();
-})
-*/
 function showMsg(level, message){
 	var $msg = $("#message");
 	$msg.classList.add(level);
@@ -72,7 +66,6 @@ function showMsg(level, message){
 	$msg.innerHTML = message;
 	$msg.style.display = "block";
 	$msg.style.opacity = 1;
-
 
 	Q.delay(500).step(20, 500).progress(function(ratio){
 		$msg.style.opacity = 1 - ratio;
