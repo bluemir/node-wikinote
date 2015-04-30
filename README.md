@@ -1,5 +1,7 @@
 #Wikinote
 
+[English](#english), [Korean](#korean)
+
 ----
 ####English
 
