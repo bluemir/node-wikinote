@@ -11,3 +11,5 @@ autoBackup : false
 #        - read
 #        - write
 wikiname : WikiNote
+plugins :
+	- remark

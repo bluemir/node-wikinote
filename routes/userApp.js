@@ -1,5 +1,3 @@
-var config = require("../config");
-
 var user = require("../app/user");
 
 exports.loginForm = function(req, res){
