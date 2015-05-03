@@ -14,12 +14,31 @@
         <textarea name="data" cols="80" rows="25">{{ wikiData|safe }}</textarea>
 		<button type="submit">저장</button>
     </form>
+	<section>
+		<h3>Uploaded Files</h3>
+		<ul id="filelist">
+			<!--<li></li>-->
+		</ul>
+		<form id="upload" method="post" enctype="multipart/form-data">
+			<input name="file" type="file" multiple />
+		</form>
+	</section>
 </article>
 {% endblock %}
 
 {% block scripts %}
+<script>var note = {
+    path : "{{wikipath.toString()}}"
+}</script>
 <script src="/!public/lib/CodeMirror/lib/codemirror.js"></script>
 <script src="/!public/lib/CodeMirror/mode/markdown/markdown.js"></script>
 <script src="/!public/lib/codemirror-emmet/dist/emmet.js"></script>
+
+<script src="/!public/lib/share/share.js"></script>
+<script src="/!public/channel/bcsocket.js"></script>
+<script src="/!public/lib/share-codemirror/share-codemirror.js"></script>
+
+<script src="/!public/q.js"></script>
+<script src="/!public/utils.js"></script>
 <script src="/!public/editor.js"></script>
 {% endblock %}

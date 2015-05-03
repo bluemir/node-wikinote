@@ -1,0 +1,32 @@
+{
+  "name": "share-codemirror",
+  "version": "0.1.0",
+  "description": "CodeMirror bindings for ShareJS",
+  "main": "share-codemirror.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/share/share-codemirror.git"
+  },
+  "keywords": [
+    "codemirror",
+    "sharejs"
+  ],
+  "author": "Aslak Hellesøy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/share/share-codemirror/issues"
+  },
+  "devDependencies": {
+    "browserchannel": "^2.0.0",
+    "codemirror": "^4.8.0",
+    "express": "^4.10.3",
+    "istanbul": "^0.3.2",
+    "jsdom": "0.8.8",
+    "livedb": "^0.4.9",
+    "mocha": "^2.0.1",
+    "share": "^0.7.3"
+  }
+}

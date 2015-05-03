@@ -2,12 +2,7 @@ var config = require("../config");
 var fs = require('fs');
 var crypto = require('crypto');
 var Datastore = require("nedb");
-
-var db = {
-	users : new Datastore({filename : "user.nedb", autoload : true})
-};
-
-db.users.ensureIndex({fieldName : "id", unique : true});
+var db = require("./db");
 
 exports.PERMISSION = {
 	READ : "read",

@@ -35,30 +35,23 @@ body>header {
 		word-spacing : 12px;
 	}
 
-	#user {
-		color : white;
-		font-size : 16px;
-		font-weight : normal;
-		float :right;
-
+	.search {
 		position : absolute;
 		right : 0px;
 		top : 5px;
 
-		input {
-			&[type="text"], &[type="password"] {
-				width : 100px;
-			}
+		input[type="text"] {
+			width : 150px;
 		}
 
-		a, input[type="submit"] {
+		input[type="submit"] {
 			display : inline-block;
 
-			padding : 1px 6px;
+			padding : 3px 6px;
 			margin : 2px;
 			font-size : 14px;
 			line-height : 14px;
-			height : 16px;
+			height : 20px;
 			text-align : center;
 			vertical-align : middle;
 			cursor: pointer;
@@ -76,9 +69,6 @@ body>header {
 				background-image : none;
 				box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0px 1px 2px rgba(0,0,0,0.05);
 			}
-		}
-		.username {
-			font-weight : bold;
 		}
 	}
 
@@ -267,10 +257,12 @@ body>header {
 		font-size : 1.5em;
 	}
 	h4 {
+		font-weight : normal;
 		font-size: 1.3em;
 	}
 	h5 {
-		font-size: 1.2em;
+		font-style : italic;
+		font-size: 1.1em;
 	}
 	h6 {
 		font-size: 1.1em;
@@ -329,11 +321,6 @@ body>header {
 
 		}
 
-		code {
-			border : 1px solid gray;
-			border-radius : 3px;
-			padding : 2px;
-		}
 		pre>code, xmp {
 			display : block;
 			background : black;
@@ -408,6 +395,10 @@ body>header {
 		}
 		.CodeMirror-scroll {
 			min-height : 300px;
+		}
+		&>section {
+			margin-top : 20px;
+			border-top : 1px solid gray
 		}
 	}
 	&.search {

@@ -4,15 +4,7 @@ var Q = require("q");
 var fs = require("fs");
 var pathutil = require("path");
 
-var nfs = {
-	join : pathutil.join,
-	readdir : Q.denodeify(fs.readdir),
-	readFile : Q.denodeify(fs.readFile),
-	stat : Q.denodeify(fs.stat),
-	extname : pathutil.extname,
-	basename : pathutil.basename
-};
-
+var nfs = require("./nfs");
 function SearchEngine(path){
 	this.rootpath = path;
 }

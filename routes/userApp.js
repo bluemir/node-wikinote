@@ -1,50 +1,54 @@
-var config = require("../config");
-
 var user = require("../app/user");
 
 exports.loginForm = function(req, res){
 	res.render("login", {});
 }
 exports.login = function(req, res){
-	var id = req.param("id");
-	var password = req.param("password");
+	var id = req.body.id;
+	var password = req.body.password;
 
 	req.user.authenticate(id, password, function(err){
 		if(err) {
 			req.flash('warn', 'Login Fail! Check your Id or Password');
 		} else {
-			req.flash("info", "Welcome " + req.param("id") + "!");
+			req.flash("info", "Welcome " + req.body.id + "!");
 		}
-		res.redirect(decodeURIComponent(req.param("redirect")));
+		res.redirect(decodeURIComponent(req.query.redirect));
 	});
 }
 exports.logout = function(req, res){
 	req.user.logout();
 	req.flash('info', 'Logout successfully!');
-	res.redirect(decodeURIComponent(req.param("redirect")));
+	res.redirect(decodeURIComponent(req.query.redirect));
 }
 exports.signupForm = function(req, res){
 	res.render("signup", {title : "signup"});
 }
 exports.signup = function(req, res){
-	if(req.param("id") == "" || req.param("password") == "" || req.param("confirm") == ""){
+	var id = req.body.id;
+	var password = req.body.password;
+	var confirm = req.body.confirm;
+	var email = req.body.email;
+	var redirect = req.query.redirect;
+
+	if(id == "" || password  == "" || confirm == ""){
 		req.flash("warn", "please fill sign up form.");
-		res.redirect("!signup?redirect=" + req.param("redirect"));
+		res.redirect("!signup?redirect=" + redirect);
 		return;
 	}
-	if(req.param("password") != req.param("confirm")){
+	if(password != confirm){
 		req.flash("warn", "password and password confirm are not matched.");
-		res.redirect("!signup?redirect=" + req.param("redirect"));
+		res.redirect("!signup?redirect=" + redirect);
 		return;
 	}
-	req.user.register(req.param("id"), req.param("password"), req.param("email"), function(err){
+	req.user.register(id, password, email, function(err){
 		if(err){
 			req.flash("warn", "already registered id. please try another one.");
-			res.redirect("!signup?redirect=" + req.param("redirect"));
+			res.redirect("!signup?redirect=" + redirect);
 			return;
 		}
-		req.flash("info", "Welcome " + req.param("id") + "!");
-		res.redirect(decodeURIComponent(req.param("redirect")));
+		req.flash("info", "Welcome " + id + "!");
+		res.redirect(decodeURIComponent(redirect));
 	});
 }
 

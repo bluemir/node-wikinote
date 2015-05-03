@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ wikipath.name }}::Backlinks - {{ config.wikiname }}
+{% endblock %}
+
+{% block contents %}
+<article class="history">
+    <h1>Backlinks of {{ wikipath.name }}</h1>
+    {% if backlinks %}
+
+	<ul>
+		{% for link in backlinks %}
+		<li><a href="{{link}}">{{link}}</a></li>
+		{% endfor %}
+	</ul>
+
+    {% else %}
+    <p>this page dose not have backlink!</p>
+    {% endif %}
+</article>
+{% endblock %}

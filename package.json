@@ -22,7 +22,10 @@
     "swig": "~1.4.2",
     "moment": "~2.8.3",
     "js-yaml": "~3.2.5",
-    "q": "~1.2.0"
+    "q": "~1.2.0",
+    "share": "~0.7.27",
+    "livedb": "~0.5.9",
+    "browserchannel": "~2.0.0"
   },
   "devDependencies": {
     "mocha": "~2.1.0",

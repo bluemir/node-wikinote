@@ -18,17 +18,12 @@
         <div class="row">
             <a id="wikiname" href="/">{{ config.wikiname }}</a>
             {% if config.security %}
-            <div id="user">
-                {% if user.isLogin() %}
-                <span class="username">{{ user.id }}</span>
-                <a href="/!logout?redirect={{ wikipath.encode() }}">logout</a>
-                {% else %}
-                <form action="/!login?redirect={{ wikipath.encode() }}" method="post">
-                    <input type="text" placeholder="id" name="id"/>
-                    <input type="password" placeholder="password" name="password"/>
-                    <input type="submit", value="login"/>
+
+            <div class="search">
+                <form action="/!search">
+                    <input type="text" placeholder="Search" name="q" />
+                    <input type="submit", value="Search" />
                 </form>
-                {% endif %}
             </div>
             {% endif %}
             {% if !disableMenu %}
@@ -42,6 +37,7 @@
                         <li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
                         <li><a href="{{ wikipath.toString() }}?move">Move</a></li>
                         <li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
+                        <li><a href="{{ wikipath.toString() }}?backlinks">Back Links</a></li>
 						{% for menu in menus %}
 						<li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
 						{% endfor %}

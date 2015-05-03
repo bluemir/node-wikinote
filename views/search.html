@@ -6,12 +6,13 @@ Search - {{ config.wikiname }}
 <article class="search">
 	<h1>Search</h1>
     <p>여기서 wikinote의 내용을 검색할수 있습니다.</p>
+	<p>검색어는 정규표현식(regular expression)으로 취급됩니다.</p>
     <form>
-        <input type="search" name="q"/>
+        <input type="search" name="q" value="{{ word }}"/>
         <input type="submit" value="검색"/>
     </form>
 	{% if word %}
-    <h2>검색결과</h2>
+    <h2> "{{ word }}"의 검색결과</h2>
     {% if result != null %}
     <ul>
         {% for key, value in result %}

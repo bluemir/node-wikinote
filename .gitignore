@@ -17,3 +17,4 @@ npm-debug.log
 
 config/local.yaml
 user.nedb
+backlinks.nedb

@@ -28,7 +28,9 @@ exports.init = function(app){
 		redirect: false
 	}));
 
+	app.get("/!api/1/files", user.checkApiPermission(user.PERMISSION.READ), wikiApi.files);
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
+	app.post("/!api/1/upload", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.upload);
 
 	var appRouter = ParamRouter();
 	appRouter.get("view", user.checkPermission(user.PERMISSION.READ), wikiApp.view);
@@ -37,6 +39,7 @@ exports.init = function(app){
 	appRouter.get("move", user.checkPermission(user.PERMISSION.WRITE), wikiApp.moveForm);
 	appRouter.get("delete", user.checkPermission(user.PERMISSION.WRITE), wikiApp.deleteForm);
 	appRouter.get("history", user.checkPermission(user.PERMISSION.READ), wikiApp.history);
+	appRouter.get("backlinks", user.checkPermission(user.PERMISSION.READ), wikiApp.backlinks);
 
 	appRouter.post("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.save);
 	appRouter.post("attach", user.checkPermission(user.PERMISSION.WRITE), wikiApp.upload);

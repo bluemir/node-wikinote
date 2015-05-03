@@ -3,8 +3,9 @@ var Q = require("q");
 var express = require("express");
 var wikiFS = require("../app/wikiFS");
 var PREFIXS = ["", "../plugins/"];
+var config = require("../config");
 
-var plugins = require("../plugins/config.js").map(load).filter(notNull);
+var plugins = config.plugins.map(load).filter(notNull);
 
 var loader = new Loader();
 
