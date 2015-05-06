@@ -39,6 +39,7 @@ cm.on("change", function(){
 		doc.destroy();
 		cm.setOption("readOnly", "nocursor");
 	}, 15 * 60 * 1000);
+	updatePreview(cm.getValue());
 	cm.save();
 });
 cm.on("mousedown", function(){
@@ -115,3 +116,43 @@ $("#upload input").addEventListener("change", function (){
 	}).then(getFileList);
 });
 getFileList();
+
+var externalLinksRenderer = new marked.Renderer();
+var protocolRegexp = /^https?:\/\/.+$/;
+externalLinksRenderer.link = function(href, title, text){
+	var external = protocolRegexp.test(href);
+	return "<a href=\"" + href + "\"" +
+		(external ? " target=\"_blank\"" : "")+
+		(title ? " title=\"" + title + "\"" : "") +
+		">" + text + "</a>";
+}
+
+marked.setOptions({
+	gfm: true,
+	tables: true,
+	breaks: false,
+	pedantic: false,
+	sanitize: false,
+	smartLists: true,
+	footnotes : true,
+	renderer : externalLinksRenderer
+});
+
+function updatePreview(value){
+	var $preview = $("article.preview");
+	$preview.innerHTML = marked(value);
+}
+
+$("article.tab-header li a[href='#']").addEventListener("click", function(){
+	$("article.edit").classList.remove("hidden");
+	$("article.preview").classList.add("hidden");
+	
+	$("article.tab-header li a[href='#preview']").parentNode.classList.remove("enabled");
+	$("article.tab-header li a[href='#']").parentNode.classList.add("enabled");
+});
+$("article.tab-header li a[href='#preview']").addEventListener("click", function(){
+	$("article.edit").classList.add("hidden");
+	$("article.preview").classList.remove("hidden");
+	$("article.tab-header li a[href='#preview']").parentNode.classList.add("enabled");
+	$("article.tab-header li a[href='#']").parentNode.classList.remove("enabled");
+});

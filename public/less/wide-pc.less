@@ -272,8 +272,35 @@ body>header {
 		font-style: italic;
 	}
 
+	&.tab-header {
+		padding-bottom : 0px;
 
-	&.view {
+		ul {
+			border-bottom : 2px solid @menu-color;
+			margin : 0px;
+			padding : 0px;
+			list-style : none;
+			li {
+				display : inline-block;
+				padding : 5px 10px;
+				a {
+					color : inherit;
+				}
+			}
+			li.enabled {
+				background : @menu-color;
+				a {
+					text-decoration : none;
+				}
+			}
+		}
+		
+	}
+	&.hidden {
+		display : none;
+	}
+
+	&.view, &.preview {
 		blockquote{
 			font-style : italic;
 			margin-left : 0px;
