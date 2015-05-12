@@ -41,6 +41,9 @@ User.register = function(id, password, email, callback){
 	});
 }
 User.hasPermission = function(permission, callback){
+	if(!config.security){
+		return callback(null, true);
+	}
 	db.users.findOne({
 		id : this.id,
 		permission : permission
