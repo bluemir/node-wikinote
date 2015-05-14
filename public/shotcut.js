@@ -1,43 +1,26 @@
 (function(){
+	
+	var keymap = {
+		ctrl : {
+			"E" : goEditPage,
+			"M" : goMovePage,
+			"L" : goViewPage
+		},
+		alt : {
+			"S" : saveData,
+			"P" : goPresentation
+		}
+	}
 
 	document.body.addEventListener("keydown", function(e) {
 		if(navigator.platform.match("Mac") ? e.metaKey : e. ctrlKey){
-			if(e.keyCode == "E".charCodeAt(0)){
-				goEditPage();
-				e.preventDefault();
-			} else if(e.keyCode == "M".charCodeAt(0)){
-				goMovePage();
-				e.preventDefault();
-			} else if(e.keyCode == "L".charCodeAt(0)){
-				goViewPage();
-				e.preventDefault();
-			} 
-		} else if(e.altKey){
-			if(e.keyCode == "S".charCodeAt(0)){
-				saveData();
-				e.preventDefault();
-			} else if (e.keyCode =="P".charCodeAt(0)) {
-				goPresentation();
-				e.preventDefault();
-			}
-		} else if(e.keyCode == 122) {//F11
-			goPresentation();
+			keymap.ctrl[String.fromCharCode(e.keyCode)]();
+			e.preventDefault();
+		} else if(e.altKey) {
+			keymap.alt[String.fromCharCode(e.keyCode)]();
+			e.preventDefault();
 		}
-	}, false);
-
-	var textarea = document.querySelector(".edit textarea");
-	if(textarea){
-		textarea.addEventListener("keydown", function(e) {
-			if(e.keyCode == "\t".charCodeAt(0)){
-				e.preventDefault();
-				var start = this.selectionStart;
-				var end  = this.selectionEnd;
-				this.value = this.value.substring(0,start) + "\t" + this.value.substring(end);
-				this.selectionEnd = start+1;
-			}
-		});
-		textarea.focus();
-	}
+	}, false)
 
 	function goViewPage(){
 		location.href = getUrl();
