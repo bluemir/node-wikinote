@@ -1,4 +1,5 @@
 (function(){
+	function noop(){}
 	
 	var keymap = {
 		ctrl : {
@@ -14,10 +15,10 @@
 
 	document.body.addEventListener("keydown", function(e) {
 		if(navigator.platform.match("Mac") ? e.metaKey : e. ctrlKey){
-			keymap.ctrl[String.fromCharCode(e.keyCode)]();
+			(keymap.ctrl[String.fromCharCode(e.keyCode)] || noop)();
 			e.preventDefault();
 		} else if(e.altKey) {
-			keymap.alt[String.fromCharCode(e.keyCode)]();
+			(keymap.alt[String.fromCharCode(e.keyCode)] || noop)();
 			e.preventDefault();
 		}
 	}, false)
@@ -35,11 +36,6 @@
 		location.href = getUrl() + "?presentation";
 	}
 
-	function saveData(){
-		if(textarea){
-			textarea.form.submit();
-		}
-	}
 	function getUrl(){
 		return location.pathname;
 	}

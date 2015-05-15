@@ -35,9 +35,11 @@
 {% endblock %}
 
 {% block scripts %}
-<script>var note = {
+<script>
+var note = {
     path : "{{wikipath.toString()}}"
-}</script>
+}
+</script>
 <script src="/!public/lib/CodeMirror/lib/codemirror.js"></script>
 <script src="/!public/lib/CodeMirror/mode/markdown/markdown.js"></script>
 <script src="/!public/lib/codemirror-emmet/dist/emmet.js"></script>
