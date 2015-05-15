@@ -23,7 +23,8 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 	tabSize : 4,
 	indentWithTabs : true,
 	profile: "html",
-	lineWrapping: true
+	lineWrapping: true,
+	readOnly : "nocursor"
 });
 emmetPlugin.clearKeymap();
 emmetPlugin.setKeymap({
@@ -58,6 +59,8 @@ doc.whenReady(function () {
 	if (doc.type && doc.type.name === 'text') {
 		doc.attachCodeMirror(cm);
 	}
+
+	cm.setOption("readOnly", false);
 });
 
 function showMsg(level, message){
@@ -72,6 +75,7 @@ function showMsg(level, message){
 		$msg.style.opacity = 1 - ratio;
 	}).then(function(){
 		$msg.classList.remove(level);
+		$msg.style.display = "none";
 	});
 }
 // TODO : refactor
