@@ -35,7 +35,11 @@
 	function goPresentation(){
 		location.href = getUrl() + "?presentation";
 	}
-
+	function saveData(){
+		if(textarea){
+			textarea.form.submit();
+		}
+	}
 	function getUrl(){
 		return location.pathname;
 	}

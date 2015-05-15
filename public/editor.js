@@ -2,22 +2,7 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 	mode:  "markdown",
 	lineNumbers: true,
 	extraKeys : {
-		"Ctrl-S" : function(){
-			var data = "data=" + encodeURIComponent(cm.doc.getValue());
-			var options = {
-				data :data,
-				contentType : "application/x-www-form-urlencoded"
-			};
-			$ajax("POST", getSaveApiUrl(), options).then(function(){
-				showMsg("info", "Save successful!");
-			}).fail(function(code){
-				if(code == 401){
-					showMsg("warn", "Unauthorized");
-				} else {
-					showMsg("warn", "Unexpected Code : " + ajax.readState);
-				}
-			});
-		}
+		"Ctrl-S" : saveDocument
 	},
 	indentUnit : 4,
 	tabSize : 4,
@@ -26,6 +11,22 @@ var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 	lineWrapping: true,
 	readOnly : "nocursor"
 });
+function saveDocument(){
+	var data = "data=" + encodeURIComponent(cm.doc.getValue());
+	var options = {
+		data :data,
+		contentType : "application/x-www-form-urlencoded"
+	};
+	$ajax("POST", getSaveApiUrl(), options).then(function(){
+		showMsg("info", "Save successful!");
+	}).fail(function(code){
+		if(code == 401){
+			showMsg("warn", "Unauthorized");
+		} else {
+			showMsg("warn", "Unexpected Code : " + ajax.readState);
+		}
+	});
+}
 emmetPlugin.clearKeymap();
 emmetPlugin.setKeymap({
 	'Ctrl-Enter': 'expand_abbreviation'
