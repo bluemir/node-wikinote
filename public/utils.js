@@ -36,3 +36,34 @@ function $create(tagname, text){
 	}
 	return newTag;
 }
+
+Q.step = function(object, step, time){
+	if (time === void 0) {
+		time = step;
+		step = object;
+		object = void 0;
+	}
+	return Q(object).step(step, time);
+}
+
+Promise.prototype.step = function (step, time){
+	return this.then(function (value){
+		var deferred = defer();
+
+		var dt = time/step;
+		var count = 0;
+
+		var onTimer = function(){
+			count++;
+			deferred.notify(count/step);
+			if(count < step){
+				setTimeout(onTimer, dt);
+			} else {
+				deferred.resolve(value);
+			}
+		}
+
+		setTimeout(onTimer, dt);
+		return deferred.promise;
+	});
+}
