@@ -37,18 +37,9 @@ function $create(tagname, text){
 	return newTag;
 }
 
-Q.step = function(object, step, time){
-	if (time === void 0) {
-		time = step;
-		step = object;
-		object = void 0;
-	}
-	return Q(object).step(step, time);
-}
-
-Promise.prototype.step = function (step, time){
-	return this.then(function (value){
-		var deferred = defer();
+function interval(step, time) {
+	return function(value){
+		var deferred = Q.defer();
 
 		var dt = time/step;
 		var count = 0;
@@ -65,5 +56,6 @@ Promise.prototype.step = function (step, time){
 
 		setTimeout(onTimer, dt);
 		return deferred.promise;
-	});
+	}
 }
+

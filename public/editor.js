@@ -71,7 +71,7 @@ function showMsg(level, message){
 	$msg.style.display = "block";
 	$msg.style.opacity = 1;
 
-	Q.delay(500).step(20, 500).progress(function(ratio){
+	Q.delay(1000).then(interval(20, 500)).progress(function(ratio){
 		$msg.style.opacity = 1 - ratio;
 	}).then(function(){
 		$msg.classList.remove(level);
