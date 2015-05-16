@@ -36,3 +36,26 @@ function $create(tagname, text){
 	}
 	return newTag;
 }
+
+function interval(step, time) {
+	return function(value){
+		var deferred = Q.defer();
+
+		var dt = time/step;
+		var count = 0;
+
+		var onTimer = function(){
+			count++;
+			deferred.notify(count/step);
+			if(count < step){
+				setTimeout(onTimer, dt);
+			} else {
+				deferred.resolve(value);
+			}
+		}
+
+		setTimeout(onTimer, dt);
+		return deferred.promise;
+	}
+}
+
