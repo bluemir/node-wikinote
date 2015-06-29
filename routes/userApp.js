@@ -51,7 +51,11 @@ exports.signup = function(req, res){
 		res.redirect(decodeURIComponent(redirect));
 	});
 }
-
+exports.list = function(req, res) {
+	var id = user.list(function(err, users){
+		res.render("userlist.html", {users : users});
+	});
+}
 
 exports.PERMISSION = user.PERMISSION;
 

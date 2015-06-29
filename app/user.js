@@ -98,6 +98,11 @@ exports.bind = function(session, key){
 		}
 	});
 }
+exports.list = function(callback){
+	db.users.find({}, function(err, users){
+		callback(err, users);
+	});
+}
 
 function hash(data){
 	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");

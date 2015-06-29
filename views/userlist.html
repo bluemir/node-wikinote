@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Users - {{ config.wikiname }}
+{% endblock %}
+
+{% block contents %}
+<article class="userlist">
+	<ul>
+		{% for user in users %}
+		<li>{{user.id}} <a href="#">Delete</a> 
+			<select>
+				<option>Admin</option>
+				<option>Write</option>
+				<option>Read</option>
+			</select>
+		</li>
+		{% endfor %}
+	</ul>
+</article>
+{% endblock %}
+

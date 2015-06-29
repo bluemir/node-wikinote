@@ -22,6 +22,8 @@ exports.init = function(app){
 	app.post("/!signup", disableMenu, user.signup);
 	app.get("/!search", disableMenu, wikiApp.search);
 
+	app.get("/!users", disableMenu, /*user.checkPermission(user.PERMISSION.ADMIN),*/ user.list);
+
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
 		index: false,
