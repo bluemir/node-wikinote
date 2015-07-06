@@ -52,8 +52,18 @@ exports.signup = function(req, res){
 	});
 }
 exports.list = function(req, res) {
-	var id = user.list(function(err, users){
+	user.list(function(err, users){
 		res.render("userlist.html", {users : users});
+	});
+}
+exports.delete = function(req, res) {
+	var id = req.params.id;
+	user.delete(id, function(err){
+		if(err) {
+			req.flash("warn", "cannot delete " +id);
+		}
+		req.flash("info", "Delete " + id);
+		res.redirect("/!users");
 	});
 }
 

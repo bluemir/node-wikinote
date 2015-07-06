@@ -103,6 +103,9 @@ exports.list = function(callback){
 		callback(err, users);
 	});
 }
+exports.delete = function(id, callback){
+	db.users.remove({id: id}, {}, callback);
+}
 
 function hash(data){
 	return crypto.createHash('sha512').update(data + config.security.salt).digest("base64");

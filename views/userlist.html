@@ -8,12 +8,14 @@ Users - {{ config.wikiname }}
 <article class="userlist">
 	<ul>
 		{% for user in users %}
-		<li>{{user.id}} <a href="#">Delete</a> 
+		<li>
+			{{user.id}}
 			<select>
 				<option>Admin</option>
 				<option>Write</option>
 				<option>Read</option>
 			</select>
+			<a href="/!users/{{user.id}}/delete">Delete</a>
 		</li>
 		{% endfor %}
 	</ul>
