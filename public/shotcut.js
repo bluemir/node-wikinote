@@ -1,6 +1,6 @@
 (function(){
 	function noop(){}
-	
+
 	var keymap = {
 		ctrl : {
 			"E" : goEditPage,
@@ -14,12 +14,17 @@
 	}
 
 	document.body.addEventListener("keydown", function(e) {
-		if(navigator.platform.match("Mac") ? e.metaKey : e. ctrlKey){
-			(keymap.ctrl[String.fromCharCode(e.keyCode)] || noop)();
-			e.preventDefault();
+		var keyCode = String.fromCharCode(e.keyCode);
+		if(navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey){
+			if(keymap.ctrl[keyCode]) {
+				keymap.ctrl[keyCode]();
+				e.preventDefault();
+			}
 		} else if(e.altKey) {
-			(keymap.alt[String.fromCharCode(e.keyCode)] || noop)();
-			e.preventDefault();
+			if(keymap.alt[keyCode]){
+				keymap.alt[keyCode]();
+				e.preventDefault();
+			}
 		}
 	}, false)
 
