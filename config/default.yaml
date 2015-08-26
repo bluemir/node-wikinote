@@ -6,7 +6,6 @@ wikiDir : "~/wiki"
 autoBackup : false
 #security :
 #    salt : 123456789
-#    admin : admin
 #    defaultPermission :
 #        - read
 #        - write
