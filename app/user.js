@@ -50,13 +50,13 @@ User.prototype.checkPermission = function(permission){
 
 	db.users.findOne({
 		id : this.$.id,
-		permission : permission
+		permissions : permission
 	}, function(err, ok){
 		if(err) return defer.reject(err);
 
 		if(ok) return defer.resolve(true);
 
-		if(config.security && config.security.defaultPermission) {
+		if(config.security && config.security.defaultPermissions) {
 			return defer.resolve(checkDefault());
 		} else {
 			return defer.resolve(false);
@@ -66,7 +66,7 @@ User.prototype.checkPermission = function(permission){
 	return defer.promise;
 
 	function checkDefault(){
-		return config.security.defaultPermission.some(function(elem){
+		return config.security.defaultPermissions.some(function(elem){
 			return elem == permission;
 		});
 	}
@@ -116,7 +116,7 @@ User.register = function(id, password, email){
 		id : id,
 		password : hash(password),
 		email : email,
-		permission : config.security.defaultPermission || ["read"]
+		permissions : config.security.defaultPermissions || ["read"]
 	}, function(err, user){
 		if(err) return defer.reject(err);
 		defer.resolve(new User(user));
