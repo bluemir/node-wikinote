@@ -1,63 +1,69 @@
+var Q = require("q");
 var config = require("../config");
-var fs = require('fs');
 var crypto = require('crypto');
 var Datastore = require("nedb");
 var db = require("./db");
 
-exports.PERMISSION = {
-	READ : "read",
-	WRITE : "write",
-	ADMIN : "admin",
-};
+module.exports = User;
 
-var User = {};
+function User(userdata){
+	this.$ = userdata || {};
 
-User.authenticate = function(id, password, callback){
 	var that = this;
-	db.users.findOne({id : id, password: hash(password)}, function(err, user){
-		if(err) return callback(err);
-		if(!user) return callback(new Error("authentication fail!"));
-
-		that.store = user;
-
-		callback();
-	});
-}
-User.logout = function(){
-	this.store = {};
-}
-User.register = function(id, password, email, callback){
-	var that = this;
-	db.users.insert({
-		id : id,
-		password : hash(password),
-		email : email,
-		permission : config.security.defaultPermission || ["read"]
-	}, function(err, data){
-		if(err) return callback(err);
-
-		that.store = data;
-		callback(null, data);
-	});
-}
-User.hasPermission = function(permission, callback){
-	if(!config.security){
-		return callback(null, true);
-	}
-	db.users.findOne({
-		id : this.id,
-		permission : permission
-	}, function(err, ok){
-		if(err) return callback(err);
-
-		if(ok) return callback(null, true);
-
-		if(config.security && config.security.defaultPermission) {
-			return callback(null, checkDefault());
-		} else {
-			return callback(null, false);
+	Object.defineProperty(this, "id", {
+		get: function(){
+			return that.$.id;
+		},
+		set: function(id){
+			that.$.id = id;
 		}
 	});
+	Object.defineProperty(this, "password", {
+		get: function(){
+			return that.$.password;
+		}
+	});
+	Object.defineProperty(this, "email", {
+		get: function(){
+			return that.$.email;
+		},
+		set: function(email){
+			that.$.email = email;
+		}
+	});
+}
+User.prototype.save = function(){
+	var defer = Q.defer();
+	var that = this;
+	db.users.update({id: this.$.id}, this.$, {}, function(err){
+		if(err) return defer.reject(err);
+		defer.resolve(that);
+	});
+	return defer.promise;
+}
+
+User.prototype.checkPermission = function(permission){
+	var defer = Q.defer();
+	if(!config.security){
+		return defer.resolve(true);
+	}
+
+	db.users.findOne({
+		id : this.$.id,
+		permission : permission
+	}, function(err, ok){
+		if(err) return defer.reject(err);
+
+		if(ok) return defer.resolve(true);
+
+		if(config.security && config.security.defaultPermission) {
+			return defer.resolve(checkDefault());
+		} else {
+			return defer.resolve(false);
+		}
+	});
+
+	return defer.promise;
 
 	function checkDefault(){
 		return config.security.defaultPermission.some(function(elem){
@@ -65,46 +71,76 @@ User.hasPermission = function(permission, callback){
 		});
 	}
 }
-User.canRead = function(callback){
-	this.hasPermission("read", callback);
+User.prototype.canRead = function(){
+	return this.checkPermission(User.PERMISSION.READ);
 }
-User.canWrite = function(){
-	this.hasPermission("write", callback);
+User.prototype.canWrite = function(){
+	return this.checkPermission(User.PERMISSION.WRITE);
 }
-User.isLogin = function(){
-	return !!this.store.id;
+User.prototype.serialize = function(){
+	return this.$;
 }
+User.prototype.isLogin = function(){
+	return !!this.$.id;
+}
+User.PERMISSION = {
+	READ : "read",
+	WRITE : "write",
+	ADMIN : "admin",
+};
+User.findById = function(id){
+	var defer = Q.defer();
 
-exports.bind = function(session, key){
-	session[key] = session[key] || {};
-	return Object.create(User, {
-		store : {
-			set : function(value){
-				session[key] = value;
-			},
-			get : function() {
-				return session[key];
-			}
-		},
-		id : {
-			get : function(){
-				return session[key].id;
-			}
-		},
-		email : {
-			get : function(){
-				return session[key].email;
-			}
-		}
+	db.users.findOne({id: id}, function(err, userdata){
+		if(err) return defer.reject(err);
+		defer.resolve(new User(userdata));
 	});
+	return defer.promise;
 }
-exports.list = function(callback){
+User.bind = function(store) {
+	return new User(store);
+}
+User.list = function(){
+	var defer = Q.defer();
+
 	db.users.find({}, function(err, users){
-		callback(err, users);
+		if(err) return defer.reject(err);
+		defer.resolve(users);
 	});
+
+	return defer.promise;
 }
-exports.delete = function(id, callback){
-	db.users.remove({id: id}, {}, callback);
+User.register = function(id, password, email){
+	var defer = Q.defer();
+	db.users.insert({
+		id : id,
+		password : hash(password),
+		email : email,
+		permission : config.security.defaultPermission || ["read"]
+	}, function(err, user){
+		if(err) return defer.reject(err);
+		defer.resolve(new User(user));
+	});
+	return defer.promise;
+}
+User.authenticate = function(id, password){
+	var defer = Q.defer();
+
+	db.users.findOne({id : id, password: hash(password)}, function(err, user){
+		if(err) return defer.reject(err);
+		if(!user) return defer.reject(new Error("authentication fail!"));
+		defer.resolve(new User(user));
+	});
+
+	return defer.promise;
+}
+User.delete = function(id){
+	var defer = Q.defer();
+	db.users.remove({id: id}, {}, function(err){
+		if(err) return defer.reject(err);
+		defer.resolve();
+	});
+	return defer.promise;
 }
 
 function hash(data){
