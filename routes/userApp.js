@@ -55,14 +55,38 @@ exports.list = function(req, res) {
 		res.render("userlist.html", {users : users});
 	});
 }
-exports.delete = function(req, res) {
-	var id = req.params.id;
-	user.delete(id, function(err){
-		if(err) {
-			req.flash("warn", "cannot delete " +id);
-		}
-		req.flash("info", "Delete " + id);
-		res.redirect("/!users");
+
+exports.deleteUser = function(req, res){
+	var id = req.params.userId;
+	User.delete(id).then(function(err){
+		res.jsonp({msg:ok});
+	}).fail(function(err){
+		res.jsonp(err);
+	});
+}
+exports.addPermission = function(req, res){
+	var id = req.params.userId;
+	var permission = req.params.permission;
+
+	User.findById(id).then(function(user){
+		return user.addPermission(permission).save();
+	}).then(function(user){
+		res.jsonp(user);
+	}).fail(function(err){
+		res.status(500).jsonp(err);
+	});
+}
+exports.deletePermission = function(req, res){
+	var id = req.params.userId;
+	var permission = req.params.permission;
+
+	User.findById(id).then(function(user){
+		return user.deletePermission(permission).save();
+	}).then(function(user){
+		res.jsonp(user);
+	}).fail(function(err){
+		console.log(err);
+		res.status(500).jsonp(err);
 	});
 }
 
@@ -89,7 +113,7 @@ exports.checkPermission = function(permission){
 			if(has){
 				next();
 			} else {
-				res.status(401).render("noAuth", {title : "Waring"});
+				res.status(401).render("noAuth");
 			}
 		}).fail(function(err){
 			next(err);

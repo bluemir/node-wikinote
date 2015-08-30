@@ -8,17 +8,31 @@ Users - {{ config.wikiname }}
 <article class="userlist">
 	<ul>
 		{% for user in users %}
-		<li>
+		<li class="user" data-id="{{user.id}}">
 			{{user.id}}
-			<select>
-				<option>Admin</option>
-				<option>Write</option>
-				<option>Read</option>
-			</select>
-			<a href="/!users/{{user.id}}/delete">Delete</a>
+			{{user.email}}
+			<button class="user"><i class="fa fa-trash-o"></i>Delete</button>
+			<fieldset>
+				<legend>permissions</legend>
+				<ul class="permissions">
+					{% for permission in user.permissions %}
+					<li class="permission" data-id="{{user.id}}" data-permission="{{permission}}">
+						<span>{{permission}}</span>
+						<button >
+							<i class="fa fa-close"></i>
+						</button>
+					</li>
+					{% endfor %}
+				</ul>
+			</fieldset>
 		</li>
 		{% endfor %}
 	</ul>
 </article>
 {% endblock %}
 
+{% block scripts %}
+<script src="/!public/q.js"></script>
+<script src="!public/utils.js"></script>
+<script src="!public/userlist.js"></script>
+{% endblock %}
