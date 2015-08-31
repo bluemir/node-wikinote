@@ -1,11 +1,110 @@
-article.userlist table {
-    border-collapse: collapse;
-    width: 100%;
+@import "color.less";
+
+article.userlist {
+	&>ul {
+		margin : 0px;
+		padding : 0px;
+		list-style : none;
+		border-top : 2px solid #222;
+		border-bottom : 2px solid #222;
+	}
+	p {
+		margin : 0px;
+		padding :0px;
+	}
+	li.user {
+		border-bottom: 1px solid #222;
+		padding : 10px 0px;
+		position : relative;
+
+		button.user {
+			position : absolute;
+			top : 10px;
+			right : 5px;
+		}
+
+		&:last-child {
+			border : none;
+		}
+	}
+	fieldset {
+		border: 1px solid gray;
+		border-radius : 10px;
+	}
+	ul.permissions{
+		padding : 0px;
+
+		li.permission, li.add {
+			display : inline-block;
+			background : @light-blue;
+			color : white;
+			padding : 2px 5px;
+			margin : 2px 3px;
+			border-radius : 2px;
+
+			button {
+				background : none;
+				border : none;
+				color : white;
+				margin : 0px;
+				padding : 2px;
+				height : 100%;
+				outline : none;
+				&:hover {
+					color : #222;
+				}
+			}
+		}
+		li.add {
+			background : fadeout(@light-blue, 50%);
+			button {
+			}
+			input {
+				background : none;
+				margin : 0px auto;
+				border : none;
+				outline : none;
+				overflow : hidden;
+				color : white;
+				transition: width 1s, padding-right 1s;
+				width : 0px;
+				margin-left :5px;
+				margin-right : -5px;
+
+				&:input-placeholder {
+					color : rgba(255,255,255,0.5);
+				}
+				&::-webkit-input-placeholder {
+					color : rgba(255,255,255,0.5);
+				}
+				&::-moz-input-placeholder {
+					color : rgba(255,255,255,0.5);
+				}
+				&:-ms-input-placeholder {
+					color : rgba(255,255,255,0.5);
+				}
+			}
+			&:hover {
+				background : @light-blue;
+				button {
+					color : #222;
+				}
+			}
+
+			&.active {
+				background : @light-blue;
+				input {
+					width:120px;
+					margin-right : 0px;
+				}
+				&:hover button{
+					color: white;
+					&:hover {
+						color: #222;
+					}
+				}
+			}
+		}
+	}
 }
-article.userlist td, article.userlist th {
-    padding: 5px;
-    border: 1px solid gray;
-}
-article.userlist td.group {
-    text-align : center;
-}
+

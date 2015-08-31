@@ -1,8 +1,14 @@
 function $(query){
 	return document.querySelector(query);
 }
+function $$(target, query) {
+	return target.querySelector(query);
+}
 function $all(query){
 	return Array.prototype.slice.call(document.querySelectorAll(query));
+}
+function $$all(target, query){
+	return Array.prototype.slice.call(target.querySelectorAll(query));
 }
 function $ajax(method, url, options){
 	options = options || {};
