@@ -23,6 +23,8 @@ exports.init = function(app){
 	app.get("/!search", disableMenu, wikiApp.search);
 
 	app.get("/!users", disableMenu, user.checkPermission(user.PERMISSION.ADMIN), user.list);
+	app.get("/!users/:userId", disableMenu, user.profile);
+	app.post("/!users/:userId", disableMenu, user.saveProfile);
 
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',

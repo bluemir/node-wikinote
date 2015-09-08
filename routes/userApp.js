@@ -1,4 +1,6 @@
+var Error = require("../app/error");
 var User = require("../app/user");
+var Q = require("q");
 
 exports.loginForm = function(req, res){
 	res.render("login", {});
@@ -55,6 +57,55 @@ exports.list = function(req, res) {
 		res.render("userlist.html", {users : users});
 	});
 }
+exports.profile = function(req, res){
+	var userId = req.params.userId;
+
+	Q.fcall(function(){
+		if(req.user.id === userId){
+			return true;
+		} else {
+			return req.user.isAdmin();
+		}
+	}).then(function(ok){
+		if (ok){
+			return User.findById(userId);
+		} else {
+			throw new Error.Unauthorized();
+		}
+	}).then(function(user){
+		res.render("profile.html", {me : user});
+	}).fail(function(err){
+		Error.handle(err).httpResponse(res);
+	});
+}
+exports.saveProfile = function(req, res){
+	var userId = req.params.userId;
+	Q.fcall(function(){
+		if(req.user.id === userId) {
+			return true;
+		} else {
+			return req.user.isAdmin();
+		}
+	}).then(function(ok){
+		if(ok) {
+			return User.findById(userId)
+		} else {
+			throw new Error.Unauthorized();
+		}
+	}).then(function(user){
+		user.email = req.body.email;
+		var password = req.body.password;
+		var confirm = req.body.password;
+		if(password != "" && password == confirm){
+			user.setPassword(password);
+		}
+		return user.save();
+	}).then(function(){
+		res.redirect("/!users/"+userId);
+	}).fail(function(err){
+		Error.handle(err).httpResponse(res);
+	});
+}
 
 exports.deleteUser = function(req, res){
 	var id = req.params.userId;
@@ -85,8 +136,7 @@ exports.deletePermission = function(req, res){
 	}).then(function(user){
 		res.jsonp(user);
 	}).fail(function(err){
-		console.log(err);
-		res.status(500).jsonp(err);
+		Error.handle(err).jsonResponse(res);
 	});
 }
 
@@ -113,7 +163,7 @@ exports.checkPermission = function(permission){
 			if(has){
 				next();
 			} else {
-				res.status(401).render("noAuth");
+				(new Error.Unauthorized()).httpResponse(res);
 			}
 		}).fail(function(err){
 			next(err);
@@ -127,10 +177,11 @@ exports.checkApiPermission = function(permission){
 			if(has){
 				next();
 			} else {
-				return res.status(401).json({msg : "unauthorized"});
+				(new Error.Unauthorized()).jsonResponse(res);
 			}
 		}).fail(function(err){
 			return next(err);
 		});
 	}
 }
+

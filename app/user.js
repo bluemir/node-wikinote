@@ -97,6 +97,9 @@ User.prototype.canRead = function(){
 User.prototype.canWrite = function(){
 	return this.checkPermission(User.PERMISSION.WRITE);
 }
+User.prototype.isAdmin = function(){
+	return this.checkPermission(User.PERMISSION.ADMIN);
+}
 User.prototype.serialize = function(){
 	return this.toJSON();
 }
