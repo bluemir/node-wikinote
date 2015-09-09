@@ -2,7 +2,7 @@
 WikinoteError.prototype = Object.create(Error.prototype);
 function WikinoteError(message, code){
 	Error.call(this, message);
-	this.stack = new Error().stack;
+	Error.captureStackTrace(this, WikinoteError);
 	this.statusCode = code || 500;
 }
 WikinoteError.prototype.httpResponse = function(res){
