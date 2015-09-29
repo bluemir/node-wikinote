@@ -32,6 +32,7 @@ app.use(flash());
 app.use("/!public", express.static(__dirname + "/public"));
 app.use("/!public/lib/share", express.static(share.static));
 app.use("/!public/marked.min.js", express.static("node_modules/marked/marked.min.js"));
+app.use("/!public/lib/font-awesome", express.static("node_modules/font-awesome"));
 
 app.use("/!public", share.middleware);
 

@@ -1,4 +1,6 @@
-var user = require("../app/user");
+var Error = require("../app/error");
+var User = require("../app/user");
+var Q = require("q");
 
 exports.loginForm = function(req, res){
 	res.render("login", {});
@@ -7,17 +9,17 @@ exports.login = function(req, res){
 	var id = req.body.id;
 	var password = req.body.password;
 
-	req.user.authenticate(id, password, function(err){
-		if(err) {
-			req.flash('warn', 'Login Fail! Check your Id or Password');
-		} else {
-			req.flash("info", "Welcome " + req.body.id + "!");
-		}
+	User.authenticate(id, password).then(function(user){
+		req.user = user;
+		req.flash("info", "Welcome " + req.body.id + "!");
+		res.redirect(decodeURIComponent(req.query.redirect));
+	}).fail(function(err){
+		req.flash('warn', 'Login Fail! Check your Id or Password');
 		res.redirect(decodeURIComponent(req.query.redirect));
 	});
 }
 exports.logout = function(req, res){
-	req.user.logout();
+	req.user = new User();
 	req.flash('info', 'Logout successfully!');
 	res.redirect(decodeURIComponent(req.query.redirect));
 }
@@ -41,50 +43,145 @@ exports.signup = function(req, res){
 		res.redirect("!signup?redirect=" + redirect);
 		return;
 	}
-	req.user.register(id, password, email, function(err){
-		if(err){
-			req.flash("warn", "already registered id. please try another one.");
-			res.redirect("!signup?redirect=" + redirect);
-			return;
-		}
+	User.register(id, password, email).then(function(user){
+		req.user = user;
 		req.flash("info", "Welcome " + id + "!");
 		res.redirect(decodeURIComponent(redirect));
+	}).fail(function(err){
+		req.flash("warn", "already registered id. please try another one.");
+		res.redirect("!signup?redirect=" + redirect);
+	});
+}
+exports.list = function(req, res) {
+	User.list().then(function(users){
+		res.render("userlist.html", {users : users});
+	});
+}
+exports.profile = function(req, res){
+	var userId = req.params.userId;
+
+	Q.fcall(function(){
+		if(req.user.id === userId){
+			return true;
+		} else {
+			return req.user.isAdmin();
+		}
+	}).then(function(ok){
+		if (ok){
+			return User.findById(userId);
+		} else {
+			throw new Error.Unauthorized();
+		}
+	}).then(function(user){
+		res.render("profile.html", {me : user});
+	}).fail(function(err){
+		Error.handle(err).httpResponse(res);
+	});
+}
+exports.saveProfile = function(req, res){
+	var userId = req.params.userId;
+	Q.fcall(function(){
+		if(req.user.id === userId) {
+			return true;
+		} else {
+			return req.user.isAdmin();
+		}
+	}).then(function(ok){
+		if(ok) {
+			return User.findById(userId)
+		} else {
+			throw new Error.Unauthorized();
+		}
+	}).then(function(user){
+		user.email = req.body.email;
+		var password = req.body.password;
+		var confirm = req.body.password;
+		if(password != "" && password == confirm){
+			user.setPassword(password);
+		}
+		return user.save();
+	}).then(function(){
+		res.redirect("/!users/"+userId);
+	}).fail(function(err){
+		Error.handle(err).httpResponse(res);
 	});
 }
 
+exports.deleteUser = function(req, res){
+	var id = req.params.userId;
+	User.delete(id).then(function(err){
+		res.jsonp({msg:ok});
+	}).fail(function(err){
+		res.jsonp(err);
+	});
+}
+exports.addPermission = function(req, res){
+	var id = req.params.userId;
+	var permission = req.params.permission;
 
-exports.PERMISSION = user.PERMISSION;
+	User.findById(id).then(function(user){
+		return user.addPermission(permission).save();
+	}).then(function(user){
+		res.jsonp(user);
+	}).fail(function(err){
+		res.status(500).jsonp(err);
+	});
+}
+exports.deletePermission = function(req, res){
+	var id = req.params.userId;
+	var permission = req.params.permission;
+
+	User.findById(id).then(function(user){
+		return user.deletePermission(permission).save();
+	}).then(function(user){
+		res.jsonp(user);
+	}).fail(function(err){
+		Error.handle(err).jsonResponse(res);
+	});
+}
+
+exports.PERMISSION = User.PERMISSION;
 
 exports.middleware = function(req, res, next){
-	req.user = res.locals.user = user.bind(req.session, "user");
+	var user;
+	Object.defineProperty(req, "user", {
+		get: function(){
+			return user;
+		},
+		set: function(newUser){
+			user = newUser;
+			res.locals.user = newUser;
+			req.session.user = newUser.serialize();
+		}
+	});
+	req.user = User.bind(req.session.user);
 	next();
 }
 exports.checkPermission = function(permission){
 	return function checkPermission(req, res, next){
-		req.user.hasPermission(permission, function(err, has){
-			if(err) {
-				throw err;
-			}
+		req.user.checkPermission(permission).then(function(has){
 			if(has){
 				next();
 			} else {
-				return res.status(401).render("noAuth", {title : "Waring"});
+				(new Error.Unauthorized()).httpResponse(res);
 			}
+		}).fail(function(err){
+			next(err);
 		});
 	}
 }
 
 exports.checkApiPermission = function(permission){
 	return function checkPermission(req, res, next){
-		req.user.hasPermission(permission, function(err, has){
-			if(err){
-				throw err;
-			}
+		req.user.checkPermission(permission).then(function(has){
 			if(has){
 				next();
 			} else {
-				return res.status(401).json({msg : "unauthorized"});
+				(new Error.Unauthorized()).jsonResponse(res);
 			}
+		}).fail(function(err){
+			return next(err);
 		});
 	}
 }
+

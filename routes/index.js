@@ -6,7 +6,7 @@ var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
 var loader = require("./pluginLoader");
 var config = require("../config");
-var ParamRouter = require("./paramRouter")
+var ParamRouter = require("./paramRouter");
 
 exports.init = function(app){
 	loader.assets(app);
@@ -22,6 +22,10 @@ exports.init = function(app){
 	app.post("/!signup", disableMenu, user.signup);
 	app.get("/!search", disableMenu, wikiApp.search);
 
+	app.get("/!users", disableMenu, user.checkPermission(user.PERMISSION.ADMIN), user.list);
+	app.get("/!users/:userId", disableMenu, user.profile);
+	app.post("/!users/:userId", disableMenu, user.saveProfile);
+
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
 		index: false,
@@ -31,6 +35,10 @@ exports.init = function(app){
 	app.get("/!api/1/files", user.checkApiPermission(user.PERMISSION.READ), wikiApi.files);
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
 	app.post("/!api/1/upload", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.upload);
+
+	app.delete("/!api/1/user/:userId", user.checkApiPermission(user.PERMISSION.ADMIN), user.deleteUser);
+	app.put("/!api/1/user/:userId/permission/:permission", user.checkApiPermission(user.PERMISSION.ADMIN), user.addPermission);
+	app.delete("/!api/1/user/:userId/permission/:permission", user.checkApiPermission(user.PERMISSION.ADMIN), user.deletePermission);
 
 	var appRouter = ParamRouter();
 	appRouter.get("view", user.checkPermission(user.PERMISSION.READ), wikiApp.view);
