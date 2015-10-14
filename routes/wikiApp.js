@@ -78,16 +78,17 @@ wikiApp.staticFiles = function(req, res){
 
 wikiApp.search = function(req, res){
 	var word = req.query.q;
+	var flags = req.query.flags || "";//javascript regex flag(g, m ,i)
+
+	flags += flags.search("c") != -1 ? "" : "i"; // i is default use c instead
 
 	if(!word){
 		res.render("search", {result : null});
 		return;
 	}
-	wikiFS.find(word, "").then(function(data){
-		//console.log(data);
+	wikiFS.find(word, flags, "").then(function(data){
 		res.render("search", {result :data, word : word});
 	}).fail(function(e){
-		//console.log(e.stack);
 		res.status(500).end();
 	});
 }
