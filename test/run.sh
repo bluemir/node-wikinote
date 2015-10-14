@@ -1,4 +1,4 @@
 #!/bin/bash
 
 grunt &
-nodemon -w app -w routes -w views -w app.js -w config.json -e html,js app.js
+nodemon -w app -w routes -w views -w wikinote.js -w config.json -e html,js wikinote.js 

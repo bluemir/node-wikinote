@@ -3,7 +3,7 @@
   "version": "0.5.2",
   "private": true,
   "scripts": {
-    "start": "node app",
+    "start": "node wikinote",
     "test": "mocha"
   },
   "dependencies": {
