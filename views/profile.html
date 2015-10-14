@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Profile - {{ config.wikiname }}
+{% endblock %}
+
+{% block contents %}
+<article class="profile">
+	<h1>{{me.id}} &lt;{{me.email||"NONE"}}&gt;</h1>
+	<form method="POST">
+		<dl>
+			<dt><label for="email">E-mail</label></dt>
+			<dd><input name="email" type="email" value="{{me.email}}" placeholder="E-mail"/></dd>
+			<dt><label for="password">Password</label></dt>
+			<dd><input name="password" type="password" placeholder="Password"/></dd>
+			<dt><label for="password">Password Confirm</label></dt>
+			<dd><input name="confirm" type="password" placeholder="Password Confirm"/></dd>
+		</dl>
+		<input type="submit" value="Save"/>
+	</form>
+</article>
+{% endblock %}

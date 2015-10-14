@@ -6,8 +6,7 @@ wikiDir : "~/wiki"
 autoBackup : false
 #security :
 #    salt : 123456789
-#    admin : admin
-#    defaultPermission :
+#    defaultPermissions :
 #        - read
 #        - write
 wikiname : WikiNote

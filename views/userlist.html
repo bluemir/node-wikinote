@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Users - {{ config.wikiname }}
+{% endblock %}
+
+{% block style %}
+{% parent %}
+<link rel="stylesheet" href="/!public/stylesheets/admin.css"/>
+{% endblock %}
+
+{% block contents %}
+<article class="userlist">
+	<h1>User List</h1>
+	<ul>
+		{% for user in users %}
+		<li class="user" data-id="{{user.id}}">
+			<p>{{user.id}} &lt;{{user.email||"NONE"}}&gt;</p>
+			<fieldset>
+				<legend>Permissions</legend>
+				<ul class="permissions">
+					{% spaceless %}
+					{% for permission in user.permissions %}
+					<li class="permission" data-permission="{{permission}}">
+						<span>{{permission}}</span>
+						<button class="delete">
+							<i class="fa fa-remove"></i>
+						</button>
+					</li>
+					{% endfor %}
+					<li class="add">
+						<button>
+							<i class="fa fa-plus"></i>
+						</button>
+						<input type="text" placeholder="add"/>
+					</li>
+					{% endspaceless %}
+				</ul>
+			</fieldset>
+			<button class="user"><i class="fa fa-trash-o"></i>Delete</button>
+		</li>
+		{% endfor %}
+	</ul>
+</article>
+{% endblock %}
+
+{% block scripts %}
+<script src="/!public/q.js"></script>
+<script src="/!public/utils.js"></script>
+<script src="/!public/userlist.js"></script>
+{% endblock %}

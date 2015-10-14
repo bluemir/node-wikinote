@@ -6,7 +6,20 @@ Warning! - {{ config.wikiname }}
 
 {% block contents %}
 <article class="noAuth">
-    <h1>warning! you connot access this page!</h1>
-    <p>please Login or Sign up! or contect administer!</p>
+    <h1>Warning! You have no authority to access this page!</h1>
+    <p>Please log in or sign up to WikiNote. OR Contact to administrator for acquiring the authority.</p>
+	<form method="post" id="login" action="/!login?redirect={{wikipath.toString()}}">
+		<dl>
+			<dt>ID</dt>
+			<dd>
+				<input type="text" placeholder="id" name="id" id="login.id" />
+			</dd>
+			<dt>Password</dt>
+			<dd>
+				<input type="password" placeholder="password" name="password" id="login.password" />
+			</dd>
+		</dl>
+		<p><input type="submit" value="login" /></p>
+	</form>
 </article>
 {% endblock %}
