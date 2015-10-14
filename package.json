@@ -1,6 +1,6 @@
 {
   "name": "wikinote",
-  "version": "0.0.1",
+  "version": "0.5.2",
   "private": true,
   "scripts": {
     "start": "node app",
