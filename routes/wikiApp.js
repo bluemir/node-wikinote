@@ -78,9 +78,8 @@ wikiApp.staticFiles = function(req, res){
 
 wikiApp.search = function(req, res){
 	var word = req.query.q;
-	var flags = req.query.flags || "";//javascript regex flag(g, m ,i)
-
-	flags += flags.search("c") != -1 ? "" : "i"; // i is default use c instead
+	var flags = "";
+	flags += req.query.case ?  "" : "i";
 
 	if(!word){
 		res.render("search", {result : null});
