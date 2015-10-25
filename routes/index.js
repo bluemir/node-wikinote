@@ -7,6 +7,7 @@ var wikiApi = require("./wikiApi");
 var loader = require("./pluginLoader");
 var config = require("../config");
 var ParamRouter = require("./paramRouter");
+var LayoutManager = require("./layoutManager");
 
 exports.init = function(app){
 	loader.assets(app);
@@ -15,16 +16,16 @@ exports.init = function(app){
 	app.use(user.middleware);
 
 	app.get("/", redirectToFront);
-	app.get("/!logout", disableMenu, user.logout);
-	app.get("/!signup", disableMenu, user.signupForm);
-	app.get("/!login", disableMenu, user.loginForm);
-	app.post("/!login", disableMenu, user.login);
-	app.post("/!signup", disableMenu, user.signup);
-	app.get("/!search", disableMenu, wikiApp.search);
+	app.get("/!logout", disable.breadcrumbs, disable.menu,  user.logout);
+	app.get("/!signup", disable.breadcrumbs, disable.menu, user.signupForm);
+	app.get("/!login", disable.breadcrumbs, disable.menu, user.loginForm);
+	app.post("/!login", disable.breadcrumbs, disable.menu, user.login);
+	app.post("/!signup", disable.breadcrumbs, disable.menu, user.signup);
+	app.get("/!search", disable.breadcrumbs, disable.menu, wikiApp.search);
 
-	app.get("/!users", disableMenu, user.checkPermission(user.PERMISSION.ADMIN), user.list);
-	app.get("/!users/:userId", disableMenu, user.profile);
-	app.post("/!users/:userId", disableMenu, user.saveProfile);
+	app.get("/!users", disable.breadcrumbs, user.checkPermission(user.PERMISSION.ADMIN), user.list);
+	app.get("/!users/:userId", disable.breadcrumbs, disable.menu, user.profile);
+	app.post("/!users/:userId", disable.breadcrumbs, disable.menu, user.saveProfile);
 
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
@@ -68,6 +69,7 @@ function preModule(req, res, next){
 		flash : req.flash.bind(req)
 	}
 	res.locals.menus = loader.menus();
+	res.locals.layoutManager = new LayoutManager();
 	next();
 }
 
@@ -77,5 +79,14 @@ function redirectToFront(req, res){
 
 function disableMenu(req, res, next) {
 	res.locals.disableMenu = true;
+	next();
+}
+var disable = {};
+disable.menu = function(req, res, next){
+	res.locals.layoutManager.disableLocalMenu();
+	next();
+}
+disable.breadcrumbs = function(req, res, next){
+	res.locals.layoutManager.disableBreadcrumb();
 	next();
 }
