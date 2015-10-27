@@ -1,0 +1,50 @@
+{% macro usermenu %}
+	{% if config.security %}
+	{% if user.isAdmin() %}
+	<li><a href="/!users">User List</a></li>
+	{% endif %}
+	{% if user.isLogin() %}
+	<li><a href="/!users/{{user.id}}">My Profile</a></li>
+	<li><a href="/!logout?redirect={{ wikipath.encode() }}">Log Out</a></li>
+	{% else %}
+	<li><a href="/!login?redirect={{ wikipath.encode() }}">Log In</a></li>
+	<li><a href="/!signup?redirect={{ wikipath.encode() }}">Sign Up</a></li>
+	{% endif %}
+	{% endif %}
+{% endmacro %}
+
+
+{% if !layoutManager.isSpecial() %}
+<ul class="menu">
+	<li><a href="{{ wikipath.toString() }}">View</a></li>
+	<li><a href="{{ wikipath.toString() }}?edit">Edit</a></li>
+	<li>
+		<a href="#">More</a>
+		<ul class="submenu">
+			<li><a href="{{ wikipath.toString() }}?delete">Delete</a></li>
+			<li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
+			<li><a href="{{ wikipath.toString() }}?move">Move</a></li>
+			<li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
+			<li><a href="{{ wikipath.toString() }}?backlinks">Back Links</a></li>
+			{% for menu in menus %}
+			<li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
+			{% endfor %}
+			<li class="seperater"></li>
+			<li><a href="/!search">Search</a></li>
+			{{ usermenu() }}
+		</ul>
+	</li>
+</ul>
+{% else %}
+<ul class="menu">
+	<li><a href="/!search">Search</a></li>
+	<li>
+		<a href="#">More</a>
+		<ul class="submenu">
+			{{ usermenu() }}
+		</ul>
+	</li>
+</ul>
+{% endif %}
+
+
