@@ -34,3 +34,11 @@ exports.files = function(req, res){
 		res.status(500).jsonp(err);
 	});
 }
+exports.delete = function(req, res) {
+	var wikipath = new WikiPath(req.query.location);
+	wikiFS.deleteWiki(wikipath).then(function(){
+		res.status(200).jsonp({});
+	}).fail(function(e){
+		res.status(500).jsonp(e);
+	});
+}

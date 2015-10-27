@@ -9,6 +9,7 @@ module.exports = {
 	appendFile : Q.denodeify(fs.appendFile),
 	readdir : Q.denodeify(fs.readdir),
 	unlink : Q.denodeify(fs.unlink),
+	rmdir : Q.denodeify(fs.rmdir),
 	rename : Q.denodeify(fs.rename),
 	stat : Q.denodeify(fs.stat),
 	join : path.join,
