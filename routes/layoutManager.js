@@ -1,19 +1,19 @@
 module.exports = LayoutManager;
 
 function LayoutManager(wikipath){
-	this.menu = {
-		local : true,
-		global : true
-	};
 	this.breadcrumbs = true;
-}
-
-LayoutManager.prototype.disableLocalMenu = function(){
-	this.menu.local = false;
-}
-LayoutManager.prototype.disableGlobalMenu = function(){
-	this.menu.global = false;
+	this.special = false;
 }
 LayoutManager.prototype.disableBreadcrumb = function(){
 	this.breadcrumbs = false;
+}
+LayoutManager.prototype.isGlobal = function(){
+	return this.menu.global;
+}
+LayoutManager.prototype.setSpecialPage = function(){
+	this.special = true;
+	this.breadcrumbs = false;
+}
+LayoutManager.prototype.isSpecial = function(){
+	return this.special;
 }

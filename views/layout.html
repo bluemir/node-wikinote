@@ -24,41 +24,7 @@
                     <input type="submit", value="Search" />
                 </form>
             </div>
-            {% if layoutManager.menu %}
-            <ul class="menu">
-                {% if layoutManager.menu.local %}
-                <li><a href="{{ wikipath.toString() }}">View</a></li>
-                <li><a href="{{ wikipath.toString() }}?edit">Edit</a></li>
-                {% endif %}
-                <li>
-                    <a href="#">More</a>
-                    <ul class="submenu">
-                        {% if layoutManager.menu.local %}
-                        <li><a href="{{ wikipath.toString() }}?delete">Delete</a></li>
-                        <li><a href="{{ wikipath.toString() }}?attach">Attach</a></li>
-                        <li><a href="{{ wikipath.toString() }}?move">Move</a></li>
-                        <li><a href="{{ wikipath.toString() }}?history">Histroy</a></li>
-                        <li><a href="{{ wikipath.toString() }}?backlinks">Back Links</a></li>
-                        {% for menu in menus %}
-                        <li><a href="{{ wikipath.toString() }}?{{menu}}">{{menu|capitalize}}</a></li>
-                        {% endfor %}
-                        {% endif %}
-                        <li class="seperater"></li>
-                        {% if layoutManager.menu.global %}
-                        <li><a href="/!search">Search</a></li>
-                        {% if config.security %}
-                        {% if user.isLogin() %}
-                        <li><a href="/!logout?redirect={{ wikipath.encode() }}">Log Out</a></li>
-                        {% else %}
-                        <li><a href="/!login?redirect={{ wikipath.encode() }}">Log In</a></li>
-                        <li><a href="/!signup?redirect={{ wikipath.encode() }}">Sign Up</a></li>
-                        {% endif %}
-                        {% endif %}
-                        {% endif %}
-                    </ul>
-                </li>
-            </ul>
-            {% endif %}
+            {% include "./menus.html" %}
             {% if layoutManager.breadcrumbs %}
             <nav id="breadcrumbs">
                 {% for key, val in wikipath.bread() %}
@@ -68,7 +34,6 @@
             {% endif %}
         </div>
     </header>
-
     <div class="row" id="wapper">
         <aside id="alert">
             {% set warn = utils.flash("warn") %}

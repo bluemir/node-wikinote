@@ -16,16 +16,18 @@ exports.init = function(app){
 	app.use(user.middleware);
 
 	app.get("/", redirectToFront);
-	app.get("/!logout", disable.breadcrumbs, disable.menu,  user.logout);
-	app.get("/!signup", disable.breadcrumbs, disable.menu, user.signupForm);
-	app.get("/!login", disable.breadcrumbs, disable.menu, user.loginForm);
-	app.post("/!login", disable.breadcrumbs, disable.menu, user.login);
-	app.post("/!signup", disable.breadcrumbs, disable.menu, user.signup);
-	app.get("/!search", disable.breadcrumbs, disable.menu, wikiApp.search);
+	app.get("/!logout", specialPage,  user.logout);
+	app.get("/!signup", specialPage, user.signupForm);
+	app.get("/!login", specialPage, user.loginForm);
+	app.post("/!login", specialPage, user.login);
+	app.post("/!signup", specialPage, user.signup);
+	app.get("/!search", specialPage, wikiApp.search);
 
-	app.get("/!users", disable.breadcrumbs, user.checkPermission(user.PERMISSION.ADMIN), user.list);
-	app.get("/!users/:userId", disable.breadcrumbs, disable.menu, user.profile);
-	app.post("/!users/:userId", disable.breadcrumbs, disable.menu, user.saveProfile);
+	if(config.security) {
+		app.get("/!users", specialPage, user.checkPermission(user.PERMISSION.ADMIN), user.list);
+		app.get("/!users/:userId", specialPage, user.profile);
+		app.post("/!users/:userId", specialPage, user.saveProfile);
+	}
 
 	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
 		dotfiles: 'ignore',
@@ -37,10 +39,11 @@ exports.init = function(app){
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
 	app.post("/!api/1/upload", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.upload);
 
-	app.delete("/!api/1/user/:userId", user.checkApiPermission(user.PERMISSION.ADMIN), user.deleteUser);
-	app.put("/!api/1/user/:userId/permission/:permission", user.checkApiPermission(user.PERMISSION.ADMIN), user.addPermission);
-	app.delete("/!api/1/user/:userId/permission/:permission", user.checkApiPermission(user.PERMISSION.ADMIN), user.deletePermission);
-
+	if(config.security){
+		app.delete("/!api/1/user/:userId", user.checkApiPermission(user.PERMISSION.ADMIN), user.deleteUser);
+		app.put("/!api/1/user/:userId/permission/:permission", user.checkApiPermission(user.PERMISSION.ADMIN), user.addPermission);
+		app.delete("/!api/1/user/:userId/permission/:permission", user.checkApiPermission(user.PERMISSION.ADMIN), user.deletePermission);
+	}
 	var appRouter = ParamRouter();
 	appRouter.get("view", user.checkPermission(user.PERMISSION.READ), wikiApp.view);
 	appRouter.get("edit", user.checkPermission(user.PERMISSION.WRITE), wikiApp.edit);
@@ -77,16 +80,8 @@ function redirectToFront(req, res){
 	res.redirect("/" + config.frontPage);
 }
 
-function disableMenu(req, res, next) {
-	res.locals.disableMenu = true;
+function specialPage(req, res, next){
+	res.locals.layoutManager.setSpecialPage();
 	next();
 }
-var disable = {};
-disable.menu = function(req, res, next){
-	res.locals.layoutManager.disableLocalMenu();
-	next();
-}
-disable.breadcrumbs = function(req, res, next){
-	res.locals.layoutManager.disableBreadcrumb();
-	next();
-}
+
