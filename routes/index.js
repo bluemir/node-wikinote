@@ -38,6 +38,7 @@ exports.init = function(app){
 	app.get("/!api/1/files", user.checkApiPermission(user.PERMISSION.READ), wikiApi.files);
 	app.post("/!api/1/save", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.save);
 	app.post("/!api/1/upload", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.upload);
+	app.post("/!api/1/delete", user.checkApiPermission(user.PERMISSION.WRITE), wikiApi.delete);
 
 	if(config.security){
 		app.delete("/!api/1/user/:userId", user.checkApiPermission(user.PERMISSION.ADMIN), user.deleteUser);
