@@ -11,7 +11,7 @@ Search - {{ config.wikiname }}
         <input type="search" name="q" value="{{ word }}"/>
 		<input type="submit" value="검색"/><br/>
 		<lable for="case">대소문자 구분</lable>
-		<input type="checkbox" name="case" value="sensitive"/>
+		<input type="checkbox" name="case" value="sensitive" {% if sensitive %} checked {% endif %}/>
     </form>
 	{% if word %}
     <h2> "{{ word }}"의 검색결과</h2>
