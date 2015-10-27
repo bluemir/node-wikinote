@@ -75,7 +75,7 @@ exports.acceptFile  = function(srcPath, path, name){
 }
 exports.deleteWiki = function(path){
 	return Q.all([
-		nfs.unlink(config.wikiDir + path.toString()),
+		nfs.rmdir(config.wikiDir + path.toString()),
 		nfs.unlink(config.wikiDir + path + ".md")
 	]);
 }
