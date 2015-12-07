@@ -27,15 +27,15 @@ exports.actions = function(paramRouter){
 	}
 }
 exports.postArticle = function(wikipath, user, callback){
-	async.map(loader.postArticle, process, function(err, results){
+	Q.all(loader.postArticle.map(function(plugin){
+		return Q.nfcall(plugin, wikipath, user);
+	})).then(function(results){
+		console.log(results);
 		var html = results.reduce(function(prev, curr){
 			return prev + curr;
 		}, "");
 		callback(null, html);
 	});
-	function process(plugin, callback){
-		plugin(wikipath, user, callback);
-	}
 }
 
 exports.assets = function(app){
