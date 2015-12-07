@@ -1,4 +1,3 @@
-var async = require("async");
 var Q = require("q");
 var express = require("express");
 var wikiFS = require("../app/wikiFS");
@@ -30,7 +29,6 @@ exports.postArticle = function(wikipath, user, callback){
 	Q.all(loader.postArticle.map(function(plugin){
 		return Q.nfcall(plugin, wikipath, user);
 	})).then(function(results){
-		console.log(results);
 		var html = results.reduce(function(prev, curr){
 			return prev + curr;
 		}, "");
