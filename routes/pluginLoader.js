@@ -26,13 +26,12 @@ exports.actions = function(paramRouter){
 	}
 }
 exports.postArticle = function(wikipath, user, callback){
-	Q.all(loader.postArticle.map(function(plugin){
+	return Q.all(loader.postArticle.map(function(plugin){
 		return Q.nfcall(plugin, wikipath, user);
 	})).then(function(results){
-		var html = results.reduce(function(prev, curr){
+		return results.reduce(function(prev, curr){
 			return prev + curr;
 		}, "");
-		callback(null, html);
 	});
 }
 
