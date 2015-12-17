@@ -25,7 +25,7 @@ exports.actions = function(paramRouter){
 		paramRouter.post(name, actions.post[name]);
 	}
 }
-exports.postArticle = function(wikipath, user, callback){
+exports.postArticle = function(wikipath, user){
 	return Q.all(loader.postArticle.map(function(plugin){
 		return Q.nfcall(plugin, wikipath, user);
 	})).then(function(results){
@@ -88,11 +88,11 @@ function Loader(){
 		},
 		readfile : function(path, callback){
 			//TODO Check argument
-			wikiFS.readFile(path).nodeify(callback);
+			return wikiFS.readFile(path).nodeify(callback);
 		},
 		writefile : function(path, data, user, callback){
 			//TODO Check argument
-			wikiFS.writeFile(path, data, user).nodeify(callback);
+			return wikiFS.writeFile(path, data, user).nodeify(callback);
 		},
 		readwiki : function(path, callback){
 			//TODO Check argument
