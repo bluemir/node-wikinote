@@ -7,7 +7,6 @@
     "test": "mocha"
   },
   "dependencies": {
-    "async": "^0.9.0",
     "body-parser": "~1.6.4",
     "browserchannel": "~2.0.0",
     "connect-flash": "*",
@@ -15,15 +14,15 @@
     "cookie-parser": "~1.3.2",
     "errorhandler": "~1.1.1",
     "express": "4.*",
-    "express-session": "~1.7.5",
+    "express-session": "~1.12",
     "font-awesome": "^4.4.0",
     "js-yaml": "~3.2.5",
     "livedb": "~0.5.9",
-    "marked": "prashaantt/marked#feature-footnotes",
+    "marked": "github:prashaantt/marked#feature-footnotes",
     "mkdirp": "~0.3.5",
     "moment": "~2.8.3",
     "nedb": "~0.10.7",
-    "q": "~1.2.0",
+    "q": "~1.4.0",
     "serve-favicon": "~2.0.1",
     "share": "0.7.28",
     "swig": "~1.4.2"
@@ -34,5 +33,19 @@
     "jit-grunt": "~0.9.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-less": "~1.0.0"
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluemir/wikinote.git"
+  },
+  "engines": {
+    "node": ">= 3.x"
+  },
+  "bugs": {
+    "url": "https://github.com/bluemir/wikinote/issues"
+  },
+  "homepage": "http://wikinote.bluemir.me/wikinote",
+  "main": "wikinote.js",
+  "author": "BlueMir <qa22ahj@gmail.com>"
 }

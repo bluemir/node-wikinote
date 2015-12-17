@@ -1,4 +1,3 @@
-var async = require("async");
 var Q = require("q");
 var express = require("express");
 var wikiFS = require("../app/wikiFS");
@@ -26,16 +25,14 @@ exports.actions = function(paramRouter){
 		paramRouter.post(name, actions.post[name]);
 	}
 }
-exports.postArticle = function(wikipath, user, callback){
-	async.map(loader.postArticle, process, function(err, results){
-		var html = results.reduce(function(prev, curr){
+exports.postArticle = function(wikipath, user){
+	return Q.all(loader.postArticle.map(function(plugin){
+		return Q.nfcall(plugin, wikipath, user);
+	})).then(function(results){
+		return results.reduce(function(prev, curr){
 			return prev + curr;
 		}, "");
-		callback(null, html);
 	});
-	function process(plugin, callback){
-		plugin(wikipath, user, callback);
-	}
 }
 
 exports.assets = function(app){
@@ -91,11 +88,11 @@ function Loader(){
 		},
 		readfile : function(path, callback){
 			//TODO Check argument
-			wikiFS.readFile(path).nodeify(callback);
+			return wikiFS.readFile(path).nodeify(callback);
 		},
 		writefile : function(path, data, user, callback){
 			//TODO Check argument
-			wikiFS.writeFile(path, data, user).nodeify(callback);
+			return wikiFS.writeFile(path, data, user).nodeify(callback);
 		},
 		readwiki : function(path, callback){
 			//TODO Check argument

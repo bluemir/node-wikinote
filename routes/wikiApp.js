@@ -1,3 +1,4 @@
+var Q = require("q");
 var wikiFS = require("../app/wikiFS");
 var markdown = require("../app/markdown");
 var WikiPath = require("./wikipath");
@@ -8,17 +9,15 @@ var loader = require("./pluginLoader");
 var wikiApp = {};
 
 wikiApp.view = function(req, res){
-	wikiFS.readWiki(req.wikipath).then(function(data){
-		data = markdown.html(data);
-		loader.postArticle(req.wikipath, req.user, function(err, html){
-			res.render("view", {wikiData: data, pluginsData : html});
-		});
+	Q.all([
+		wikiFS.readWiki(req.wikipath),
+		loader.postArticle(req.wikipath, req.user)
+	]).spread(function(data, plugin){
+		var html = markdown.html(data);
+		res.render("view", {wikiData: html, pluginsData : plugin});
 	}).fail(function(err){
-		res.status(404);
 		data = null;
-		loader.postArticle(req.wikipath, req.user, function(err, html){
-			res.render("view", {wikiData: data, pluginsData : html});
-		});
+		res.status(404).render("view", {wikiData: data, pluginsData : ""});
 	});
 }
 wikiApp.edit = function(req, res){
