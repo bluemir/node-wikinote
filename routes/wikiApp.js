@@ -1,10 +1,10 @@
 var Q = require("q");
 var wikiFS = require("../app/wikiFS");
 var markdown = require("../app/markdown");
-var WikiPath = require("./wikipath");
+var WikiPath = require("../app/wikipath");
+var loader = require("../app/pluginLoader");
 var config = require("../config");
 var userApp = require("./userApp");
-var loader = require("./pluginLoader");
 
 var wikiApp = {};
 
@@ -26,7 +26,7 @@ wikiApp.edit = function(req, res){
 	}).fail(function(err){
 		//TODO Error Handling
 		res.render("edit", {wikiData: null});
-	})
+	});
 }
 wikiApp.save = function(req, res){
 	var data = req.body.data;

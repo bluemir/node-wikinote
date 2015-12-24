@@ -1,10 +1,11 @@
 var express = require("express");
 var path = require("path");
-var WikiPath = require("./wikipath");
+var WikiPath = require("../app/wikipath");
+var loader = require("../app/pluginLoader");
+
 var user = require("./userApp");
 var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
-var loader = require("./pluginLoader");
 var config = require("../config");
 var ParamRouter = require("./paramRouter");
 var LayoutManager = require("./layoutManager");
