@@ -78,7 +78,7 @@ function preModule(req, res, next){
 }
 
 function redirectToFront(req, res){
-	res.redirect("/" + config.frontPage);
+	res.redirect(307, "/" + config.frontPage);
 }
 
 function specialPage(req, res, next){

@@ -32,11 +32,11 @@ wikiApp.save = function(req, res){
 	var data = req.body.data;
 
 	wikiFS.writeWiki(req.wikipath, data, req.user).then(function(){
-		res.redirect(req.path);
+		res.redirect(303, req.path);
 	}).fail(function(err){
 		console.log(err);
 		req.flash("warn", "fail to save");
-		res.redirect(req.path);
+		res.redirect(303, req.path);
 	});
 }
 wikiApp.moveForm = function(req, res){
@@ -50,10 +50,10 @@ wikiApp.move = function(req, res){
 	}
 
 	wikiFS.move(req.wikipath, new WikiPath(target)).then(function(){
-		res.redirect(target);
+		res.redirect(303, target);
 	}).fail(function(err){
 		req.flash("warn", "move fail");
-		res.redirect(req.wikipath);
+		res.redirect(303, req.wikipath);
 	});
 }
 wikiApp.attach = function(req, res){
@@ -66,7 +66,7 @@ wikiApp.attach = function(req, res){
 wikiApp.upload = function(req, res){
 	var file = req.files.upload;
 	wikiFS.acceptFile(file.path, req.wikipath, file.name).then(function(){
-		res.redirect(req.path + "?attach");
+		res.redirect(303, req.path + "?attach");
 	}).fail(function(err){
 		res.send(500);
 	});
@@ -97,15 +97,15 @@ wikiApp.deleteForm = function(req, res){
 wikiApp.deleteConfirm = function(req, res){
 	if(req.wikipath.name != req.body.confirm){
 		req.flash("warn","note의 이름이 정확하지 않습니다.");
-		res.redirect(req.wikipath + "?delete" );
+		res.redirect(303, req.wikipath + "?delete" );
 		return;
 	}
 	wikiFS.deleteWiki(req.wikipath).then(function(){
 		req.flash("info", "delete!");
-		res.redirect("/" + config.frontPage);
+		res.redirect(303, "/" + config.frontPage);
 	}).fail(function(e){
 		req.flash("warn","fail to delete");
-		res.redirect(req.wikipath);
+		res.redirect(303, req.wikipath);
 	});
 }
 wikiApp.history = function(req, res){
