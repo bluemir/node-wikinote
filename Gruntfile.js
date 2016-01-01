@@ -22,10 +22,7 @@ module.exports = function(grunt) {
 		watch: {
 			styles: {
 				files: ['public/less/**/*.less'], // which files to watch
-				tasks: ['less'],
-				options: {
-					nospawn: true
-				}
+				tasks: ['less']
 			},
 			dev : {
 				files : ['rotues/**/*', 'app/**/*', 'wikinote.js'],
@@ -47,6 +44,14 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		concurrent: {
+			dev : {
+				tasks : ['watch:dev', 'watch:styles'],
+				options: {
+					logConcurrentOutput: true
+				}
+			}
+		},
 		mochaTest : {
 			test : {
 				src : ["test/**/*.js"]
@@ -54,9 +59,8 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['less', 'watch:styles']);
-	grunt.registerTask("serve", []);
-	grunt.registerTask("serve-dev", ['express:dev', 'watch:dev']);
+	grunt.registerTask('default', ['serve-dev']);
+	grunt.registerTask("serve-dev", ['express:dev', 'concurrent:dev']);
 	grunt.registerTask("build", ['less']);
 	grunt.registerTask("test", ['mochaTest']);
 };
