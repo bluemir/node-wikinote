@@ -25,8 +25,11 @@ module.exports = function(grunt) {
 				tasks: ['less']
 			},
 			dev : {
-				files : ['rotues/**/*', 'app/**/*', 'wikinote.js'],
-				tasks: ['express:dev']
+				files : ['routes/**/*.js', 'app/**/*.js', 'wikinote.js'],
+				tasks: ['express:dev'],
+				options: {
+					spawn: false
+				}
 			}
 		},
 		express : {
