@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
-	require('jit-grunt')(grunt);
+	require('jit-grunt')(grunt, {
+		express : "grunt-express-server",
+		mochaTest : "grunt-mocha-test"
+	});
 
 	grunt.initConfig({
 		less: {
@@ -19,13 +22,48 @@ module.exports = function(grunt) {
 		watch: {
 			styles: {
 				files: ['public/less/**/*.less'], // which files to watch
-				tasks: ['less'],
+				tasks: ['less']
+			},
+			dev : {
+				files : ['routes/**/*.js', 'app/**/*.js', 'wikinote.js'],
+				tasks: ['express:dev'],
 				options: {
-					nospawn: true
+					spawn: false
 				}
+			}
+		},
+		express : {
+			options : {
+			},
+			dev : {
+				options : {
+					script: "wikinote.js"
+				}
+			},
+			product: {
+				options : {
+					script: "wikinote.js",
+					node_env: 'production'
+				}
+			}
+		},
+		concurrent: {
+			dev : {
+				tasks : ['watch:dev', 'watch:styles'],
+				options: {
+					logConcurrentOutput: true
+				}
+			}
+		},
+		mochaTest : {
+			test : {
+				src : ["test/**/*.js"]
 			}
 		}
 	});
 
-	grunt.registerTask('default', ['less', 'watch']);
+	grunt.registerTask('default', ['serve-dev']);
+	grunt.registerTask("serve-dev", ['express:dev', 'concurrent:dev']);
+	grunt.registerTask("build", ['less']);
+	grunt.registerTask("test", ['mochaTest']);
 };
