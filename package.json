@@ -1,7 +1,6 @@
 {
   "name": "wikinote",
   "version": "0.5.2",
-  "private": true,
   "scripts": {
     "start": "node wikinote",
     "test": "mocha"
