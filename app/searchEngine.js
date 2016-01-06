@@ -9,8 +9,8 @@ function SearchEngine(path){
 	this.rootpath = path;
 }
 
-SearchEngine.prototype.search = function(keywords, path){
-	return find(this.rootpath, path, new RegExp(keywords)).all().then(function(result){
+SearchEngine.prototype.search = function(keywords, flags, path){
+	return find(this.rootpath, path, new RegExp(keywords, flags)).all().then(function(result){
 		return result.filter(notNull);
 	});
 }

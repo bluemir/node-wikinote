@@ -1,3 +1,4 @@
+var Q = require("q");
 var wikiFS = require("../app/wikiFS");
 var markdown = require("../app/markdown");
 var WikiPath = require("./wikipath");
@@ -8,17 +9,15 @@ var loader = require("./pluginLoader");
 var wikiApp = {};
 
 wikiApp.view = function(req, res){
-	wikiFS.readWiki(req.wikipath).then(function(data){
-		data = markdown.html(data);
-		loader.postArticle(req.wikipath, req.user, function(err, html){
-			res.render("view", {wikiData: data, pluginsData : html});
-		});
+	Q.all([
+		wikiFS.readWiki(req.wikipath),
+		loader.postArticle(req.wikipath, req.user)
+	]).spread(function(data, plugin){
+		var html = markdown.html(data);
+		res.render("view", {wikiData: html, pluginsData : plugin});
 	}).fail(function(err){
-		res.status(404);
 		data = null;
-		loader.postArticle(req.wikipath, req.user, function(err, html){
-			res.render("view", {wikiData: data, pluginsData : html});
-		});
+		res.status(404).render("view", {wikiData: data, pluginsData : ""});
 	});
 }
 wikiApp.edit = function(req, res){
@@ -78,16 +77,17 @@ wikiApp.staticFiles = function(req, res){
 
 wikiApp.search = function(req, res){
 	var word = req.query.q;
+	var c = req.query.case || false;
+	var flags = "";
+	flags += req.query.case ?  "" : "i";
 
 	if(!word){
-		res.render("search", {result : null});
+		res.render("search", {result : null, sensitive: c});
 		return;
 	}
-	wikiFS.find(word, "").then(function(data){
-		//console.log(data);
-		res.render("search", {result :data, word : word});
+	wikiFS.find(word, flags, "").then(function(data){
+		res.render("search", {result :data, word : word, sensitive : c});
 	}).fail(function(e){
-		//console.log(e.stack);
 		res.status(500).end();
 	});
 }

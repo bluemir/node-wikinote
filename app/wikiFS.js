@@ -75,7 +75,7 @@ exports.acceptFile  = function(srcPath, path, name){
 }
 exports.deleteWiki = function(path){
 	return Q.all([
-		nfs.unlink(config.wikiDir + path.toString()),
+		nfs.rmdir(config.wikiDir + path.toString()),
 		nfs.unlink(config.wikiDir + path + ".md")
 	]);
 }
@@ -88,8 +88,8 @@ exports.move = function(srcPath, targetPath){
 			nfs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md")
 		]);
 }
-exports.find = function(word, path){
-	return searchEngine.search(word, path + "");
+exports.find = function(word, flags, path){
+	return searchEngine.search(word, flags, path + "");
 }
 exports.history = function(path){
 	//%cD : date

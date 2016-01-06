@@ -3,7 +3,9 @@
 		mode:  "markdown",
 		lineNumbers: true,
 		extraKeys : {
-			"Ctrl-S" : saveDocument
+			"Ctrl-S" : saveDocument,
+			"Cmd-S" : saveDocument,
+			"Alt-S" : save,
 		},
 		indentUnit : 4,
 		tabSize : 4,
@@ -27,6 +29,8 @@
 				showMsg("warn", "Unexpected Code : " + ajax.readState);
 			}
 		});
+	}
+	function save(){
 	}
 	emmetPlugin.clearKeymap();
 	emmetPlugin.setKeymap({
