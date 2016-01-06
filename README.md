@@ -131,4 +131,4 @@ wikinote는 Plugin을 쉽게 제작할수 있도록 되어 있습니다.
 * package.js 참조
 
 ##소개 동영상
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Ona_JaippdQ" frameborder="0" allowfullscreen></iframe>
+https://www.youtube.com/embed/Ona_JaippdQ
