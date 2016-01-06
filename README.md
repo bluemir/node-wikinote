@@ -73,7 +73,7 @@ Feel free to submit pull request.
 ##WikiNote is not wiki
 wiki가 다수 사용자의 집단 지성을 모으는 도구로 사용된다면
 WikiNote는 주로 개인의 생각을 정리하거나 작은 집단에서 사용하기에 좀 더 알맞습니다.
-markdown문법은 위법법키문법보다 간결하고 기본적인 기능만 갖추어져 있습니다.
+markdown문법은 위키문법보다 간결하고 기본적인 기능만 갖추어져 있습니다.
 개인사용자는 wiki의 복잡한 문법이 대부분 필요없기 때문입니다.
 
 ##문법
@@ -118,3 +118,17 @@ wikinote는 Plugin을 쉽게 제작할수 있도록 되어 있습니다.
 만약 이 프로젝트에 새로운 기능을 제안하고 싶거나 수정사항을 알려주고 싶으시다면
 [Github repository](https://github.com/bluemir/wikinote)로 알려주시면 됩니다.
 물론 pull request도 환영합니다.
+
+
+##Used Libaray
+###Client side
+* q.js
+* code-mirror
+* share-mirror
+* web-font-loader
+
+###Server side
+* package.js 참조
+
+##소개 동영상
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ona_JaippdQ" frameborder="0" allowfullscreen></iframe>
