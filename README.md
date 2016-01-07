@@ -122,13 +122,12 @@ wikinote는 Plugin을 쉽게 제작할수 있도록 되어 있습니다.
 
 ##Used Libaray
 ###Client side
-* q.js
-* code-mirror
-* share-mirror
-* web-font-loader
+* [q.js](https://github.com/kriskowal/q)
+* [code-mirror](https://codemirror.net/)
+* [share-codemirror](https://github.com/share/share-codemirror)
 
 ###Server side
 * package.js 참조
 
 ##소개 동영상
-https://www.youtube.com/embed/Ona_JaippdQ
+https://www.youtube.com/Ona_JaippdQ
