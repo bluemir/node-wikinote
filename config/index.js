@@ -5,16 +5,6 @@ var env = process.env;
 
 loadConfig();
 
-var watcher = fs.watch("config/local.yaml");
-watcher.on('change', function(event, filename){
-	try {
-		loadConfig();
-		console.log("change config " + filename);
-	} catch(e) {
-		console.log(e, filename);
-	}
-});
-
 function loadConfig(){
 	var config = loadDefault();
 	var local = loadLocal();
