@@ -25,7 +25,8 @@
     "q": "~1.4.0",
     "serve-favicon": "~2.0.1",
     "share": "0.7.28",
-    "swig": "~1.4.2"
+    "swig": "~1.4.2",
+    "yargs": "^3.31.0"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

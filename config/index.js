@@ -1,37 +1,96 @@
 var fs = require("fs");
 var crypto = require("crypto");
 var yaml = require("js-yaml");
+var yargs = require("yargs");
 var env = process.env;
 
-loadConfig();
+var yargs = require("yargs")
+	.usage("Usage : $0 [options]")
+	.env("WIKINOTE")
+	.option("p", {
+		alias : "port",
+		describe :"port number",
+		type : "int"
+	})
+	.option("d", {
+		alias : "wiki-dir",
+		describe : "wiki repository location"
+	})
+	.option("n", {
+		alias : "wikiname",
+		describe : "wikiname"
+	})
+	.option("frontpage", {
+		describe : "set front page name"
+	})
+	.option("b", {
+		alias : "auto-backup",
+		describe : "auto backup with git"
+	});
 
-function loadConfig(){
-	var config = loadDefault();
-	var local = loadLocal();
+//yargs.showHelp();
 
-	apply(resolve(overwrite(config, local)));
+global.config = module.exports = Object.create({}, {
+	$load : {
+		value : $load,
+	},
+	$save : {
+		value : $save,
+	}
+});
+
+function $load(){
+	var config = merge(
+		readConfig('config/default.yaml').hashCheck('config/.default.hash').get(),
+		readConfig('config/local.yaml').get(),
+		{
+			port : process.env.PORT
+		},
+		{
+			wikiDir : yargs.argv["wiki-dir"],
+			port : yargs.argv["port"],
+			wikiname : yargs.argv["wikiname"],
+			autoBackup : yargs.argv["auto-backup"]
+		}
+	);
+
+	overwrite(this, resolve(config));
+	return this;
 }
 
-function loadDefault() {
-	var doc = read('config/default.yaml');
-	if(read("config/.default.hash").trim() !== hash(doc)){
+function $save(){
+	return this;
+}
+
+function readConfig(filename){
+	return new FileConfig(filename);
+}
+
+function FileConfig(filename){
+	this.filename = filename;
+	this.data = fs.readFileSync(filename, 'utf8');
+}
+FileConfig.prototype.get = function(){
+	return yaml.safeLoad(this.data);
+}
+FileConfig.prototype.hashCheck = function(hashFileName){
+	var hashValue = fs.readFileSync(hashFileName, "utf8").trim();
+	if (hashValue !== hash(this.data)){
 		throw new Error("config/default.yaml is changed");
 	}
-	return yaml.safeLoad(doc);
+	return this;
 }
 
-function loadLocal() {
-	var doc = "";
-	try {
-		doc = read('config/local.yaml');
-	} catch (e){
-		fs.writeFileSync("config/local.yaml", "", {encoding : "utf8"});
-	}
-	return yaml.safeLoad(doc);
+function merge(){
+	return Array.prototype.reduce.call(arguments, function(prev, current){
+		 return overwrite(prev, current);
+	}, {});
 }
 
 function overwrite(dest, src){
 	for(var key in src){
+		if(!src[key]) continue;
+
 		if(src[key] instanceof Array){
 			dest[key] = dest[key] || [];
 			overwrite(dest[key], src[key]);
@@ -52,12 +111,13 @@ function resolve(config){
 		return path.replace(/^~/g, env.HOME);
 	}
 }
-function apply(config){
-	for(var key in module.exports){
-		delete module.exports[key];
-	}
-	for(var key in config){
-		module.exports[key] = config[key];
+
+function resolve(config){
+	config.wikiDir = resolveHome(config.wikiDir);
+	return config;
+
+	function resolveHome(path){
+		return path.replace(/^~/g, env.HOME);
 	}
 }
 
@@ -65,6 +125,4 @@ function hash(data){
 	return crypto.createHash('sha512').update(data).digest("base64").trim();
 }
 
-function read(filename){
-	return fs.readFileSync(filename, 'utf8');
-}
+global.config.$load();
