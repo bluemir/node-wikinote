@@ -59,6 +59,7 @@ function $load(){
 }
 
 function $save(){
+	// TODO Impliment
 	return this;
 }
 
@@ -125,4 +126,3 @@ function hash(data){
 	return crypto.createHash('sha512').update(data).digest("base64").trim();
 }
 
-global.config.$load();

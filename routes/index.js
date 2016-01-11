@@ -6,7 +6,6 @@ var loader = require("../app/pluginLoader");
 var user = require("./userApp");
 var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
-var config = require("../config");
 var ParamRouter = require("./paramRouter");
 var LayoutManager = require("./layoutManager");
 

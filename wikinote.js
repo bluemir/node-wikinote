@@ -1,3 +1,5 @@
+require("./config").$load();
+
 var express = require('express')
 var http = require('http')
 var path = require('path');
@@ -13,7 +15,6 @@ var swig = require("swig");
 var share = require("./routes/share");
 
 var routes = require('./routes');
-require("./config");
 
 var app = express();
 app.engine("html", swig.renderFile)
