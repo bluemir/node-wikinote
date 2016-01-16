@@ -59,7 +59,11 @@ function $load(){
 }
 
 function $save(){
-	// TODO Impliment
+	data = yaml.safeDump(this,{
+		indent : 4
+	});
+	fs.writeFileSync('config/local.yaml', data)
+	console.log("overwrite config");
 	return this;
 }
 
