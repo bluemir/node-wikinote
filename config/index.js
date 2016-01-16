@@ -112,16 +112,6 @@ function resolve(config){
 		return path.replace(/^~/g, env.HOME);
 	}
 }
-
-function resolve(config){
-	config.wikiDir = resolveHome(config.wikiDir);
-	return config;
-
-	function resolveHome(path){
-		return path.replace(/^~/g, env.HOME);
-	}
-}
-
 function hash(data){
 	return crypto.createHash('sha512').update(data).digest("base64").trim();
 }
