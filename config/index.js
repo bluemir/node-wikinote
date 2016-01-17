@@ -36,7 +36,23 @@ global.config = module.exports = Object.create({}, {
 	},
 	$save : {
 		value : $save,
-	}
+	},
+	wikiDir : (function(){
+		var path = "";
+		return {
+			set : function(value){
+				path = value;
+			},
+			get : function(){
+				return resolveHome(path);
+			},
+			enumerable : true
+		};
+
+		function resolveHome(path){
+			return path.replace(/^~/g, env.HOME);
+		}
+	})()
 });
 
 function $load(){
@@ -54,7 +70,7 @@ function $load(){
 		}
 	);
 
-	overwrite(this, resolve(config));
+	overwrite(this, config);
 	return this;
 }
 
@@ -97,8 +113,7 @@ function overwrite(dest, src){
 		if(!src[key]) continue;
 
 		if(src[key] instanceof Array){
-			dest[key] = dest[key] || [];
-			overwrite(dest[key], src[key]);
+			dest[key] = src[key];
 		} else if(typeof src[key] === "object"){
 			dest[key] = dest[key] || {};
 			overwrite(dest[key], src[key]);
@@ -107,14 +122,6 @@ function overwrite(dest, src){
 		}
 	}
 	return dest;
-}
-function resolve(config){
-	config.wikiDir = resolveHome(config.wikiDir);
-	return config;
-
-	function resolveHome(path){
-		return path.replace(/^~/g, env.HOME);
-	}
 }
 function hash(data){
 	return crypto.createHash('sha512').update(data).digest("base64").trim();
