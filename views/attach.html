@@ -11,8 +11,13 @@
         <li><a href="{{ wikipath.toString() }}/{{ file }}">{{file}}</a></li>
         {% endfor %}
     </ul>
-    <form enctype="multipart/form-data" method="post">
-        <input type="file" name="upload" onchange="forms[0].submit()"/>
+	<form class="upload" enctype="multipart/form-data" method="post" action="{{wikipath.toString()}}?attach">
+        <input type="file" name="upload" />
     </form>
 </article>
+{% endblock %}
+{% block scripts %}
+<script src="/!public/q.js"></script>
+<script src="/!public/utils.js"></script>
+<script src="/!public/attach.js"></script>
 {% endblock %}
