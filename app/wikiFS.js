@@ -6,6 +6,8 @@ var config = require("../config");
 var SearchEngine = require("./searchEngine")
 var searchEngine = new SearchEngine(config.wikiDir);
 var backlink = require("./backlink");
+var Git = require("nodegit");
+var history = require("./history")
 
 exports.readWiki = function(path){
 	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
@@ -92,29 +94,7 @@ exports.find = function(word, flags, path){
 	return searchEngine.search(word, flags, path + "");
 }
 exports.history = function(path){
-	//%cD : date
-	//%s  : subject
-	//%h  : hash id
-	//%an : author name
-	//%ae : author email
-	var logFormat = "%cD%x01%s%x01%h%x01%an%x01%ae"
-	var command = "git log --pretty=format:'" + logFormat + "' -- " + config.wikiDir + path + ".md";
-
-	return exec(command, {cwd : config.wikiDir}).spread(function(stdout, stderr){
-		var logs = stdout.split(/[\n\r]/g).map(function(log, index){
-			var tmp = log.split("\x01");
-			return {
-				date : tmp[0],
-				subject : tmp[1],
-				id : tmp[2],
-				author : {
-					name : tmp[3],
-					email : tmp[4]
-				}
-			};
-		});
-		return logs;
-	});
+	return history.getHistory(path);
 }
 exports.backlinks = function(path){
 	return backlink.get(path);
