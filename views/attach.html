@@ -6,14 +6,14 @@
 
 {% block contents %}
 <article class="attach">
-    <ul>
-        {% for file in files %}
-        <li><a href="{{ wikipath.toString() }}/{{ file }}">{{file}}</a></li>
-        {% endfor %}
-    </ul>
+	<ul>
+		{% for file in files %}
+		<li><a href="{{ wikipath.toString() }}/{{ file }}">{{file}}</a></li>
+		{% endfor %}
+	</ul>
 	<form class="upload" enctype="multipart/form-data" method="post" action="{{wikipath.toString()}}?attach">
-        <input type="file" name="upload" />
-    </form>
+		<input type="file" name="upload" />
+	</form>
 </article>
 {% endblock %}
 {% block scripts %}
