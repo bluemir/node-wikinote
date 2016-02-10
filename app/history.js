@@ -11,7 +11,6 @@ exports.getHistory = function(wikipath){
 		repo = r;
 		return repo.getMasterCommit();
 	}).then(function(firstCommitOnMaster){
-
 		var walker = repo.createRevWalk();
 
 		walker.push(firstCommitOnMaster.sha());
@@ -35,7 +34,7 @@ exports.getHistory = function(wikipath){
 		});
 	});
 	function continueSearch(result){
-		if(!result){
+		if(!result || result.length === 0){
 			return [];
 		}
 		var lastCommit = result[result.length - 1].commit.sha();

@@ -6,8 +6,8 @@
 
 {% block contents %}
 <article class="history">
-    <h1>History of {{ notename }}</h1>
-    {% if logs %}
+    <h1>History of {{ wikipath.name }}</h1>
+    {% if logs && logs.length !== 0 %}
     <table>
         <tr>
             <th>version</th>
