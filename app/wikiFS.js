@@ -12,30 +12,30 @@ var history = require("./history")
 exports.readWiki = function(path){
 	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
 }
-exports.writeWiki = function(path, data, author){
+exports.writeWiki = function(wikipath, data, author){
 
-	backlink.update(path.toString(), data).fail(function(err){
-		console.log(err);
+	backlink.update(wikipath.toString(), data).fail(function(err){
+		console.log(err, err.stack);
 	});
 
-	return nfs.mkdirp(config.wikiDir + path.toString())
+	return nfs.mkdirp(config.wikiDir + wikipath.toString())
 		.then(function(){
-			return nfs.writeFile(config.wikiDir + path.full + ".md", data, "utf8")
+			return nfs.writeFile(config.wikiDir + wikipath.full + ".md", data, "utf8")
 		})
 		.then(function(){
-			backup("update", path.full, author)
+			backup("update", wikipath, author)
 		});
 }
 exports.readFile = function(path){
 	return nfs.readFile(config.wikiDir + path.full, "utf8");
 }
-exports.writeFile = function(path, data, author){
-	return nfs.mkdirp(config.wikiDir + path.path)
+exports.writeFile = function(wikipath, data, author){
+	return nfs.mkdirp(config.wikiDir + wikipath.path)
 		.then(function(){
-			return nfs.writeFile(config.wikiDir + path.full, data, "utf8")
+			return nfs.writeFile(config.wikiDir + wikipath.full, data, "utf8")
 		})
 		.then(function(){
-			backup("update", path.full, author)
+			backup("update", wikipath, author)
 		});
 }
 exports.fileList = function(path){
@@ -99,33 +99,13 @@ exports.history = function(path){
 exports.backlinks = function(path){
 	return backlink.get(path);
 }
-function backup(method, fullname, author){
+function backup(method, wikipath, author){
 	if(!config.autoBackup){
 		return Q();
 	}
 
-	var message = method + " : " + fullname
-
-	var command = "git add .;"
-	command += "git commit -a ";
-	command += "-m" + wapper(buildMessage(method, fullname));
-	command += "--author" + wapper(signature(author));
-
-	return exec(command, {cwd : config.wikiDir});
-
-	function wapper(str){
-		return " '" + str + "' ";
-	}
-	function signature(author){
-		if(!author){
-			return "anomymous <anomymous@wikinote>";
-		}
-		var id = author.id || "anomymous";
-		var email = author.email || id + "@wikinote";
-
-		return id + " <" + email + ">";
-	}
-	function buildMessage(method, notename){
-		return method + " : " + notename;
-	}
+	Q(history.commit(wikipath, method + ":" + wikipath.toString(), author)).fail(function(e){
+		console.log(e, e.stack);
+	});
+	return Q();
 }

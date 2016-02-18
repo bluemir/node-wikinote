@@ -52,3 +52,34 @@ exports.getHistory = function(wikipath){
 		});
 	}
 }
+exports.commit = function(wikipath, message, auth) {
+	var repo;
+	var filepath = wikipath.toString().substr(1) + ".md";
+	nodegit.Repository.open(config.wikiDir).then(function(r){
+		repo = r;
+	}).then(function(){
+		return repo.openIndex();
+	}).then(function(index){
+		index.addByPath(filepath)
+		return index;
+	}).then(function(index){
+		index.write();
+		return index;
+	}).then(function(index){
+		return index.writeTree();
+	}).then(function(oidResult) {
+		oid = oidResult;
+		return nodegit.Reference.nameToId(repo, "HEAD");
+	}).then(function(head) {
+		  return repo.getCommit(head);
+	}).then(function(parent) {
+		auth = auth || {};
+		auth.id = auth.id || "anomymous";
+		auth.email = auth.email || auth.id + "@wikinote";
+
+		var author = nodegit.Signature.now(auth.id, auth.email);
+		var committer = author;
+
+		return repo.createCommit("HEAD", author, committer, message, oid, [parent]);
+	});
+}
