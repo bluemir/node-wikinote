@@ -12,16 +12,16 @@ exports.login = function(req, res){
 	User.authenticate(id, password).then(function(user){
 		req.user = user;
 		req.flash("info", "Welcome " + req.body.id + "!");
-		res.redirect(decodeURIComponent(req.query.redirect));
+		res.redirect(303, decodeURIComponent(req.query.redirect));
 	}).fail(function(err){
 		req.flash('warn', 'Login Fail! Check your Id or Password');
-		res.redirect(decodeURIComponent(req.query.redirect));
+		res.redirect(303, decodeURIComponent(req.query.redirect));
 	});
 }
 exports.logout = function(req, res){
 	req.user = new User();
 	req.flash('info', 'Logout successfully!');
-	res.redirect(decodeURIComponent(req.query.redirect));
+	res.redirect(303, decodeURIComponent(req.query.redirect));
 }
 exports.signupForm = function(req, res){
 	res.render("signup", {title : "signup"});
@@ -35,21 +35,21 @@ exports.signup = function(req, res){
 
 	if(id == "" || password  == "" || confirm == ""){
 		req.flash("warn", "please fill sign up form.");
-		res.redirect("!signup?redirect=" + redirect);
+		res.redirect(303, "!signup?redirect=" + redirect);
 		return;
 	}
 	if(password != confirm){
 		req.flash("warn", "password and password confirm are not matched.");
-		res.redirect("!signup?redirect=" + redirect);
+		res.redirect(303, "!signup?redirect=" + redirect);
 		return;
 	}
 	User.register(id, password, email).then(function(user){
 		req.user = user;
 		req.flash("info", "Welcome " + id + "!");
-		res.redirect(decodeURIComponent(redirect));
+		res.redirect(303, decodeURIComponent(redirect));
 	}).fail(function(err){
 		req.flash("warn", "already registered id. please try another one.");
-		res.redirect("!signup?redirect=" + redirect);
+		res.redirect(303, "!signup?redirect=" + redirect);
 	});
 }
 exports.list = function(req, res) {
@@ -101,7 +101,7 @@ exports.saveProfile = function(req, res){
 		}
 		return user.save();
 	}).then(function(){
-		res.redirect("/!users/"+userId);
+		res.redirect(303, "/!users/"+userId);
 	}).fail(function(err){
 		Error.handle(err).httpResponse(res);
 	});
