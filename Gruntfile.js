@@ -37,6 +37,7 @@ module.exports = function(grunt) {
 			},
 			dev : {
 				options : {
+					opts : ["--debug"],
 					script: "wikinote.js"
 				}
 			},
