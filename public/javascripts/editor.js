@@ -20,7 +20,7 @@
 			data :data,
 			contentType : "application/x-www-form-urlencoded"
 		};
-		$ajax("POST", getSaveApiUrl(), options).then(function(){
+		return $ajax("POST", getSaveApiUrl(), options).then(function(){
 			showMsg("info", "Save successful!");
 		}).fail(function(code){
 			if(code == 401){
@@ -55,7 +55,7 @@
 		}
 	})
 
-	var socket = new BCSocket("/!public/channel", {reconnect: true});
+	var socket = new BCSocket("/!public/lib/channel", {reconnect: true});
 	var sjs = new window.sharejs.Connection(socket);
 	var doc = sjs.get('wiki', note.path);
 

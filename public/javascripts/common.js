@@ -8,7 +8,6 @@
 			"L" : goViewPage
 		},
 		alt : {
-			"S" : saveData,
 			"P" : goPresentation
 		}
 	}
@@ -39,11 +38,6 @@
 	}
 	function goPresentation(){
 		location.href = getUrl() + "?presentation";
-	}
-	function saveData(){
-		if(textarea){
-			textarea.form.submit();
-		}
 	}
 	function getUrl(){
 		return location.pathname;
