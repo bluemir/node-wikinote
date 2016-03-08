@@ -1,3 +1,29 @@
+//mininal lib
+function $(query){
+	return document.querySelector(query);
+}
+function $$(target, query) {
+	return target.querySelector(query);
+}
+function $all(query){
+	return Array.prototype.slice.call(document.querySelectorAll(query));
+}
+function $$all(target, query){
+	return Array.prototype.slice.call(target.querySelectorAll(query));
+}
+function $create(tagname, text){
+	var newTag = document.createElement(tagname);
+	if (text){
+		newTag.appendChild(document.createTextNode(text));
+	}
+	return newTag;
+}
+if (!('remove' in Element.prototype)) {
+	Element.prototype.remove = function() {
+		this.parentElement.removeChild(this);
+	};
+}
+//common module
 var wikinote = {};
 wikinote.common = (function(){
 	function noop(){}
@@ -45,27 +71,26 @@ wikinote.common = (function(){
 	}
 
 	function createMsgElement(str){
-		var $msg = document.createElement("p");
+		var $msg = $create("p", str);
 		$msg.classList.add("msg-dynamic");
 		$msg.innerHTML = str;
 
 		$msg.addEventListener("animationend", function(){
-			$msg.parentElement.removeChild($msg);
+			$msg.remove();
 		}, false);
 
 		return $msg;
 	}
 	function showInfo(msg){
 		var $msg = createMsgElement(msg);
-		var $alert = document.querySelector("#alert");
+		var $alert = $("#alert");
 
 		$alert.appendChild($msg);
-
 	}
 	function showWarning(){
 		var $msg = createMsgElement(msg);
 		$msg.classList.add("warn");
-		var $alert = document.querySelector("#alert");
+		var $alert = $("#alert");
 
 		$alert.appendChild($msg);
 	}
