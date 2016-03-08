@@ -16,7 +16,6 @@ $signup.addEventListener('submit', function(e){
 	}
 
 	function dynamicMsg(str){
-		
 		var $msg = document.getElementById("message");
 		$msg.innerHTML = str;
 		$msg.style.display = "block";
@@ -30,7 +29,7 @@ $signup.addEventListener('submit', function(e){
 			op -= 0.02;
 			if(op > 0)
 				setTimeout(loop, 20);
-			else 
+			else
 				$msg.style.display = "none";
 		}, 0.5 * 1000);
 	}

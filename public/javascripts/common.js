@@ -1,4 +1,5 @@
-(function(){
+var wikinote = {};
+wikinote.common = (function(){
 	function noop(){}
 
 	var keymap = {
@@ -41,5 +42,38 @@
 	}
 	function getUrl(){
 		return location.pathname;
+	}
+
+	function createMsgElement(str){
+		var $msg = document.createElement("p");
+		$msg.classList.add("msg-dynamic");
+		$msg.innerHTML = str;
+
+		$msg.addEventListener("animationend", function(){
+			$msg.parentElement.removeChild($msg);
+		}, false);
+
+		return $msg;
+	}
+	function showInfo(msg){
+		var $msg = createMsgElement(msg);
+		var $alert = document.querySelector("#alert");
+
+		$alert.appendChild($msg);
+
+	}
+	function showWarning(){
+		var $msg = createMsgElement(msg);
+		$msg.classList.add("warn");
+		var $alert = document.querySelector("#alert");
+
+		$alert.appendChild($msg);
+	}
+
+	return {
+		alert : {
+			warn: showWarning,
+			info : showInfo
+		}
 	}
 })();

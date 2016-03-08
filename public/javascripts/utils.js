@@ -20,7 +20,7 @@ function $ajax(method, url, options){
 			req.setRequestHeader("Content-Type", options.contentType);
 		}
 		req.addEventListener("load", function(){
-			if(req.status == 200){ //TODO FIX SUCCESS CHECK : for 2xx eg. 201
+			if(req.status >= 200 && req.status < 300){ //SUCCESS
 				resolve({
 					type : req.responseType,
 					data : req.response,
@@ -44,28 +44,6 @@ function $create(tagname, text){
 		newTag.appendChild(document.createTextNode(text));
 	}
 	return newTag;
-}
-
-function interval(step, time) {
-	return function(value){
-		var deferred = Q.defer();
-
-		var dt = time/step;
-		var count = 0;
-
-		var onTimer = function(){
-			count++;
-			deferred.notify(count/step);
-			if(count < step){
-				setTimeout(onTimer, dt);
-			} else {
-				deferred.resolve(value);
-			}
-		}
-
-		setTimeout(onTimer, dt);
-		return deferred.promise;
-	}
 }
 
 if (!('remove' in Element.prototype)) {
