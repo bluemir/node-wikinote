@@ -10,18 +10,22 @@ Sign Up - {{ config.wikiname }}
         <dl>
             <dt>ID</dt>
             <dd>
-                <input type="text" placeholder="id" name="id" id="signup.id" />
+                <input type="text" placeholder="id" name="id" class="id" />
             </dd>
             <dt>Password</dt>
             <dd>
-                <input type="password" placeholder="password" name="password" id="signup.password" />
+                <input type="password" placeholder="password" name="password" class="password" />
             </dd>
             <dt>Password Confirm</dt>
             <dd>
-                <input type="password" placeholder="password confirm" name="confirm" id="signup.confirm" />
+                <input type="password" placeholder="password confirm" name="confirm" class="confirm" />
             </dd>
         </dl>
         <p><input type="submit" value="signup" /></p>
     </form>
 </article>
+{% endblock %}
+
+{% block scripts %}
+<script src="/!public/javascripts/signup.js"></script>
 {% endblock %}

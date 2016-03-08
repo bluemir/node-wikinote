@@ -87,7 +87,7 @@ wikinote.common = (function(){
 
 		$alert.appendChild($msg);
 	}
-	function showWarning(){
+	function showWarning(msg){
 		var $msg = createMsgElement(msg);
 		$msg.classList.add("warn");
 		var $alert = $("#alert");
