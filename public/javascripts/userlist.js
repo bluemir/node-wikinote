@@ -13,8 +13,7 @@
 		$$all(element, ".permission").forEach(initPermissionElement);
 
 		$$all(element, ".add").forEach(function(element){
-			var button = element.querySelector("button");
-			var input = element.querySelector("input");
+			var input = $$(element, "input");
 
 			element.addEventListener("click", function(){
 				input.focus();

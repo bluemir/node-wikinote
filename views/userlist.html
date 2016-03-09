@@ -29,10 +29,10 @@ Users - {{ config.wikiname }}
 					</li>
 					{% endfor %}
 					<li class="add">
-						<button>
+						<label>
 							<i class="fa fa-plus"></i>
-						</button>
-						<input type="text" placeholder="add"/>
+							<input type="text" placeholder="label name"/>
+						</label>
 					</li>
 					{% endspaceless %}
 				</ul>
@@ -45,7 +45,7 @@ Users - {{ config.wikiname }}
 {% endblock %}
 
 {% block scripts %}
-<script src="/!public/q.js"></script>
-<script src="/!public/utils.js"></script>
-<script src="/!public/userlist.js"></script>
+<script src="/!public/lib/q.js"></script>
+<script src="/!public/javascripts/utils.js"></script>
+<script src="/!public/javascripts/userlist.js"></script>
 {% endblock %}
