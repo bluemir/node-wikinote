@@ -43,7 +43,6 @@
 				}
 				element.classList.contains("active");
 			});
-
 		});
 
 		function initPermissionElement(element){
@@ -62,7 +61,6 @@
 				});
 			});
 		}
-
 	});
 	function addPermission(id, permission){
 		return $ajax("PUT", "/!api/1/user/"+id+"/permission/"+permission);

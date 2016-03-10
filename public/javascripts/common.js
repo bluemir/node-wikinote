@@ -23,6 +23,11 @@ if (!('remove' in Element.prototype)) {
 		this.parentElement.removeChild(this);
 	};
 }
+if (!('on' in HTMLElement.prototype)) {
+	HTMLElement.prototype.on = function() {
+		this.addEventListener.apply(this, arguments);
+	}
+}
 //common module
 var wikinote = {};
 wikinote.common = (function(){
