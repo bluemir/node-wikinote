@@ -1,5 +1,5 @@
 (function(global){
-	$("form.upload").addEventListener("change", function(){
+	$("form.upload").on("change", function(){
 		$("form.upload").submit();
 	})
 

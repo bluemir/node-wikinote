@@ -4,7 +4,7 @@
 	var $password = $("#signup .password");
 	var $confirm = $("#signup .confirm");
 
-	$signup.addEventListener('submit', function(e){
+	$signup.on('submit', function(e){
 		if($password.value != $confirm.value){
 			wikinote.common.alert.warn("password and password cofirm didn't match up");
 			e.preventDefault();

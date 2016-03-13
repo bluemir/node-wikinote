@@ -1,14 +1,10 @@
 //mininal lib
-function $(query){
-	return document.querySelector(query);
-}
-function $$(target, query) {
+function $(target, query){
+	if(typeof target.querySelector !== "function") {return $(document, target)}
 	return target.querySelector(query);
 }
-function $all(query){
-	return Array.prototype.slice.call(document.querySelectorAll(query));
-}
-function $$all(target, query){
+function $all(target, query){
+	if(typeof target.querySelectorAll !== "function") {return $all(document, target)}
 	return Array.prototype.slice.call(target.querySelectorAll(query));
 }
 function $create(tagname, text){
@@ -44,7 +40,7 @@ wikinote.common = (function(){
 		}
 	}
 
-	document.body.addEventListener("keydown", function(e) {
+	document.body.on("keydown", function(e) {
 		var keyCode = String.fromCharCode(e.keyCode);
 		if(navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey){
 			if(keymap.ctrl[keyCode]) {
@@ -80,7 +76,7 @@ wikinote.common = (function(){
 		$msg.classList.add("msg-dynamic");
 		$msg.innerHTML = str;
 
-		$msg.addEventListener("animationend", function(){
+		$msg.on("animationend", function(){
 			$msg.remove();
 		}, false);
 

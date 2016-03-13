@@ -10,10 +10,10 @@
 			});
 		});
 
-		$$all(element, ".permission").forEach(initPermissionElement);
+		$all(element, ".permission").forEach(initPermissionElement);
 
-		$$all(element, ".add").forEach(function(element){
-			var input = $$(element, "input");
+		$all(element, ".add").forEach(function(element){
+			var input = $(element, "input");
 
 			element.addEventListener("click", function(){
 				input.focus();
@@ -32,7 +32,7 @@
 					var $new = createPermissionElement(userId,  permission);
 					element.parentNode.insertBefore($new, element);
 					addPermission(userId, permission).then(function(){
-						var $icon = $$($new, "i");
+						var $icon = $($new, "i");
 						$icon.classList.remove("fa-pulse");
 						$icon.classList.remove("fa-spinner");
 						$icon.classList.add("fa-remove");
@@ -51,7 +51,7 @@
 			var permission = element.dataset.permission;
 
 			button.addEventListener("click", function(){
-				var $icon = $$(button, "i");
+				var $icon = $(button, "i");
 				$icon.classList.remove("fa-remove");
 				$icon.classList.add("fa-spinner");
 				$icon.classList.add("fa-pulse");

@@ -101,7 +101,7 @@
 			console.error(err);
 		});
 	}
-	$("#upload input").addEventListener("change", function (){
+	$("#upload input").on("change", function (){
 		upload().then(function(){
 			var $list = $("#filelist");
 
@@ -138,14 +138,14 @@
 		$preview.innerHTML = marked(value);
 	}
 
-	$("article.tab-header li a[href='#']").addEventListener("click", function(){
+	$("article.tab-header li a[href='#']").on("click", function(){
 		$("article.edit").classList.remove("hidden");
 		$("article.preview").classList.add("hidden");
 
 		$("article.tab-header li a[href='#preview']").parentNode.classList.remove("enabled");
 		$("article.tab-header li a[href='#']").parentNode.classList.add("enabled");
 	});
-	$("article.tab-header li a[href='#preview']").addEventListener("click", function(){
+	$("article.tab-header li a[href='#preview']").on("click", function(){
 		$("article.edit").classList.add("hidden");
 		$("article.preview").classList.remove("hidden");
 		$("article.tab-header li a[href='#preview']").parentNode.classList.add("enabled");
