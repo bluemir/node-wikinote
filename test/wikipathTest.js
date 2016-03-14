@@ -1,4 +1,4 @@
-var WikiPath = require("../routes/wikipath.js");
+var WikiPath = require("../app/wikipath.js");
 var assert = require("assert");
 
 describe("WikiPath", function(){

@@ -1,7 +1,7 @@
 var Q = require("q");
 var express = require("express");
 var wikiFS = require("../app/wikiFS");
-var PREFIXS = ["", "../plugins/"];
+var PREFIXS = ["../plugins/"];
 var config = require("../config");
 
 var plugins = config.plugins.map(load).filter(notNull);
