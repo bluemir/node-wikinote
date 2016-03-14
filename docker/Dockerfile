@@ -24,9 +24,9 @@ RUN git clone https://github.com/bluemir/wikinote.git
 RUN mkdir /home/wikinote/wiki
 
 #RUN
-WORKDIR /home/wikinote/wikinote
+WORKDIR /home/wikinote
 RUN ["/bin/bash", "--login", "-c", "npm install"]
 
 EXPOSE 4000
-CMD ["/bin/bash", "--login", "-c", "node app.js"]
+CMD ["/bin/bash", "--login", "-c", "node wikinote.js"]
 
