@@ -32,7 +32,7 @@ RUN ["/bin/bash", "--login", "-c", "npm install"]
 ##configuration
 ADD local.yaml /home/wikinote/src/config/
 
-COPY entry.sh .
+COPY entry.sh /home/wikinote/src/
 
 VOLUME ["/home/wikinote/data"]
 
