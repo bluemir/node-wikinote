@@ -3,9 +3,11 @@ MAINTAINER BlueMir <bluemir@bluemir.me>
 
 #Run Upgrade / Install tools
 RUN dnf -y update && \
-	dnf -y groupinstall 'Development Tools' && \
-	dnf -y install wget tar gcc-c++ openssl-devel git && \
-	dnf clean all
+	dnf -y install \
+	findutils \
+	tar \
+	git \
+	&& dnf clean all
 
 #make user
 RUN useradd wikinote
@@ -21,17 +23,14 @@ RUN ["/bin/bash", "--login", "-c", "nvm install v4 && nvm alias default v4 && nv
 RUN mkdir data
 
 #Clone source file
-RUN git clone https://github.com/bluemir/wikinote.git src
+RUN git clone --depth 1 https://github.com/bluemir/wikinote.git src && rm -rf src/.git
 
 WORKDIR /home/wikinote/src
 #RUN
 RUN ["/bin/bash", "--login", "-c", "npm install"]
 
 ##configuration
-RUN echo "frontPage : front-page" >> config/local.yaml
-RUN echo "autoBackup : true" >> config/local.yaml
-RUN echo "wikiname : WikiNote" >> config/local.yaml
-RUN echo "wikiDir : ~/data" >> config/local.yaml
+ADD local.yaml /home/wikinote/src/config/
 
 COPY entry.sh .
 
