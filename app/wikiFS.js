@@ -3,13 +3,13 @@ var fs = require("fs");
 var nfs = require("./nfs");
 var exec = Q.denodeify(require("child_process").exec);
 var SearchEngine = require("./searchEngine")
-var searchEngine = new SearchEngine(config.wikiDir);
+var searchEngine = new SearchEngine(config.wikinotePath);
 var backlink = require("./backlink");
 var Git = require("nodegit");
 var history = require("./history")
 
 exports.readWiki = function(path){
-	return nfs.readFile(config.wikiDir + path.full + ".md", "utf8");
+	return nfs.readFile(config.wikinotePath + path.full + ".md", "utf8");
 }
 exports.writeWiki = function(wikipath, data, author){
 
@@ -17,34 +17,34 @@ exports.writeWiki = function(wikipath, data, author){
 		console.log(err, err.stack);
 	});
 
-	return nfs.mkdirp(config.wikiDir + wikipath.toString())
+	return nfs.mkdirp(config.wikinotePath + wikipath.toString())
 		.then(function(){
-			return nfs.writeFile(config.wikiDir + wikipath.full + ".md", data, "utf8")
+			return nfs.writeFile(config.wikinotePath + wikipath.full + ".md", data, "utf8")
 		})
 		.then(function(){
 			backup("update", wikipath, author)
 		});
 }
 exports.readFile = function(path){
-	return nfs.readFile(config.wikiDir + path.full, "utf8");
+	return nfs.readFile(config.wikinotePath + path.full, "utf8");
 }
 exports.writeFile = function(wikipath, data, author){
-	return nfs.mkdirp(config.wikiDir + wikipath.path)
+	return nfs.mkdirp(config.wikinotePath + wikipath.path)
 		.then(function(){
-			return nfs.writeFile(config.wikiDir + wikipath.full, data, "utf8")
+			return nfs.writeFile(config.wikinotePath + wikipath.full, data, "utf8")
 		})
 		.then(function(){
 			backup("update", wikipath, author)
 		});
 }
 exports.fileList = function(path){
-	return nfs.readdir(config.wikiDir + path.toString())
+	return nfs.readdir(config.wikinotePath + path.toString())
 		.then(function(files){
 			return files.filter(notStartDot);
 		})
 		.then(function(files){
 			return Q.all(files.map(function(file){
-				return nfs.stat(nfs.join(config.wikiDir, path.toString(), file)).then(function(stat){
+				return nfs.stat(nfs.join(config.wikinotePath, path.toString(), file)).then(function(stat){
 					if(stat.isDirectory()){
 						return null;
 					} else {
@@ -63,10 +63,10 @@ exports.fileList = function(path){
 	}
 }
 exports.acceptFile  = function(srcPath, path, name){
-	return nfs.mkdirp(config.wikiDir + path.toString()).then(function(){
+	return nfs.mkdirp(config.wikinotePath + path.toString()).then(function(){
 		return Q.promise(function(resolve, reject){
 			var readStream = fs.createReadStream(srcPath)
-			var writeStream = fs.createWriteStream(config.wikiDir + path.full + "/" + name);
+			var writeStream = fs.createWriteStream(config.wikinotePath + path.full + "/" + name);
 
 			readStream.pipe(writeStream);
 
@@ -76,17 +76,17 @@ exports.acceptFile  = function(srcPath, path, name){
 }
 exports.deleteWiki = function(path){
 	return Q.all([
-		nfs.rmdir(config.wikiDir + path.toString()),
-		nfs.unlink(config.wikiDir + path + ".md")
+		nfs.rmdir(config.wikinotePath + path.toString()),
+		nfs.unlink(config.wikinotePath + path + ".md")
 	]);
 }
 exports.move = function(srcPath, targetPath){
 	backlink.move(srcPath, targetPath);
 
-	return nfs.mkdirp(config.wikiDir + targetPath.toString())
+	return nfs.mkdirp(config.wikinotePath + targetPath.toString())
 		.all([
-			nfs.rename(config.wikiDir + srcPath.full, config.wikiDir + targetPath.full),
-			nfs.rename(config.wikiDir + srcPath.full + ".md", config.wikiDir + targetPath.full + ".md")
+			nfs.rename(config.wikinotePath + srcPath.full, config.wikinotePath + targetPath.full),
+			nfs.rename(config.wikinotePath + srcPath.full + ".md", config.wikinotePath + targetPath.full + ".md")
 		]);
 }
 exports.find = function(word, flags, path){

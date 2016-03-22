@@ -3,6 +3,10 @@ var crypto = require("crypto");
 var yaml = require("js-yaml");
 var yargs = require("yargs");
 var env = process.env;
+var join = require("path").join;
+var resolve = require("path").resolve;
+
+var WIKINOTE_PATH = env.WIKINOTE_PATH || join(env.HOME, "wiki");
 
 var yargs = require("yargs")
 	.usage("Usage : $0 [options]")
@@ -10,25 +14,37 @@ var yargs = require("yargs")
 	.option("p", {
 		alias : "port",
 		describe :"port number",
-		type : "int"
-	})
-	.option("d", {
-		alias : "wiki-dir",
-		describe : "wiki repository location"
+		nargs : 1,
+		"default" : 3000
 	})
 	.option("n", {
-		alias : "wikiname",
-		describe : "wikiname"
+		type : "string",
+		alias : "name",
+		nargs : 1,
+		describe : "wikinote name",
+		"default" : "WikiNote"
 	})
 	.option("frontpage", {
-		describe : "set front page name"
+		type : "string",
+		describe : "set front page name",
+		nargs : 1,
+		"default" : "front-page"
+	})
+	.option("wikinote-path", {
+		type : "string",
+		describe : "wikinote data path",
+		nargs : 1,
+		"default" : join(env.HOME, "wiki")
 	})
 	.option("b", {
+		type : "boolean",
 		alias : "auto-backup",
-		describe : "auto backup with git"
+		describe : "auto backup with git",
+		nargs : 1,
+		"default" : true
 	});
 
-//yargs.showHelp();
+yargs.showHelp();
 
 global.config = module.exports = Object.create({}, {
 	$load : {
@@ -36,37 +52,22 @@ global.config = module.exports = Object.create({}, {
 	},
 	$save : {
 		value : $save,
-	},
-	wikiDir : (function(){
-		var path = "";
-		return {
-			set : function(value){
-				path = value;
-			},
-			get : function(){
-				return resolveHome(path);
-			},
-			enumerable : true
-		};
-
-		function resolveHome(path){
-			return path.replace(/^~/g, env.HOME);
-		}
-	})()
+	}
 });
 
 function $load(){
 	var config = merge(
+		readConfig(join(WIKINOTE_PATH, ".app", "config.yaml")).get(),
 		readConfig('config/default.yaml').hashCheck('config/.default.hash').get(),
 		readConfig('config/local.yaml').get(),
 		{
 			port : process.env.PORT
 		},
 		{
-			wikiDir : yargs.argv["wiki-dir"],
 			port : yargs.argv["port"],
 			wikiname : yargs.argv["wikiname"],
-			autoBackup : yargs.argv["auto-backup"]
+			autoBackup : yargs.argv["auto-backup"],
+			wikinotePath : WIKINOTE_PATH
 		}
 	);
 
@@ -89,7 +90,11 @@ function readConfig(filename){
 
 function FileConfig(filename){
 	this.filename = filename;
-	this.data = fs.readFileSync(filename, 'utf8');
+	try {
+		this.data = fs.readFileSync(filename, 'utf8');
+	} catch (e) {
+		this.data = {};
+	}
 }
 FileConfig.prototype.get = function(){
 	return yaml.safeLoad(this.data);
@@ -100,6 +105,8 @@ FileConfig.prototype.hashCheck = function(hashFileName){
 		throw new Error("config/default.yaml is changed");
 	}
 	return this;
+}
+FileConfig.prototype.liveSet = function(key, value){
 }
 
 function merge(){
