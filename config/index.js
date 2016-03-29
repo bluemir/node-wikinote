@@ -3,8 +3,11 @@ var crypto = require("crypto");
 var yaml = require("js-yaml");
 var yargs = require("yargs");
 var env = process.env;
+var mkdirp = require("mkdirp");
 var join = require("path").join;
 var resolve = require("path").resolve;
+var dirname = require("path").dirname;
+
 
 var WIKINOTE_PATH = env.WIKINOTE_PATH || join(env.HOME, "wiki");
 
@@ -85,6 +88,7 @@ function $save(){
 	var data = yaml.safeDump(this,{
 		indent : 4
 	});
+	mkdirp.sync(dirname(yargs["config-file"]));
 	fs.writeFileSync(yargs["config-file"], data);
 	console.log("overwrite config");
 	return this;
