@@ -1,4 +1,4 @@
-require("./config").$load();
+require("./config").$init();
 
 var express = require('express')
 var http = require('http')

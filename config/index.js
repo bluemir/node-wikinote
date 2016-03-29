@@ -7,7 +7,7 @@ var mkdirp = require("mkdirp");
 var join = require("path").join;
 var resolve = require("path").resolve;
 var dirname = require("path").dirname;
-
+var swig = require("swig");
 
 var WIKINOTE_PATH = env.WIKINOTE_PATH || join(env.HOME, "wiki");
 
@@ -26,6 +26,7 @@ var yargs = require("yargs")
 		alias : "config-file",
 		describe : "config file path",
 		config : true,
+		nargs : 1,
 		configParser : function(configPath){
 			var data = fs.readFileSync(configPath, 'utf8');
 			return yaml.safeLoad(data);
@@ -40,7 +41,7 @@ var yargs = require("yargs")
 	})
 	.option("n", {
 		type : "string",
-		alias : "name",
+		alias : ["name", "wikiname"],
 		nargs : 1,
 		describe : "wikinote name",
 		"default" : "WikiNote"
@@ -58,6 +59,10 @@ var yargs = require("yargs")
 		describe : "auto backup with git",
 		nargs : 1,
 		"default" : true
+	})
+	.option("save", {
+		type : "boolean",
+		describe : "save option to file",
 	});
 
 global.config = module.exports = Object.create({}, {
@@ -66,8 +71,18 @@ global.config = module.exports = Object.create({}, {
 	},
 	$save : {
 		value : $save,
+	},
+	$init : {
+		value : $init,
 	}
 });
+function $init(){
+	var config = this.$load();
+	if(yargs.argv["save"]){
+		this.$save();
+	}
+	return config;
+}
 
 function $load(){
 	var config = {
@@ -85,12 +100,11 @@ function $load(){
 }
 
 function $save(){
-	var data = yaml.safeDump(this,{
-		indent : 4
-	});
-	mkdirp.sync(dirname(yargs["config-file"]));
-	fs.writeFileSync(yargs["config-file"], data);
+	var data = swig.renderFile(__dirname + "/config.template", yargs.argv);
+	mkdirp.sync(dirname(yargs.argv["config-file"]));
 	console.log("overwrite config");
+	console.log(data);
+	fs.writeFileSync(yargs.argv["config-file"], data);
 	return this;
 }
 
@@ -109,4 +123,3 @@ function overwrite(dest, src){
 	}
 	return dest;
 }
-
