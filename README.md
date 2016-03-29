@@ -1,5 +1,7 @@
 #Wikinote
 
+[![Join the chat at https://gitter.im/bluemir/wikinote](https://badges.gitter.im/bluemir/wikinote.svg)](https://gitter.im/bluemir/wikinote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [English](#english), [Korean](#korean)
 
 ----
