@@ -11,6 +11,24 @@ var WIKINOTE_PATH = env.WIKINOTE_PATH || join(env.HOME, "wiki");
 var yargs = require("yargs")
 	.usage("Usage : $0 [options]")
 	.env("WIKINOTE")
+	.locale("en")
+	.help("h").alias("h", "help")
+	.option("wikinote-path", {
+		type : "string",
+		describe : "wikinote data path",
+		nargs : 1,
+		"default" : join(env.HOME, "wiki")
+	})
+	.option("c", {
+		alias : "config-file",
+		describe : "config file path",
+		config : true,
+		configParser : function(configPath){
+			var data = fs.readFileSync(configPath, 'utf8');
+			return yaml.safeLoad(data);
+		},
+		"default" : join(WIKINOTE_PATH, ".app", "config.yaml")
+	})
 	.option("p", {
 		alias : "port",
 		describe :"port number",
@@ -24,17 +42,12 @@ var yargs = require("yargs")
 		describe : "wikinote name",
 		"default" : "WikiNote"
 	})
-	.option("frontpage", {
+	.option("f", {
+		alias : "front-page",
 		type : "string",
 		describe : "set front page name",
 		nargs : 1,
 		"default" : "front-page"
-	})
-	.option("wikinote-path", {
-		type : "string",
-		describe : "wikinote data path",
-		nargs : 1,
-		"default" : join(env.HOME, "wiki")
 	})
 	.option("b", {
 		type : "boolean",
@@ -43,8 +56,6 @@ var yargs = require("yargs")
 		nargs : 1,
 		"default" : true
 	});
-
-yargs.showHelp();
 
 global.config = module.exports = Object.create({}, {
 	$load : {
@@ -56,63 +67,27 @@ global.config = module.exports = Object.create({}, {
 });
 
 function $load(){
-	var config = merge(
-		readConfig(join(WIKINOTE_PATH, ".app", "config.yaml")).get(),
-		readConfig('config/default.yaml').hashCheck('config/.default.hash').get(),
-		readConfig('config/local.yaml').get(),
-		{
-			port : process.env.PORT
-		},
-		{
-			port : yargs.argv["port"],
-			wikiname : yargs.argv["wikiname"],
-			autoBackup : yargs.argv["auto-backup"],
-			wikinotePath : WIKINOTE_PATH
-		}
-	);
+	var config = {
+		port : yargs.argv["port"],
+		wikiname : yargs.argv["name"],
+		autoBackup : yargs.argv["auto-backup"],
+		frontPage : yargs.argv["front-page"],
+		wikinotePath : WIKINOTE_PATH,
+		plugins: yargs.argv["plugins"],
+		security : yargs.argv["security"]
+	};
 
 	overwrite(this, config);
 	return this;
 }
 
 function $save(){
-	data = yaml.safeDump(this,{
+	var data = yaml.safeDump(this,{
 		indent : 4
 	});
-	fs.writeFileSync('config/local.yaml', data)
+	fs.writeFileSync(yargs["config-file"], data);
 	console.log("overwrite config");
 	return this;
-}
-
-function readConfig(filename){
-	return new FileConfig(filename);
-}
-
-function FileConfig(filename){
-	this.filename = filename;
-	try {
-		this.data = fs.readFileSync(filename, 'utf8');
-	} catch (e) {
-		this.data = {};
-	}
-}
-FileConfig.prototype.get = function(){
-	return yaml.safeLoad(this.data);
-}
-FileConfig.prototype.hashCheck = function(hashFileName){
-	var hashValue = fs.readFileSync(hashFileName, "utf8").trim();
-	if (hashValue !== hash(this.data)){
-		throw new Error("config/default.yaml is changed");
-	}
-	return this;
-}
-FileConfig.prototype.liveSet = function(key, value){
-}
-
-function merge(){
-	return Array.prototype.reduce.call(arguments, function(prev, current){
-		 return overwrite(prev, current);
-	}, {});
 }
 
 function overwrite(dest, src){
@@ -129,8 +104,5 @@ function overwrite(dest, src){
 		}
 	}
 	return dest;
-}
-function hash(data){
-	return crypto.createHash('sha512').update(data).digest("base64").trim();
 }
 
