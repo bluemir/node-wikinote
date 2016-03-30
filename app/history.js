@@ -7,7 +7,7 @@ exports.getHistory = function(wikipath){
 	//FIXME clear filename
 	var filepath = wikipath.toString().substr(1) + ".md";
 
-	return nodegit.Repository.open(config.wikiDir).then(function(r){
+	return nodegit.Repository.open(config.wikinotePath).then(function(r){
 		repo = r;
 		return repo.getMasterCommit();
 	}).then(function(firstCommitOnMaster){
@@ -55,7 +55,7 @@ exports.getHistory = function(wikipath){
 exports.commit = function(wikipath, message, auth) {
 	var repo;
 	var filepath = wikipath.toString().substr(1) + ".md";
-	nodegit.Repository.open(config.wikiDir).then(function(r){
+	nodegit.Repository.open(config.wikinotePath).then(function(r){
 		repo = r;
 	}).then(function(){
 		return repo.openIndex();

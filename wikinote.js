@@ -1,3 +1,5 @@
+require("./config").$init();
+
 var express = require('express')
 var http = require('http')
 var path = require('path');
@@ -13,12 +15,11 @@ var swig = require("swig");
 var share = require("./routes/share");
 
 var routes = require('./routes');
-var config = require("./config");
 
 var app = express();
 app.engine("html", swig.renderFile)
 
-app.set('port', process.env.PORT || config.PORT || 4000);
+app.set('port', config.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 
@@ -45,3 +46,4 @@ if ('development' == process.env.NODE_ENV || 'development') {
 http.createServer(app).listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
 });
+
