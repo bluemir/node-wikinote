@@ -23,7 +23,7 @@ app.set('port', config.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 
-app.use(favicon("public/icon/note_book.png"));
+app.use(favicon(__dirname + "/public/icon/note_book.png"));
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(multipart());
 app.use(cookieParser());
