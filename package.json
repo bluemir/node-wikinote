@@ -29,13 +29,10 @@
     "yargs": "^4.3.2"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-concurrent": "^2.1.0",
-    "grunt-contrib-less": "~1.0.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-express-server": "^0.5.1",
-    "grunt-mocha-test": "^0.12.7",
-    "jit-grunt": "~0.9.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.4",
+    "gulp-less": "^3.0.5",
+    "gulp-live-server": "0.0.29",
     "mocha": "~2.1.0"
   },
   "license": "MIT",
@@ -49,7 +46,9 @@
   "bugs": {
     "url": "https://github.com/bluemir/wikinote/issues"
   },
-  "bin" : {"wikinote" :"./wikinote.js"},
+  "bin": {
+    "wikinote": "./wikinote.js"
+  },
   "homepage": "http://wikinote.bluemir.me/wikinote",
   "main": "wikinote.js",
   "author": "BlueMir <qa22ahj@gmail.com>"
