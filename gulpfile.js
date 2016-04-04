@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var gls = require('gulp-live-server');
 var less = require('gulp-less');
 var cleanCSS = require('gulp-clean-css');
+var exec = require('child_process').exec;
 
 gulp.task('less', function(){
 	return gulp.src(["public/less/main.less", "public/less/admin.less"])
@@ -25,3 +26,7 @@ gulp.task('serve', ['less'], function(){
 });
 
 gulp.task('default', ['serve']);
+
+gulp.task('dist', ['less'], function(cb){
+	exec("npm pack", cb);
+});
