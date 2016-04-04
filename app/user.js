@@ -1,6 +1,5 @@
 var Q = require("q");
 var crypto = require('crypto');
-var Datastore = require("nedb");
 var db = require("./db");
 
 module.exports = User;
