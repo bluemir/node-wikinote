@@ -1,6 +1,6 @@
 # Wikinote
 
-wiki-like contents manager system using [markdown](http://daringfireball.net/projects/markdown) syntax
+wiki-like contents manager system using markdown syntax
 
 [![Join the chat at https://gitter.im/bluemir/wikinote](https://badges.gitter.im/bluemir/wikinote.svg)](https://gitter.im/bluemir/wikinote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub tag](https://img.shields.io/github/tag/bluemir/wikinote.svg)](https://github.com/bluemir/wikinote)
