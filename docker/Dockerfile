@@ -12,15 +12,13 @@ RUN git clone --depth 1 https://github.com/bluemir/wikinote.git src && rm -rf sr
 
 WORKDIR /wikinote/src
 #RUN
-RUN ["/bin/bash", "--login", "-c", "npm install"]
+RUN npm install
 
 ##configuration
-ADD local.yaml /wikinote/src/config/
-
 COPY entry.sh /wikinote/src/
 
 VOLUME ["/wikinote/data"]
 
 EXPOSE 4000
-CMD ["/bin/bash", "--login", "-c", "./entry.sh"]
+CMD ["./entry.sh"]
 
