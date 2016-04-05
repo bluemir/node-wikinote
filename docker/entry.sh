@@ -10,7 +10,7 @@ if [ ! -d /wikinote/data/.git ]; then
 		echo ".app/" >> .gitignore
 fi
 
-if [ ! -d /wikinote/data/.app/config.yaml ]; then
+if [ ! -f /wikinote/data/.app/config.yaml ]; then
 	cd /wikinote/src && \
 		node wikinote.js  \
 			--port 4000 \
