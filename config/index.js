@@ -9,27 +9,40 @@ var resolve = require("path").resolve;
 var dirname = require("path").dirname;
 var swig = require("swig");
 
-var WIKINOTE_PATH = env.WIKINOTE_PATH || join(env.HOME, "wiki");
+var wikinotePathOption = {
+	type : "string",
+	describe : "wikinote data path",
+	nargs : 1,
+	"default" : join(env.HOME, "wiki")
+}
 
-var yargs = require("yargs")
+var WIKINOTE_PATH = yargs
+	.option("wikinote-path", wikinotePathOption)
+	.argv["wikinote-path"] || env.WIKINOTE_PATH;
+
+var argv = yargs
 	.usage("Usage : $0 [options]")
 	.env("WIKINOTE")
 	.locale("en")
 	.help("h").alias("h", "help")
-	.option("wikinote-path", {
-		type : "string",
-		describe : "wikinote data path",
-		nargs : 1,
-		"default" : join(env.HOME, "wiki")
-	})
+	.option("wikinote-path", wikinotePathOption)
 	.option("c", {
+		type : "string",
 		alias : "config-file",
 		describe : "config file path",
 		config : true,
 		nargs : 1,
 		configParser : function(configPath){
-			var data = fs.readFileSync(configPath, 'utf8');
-			return yaml.safeLoad(data);
+			try {
+				var data = fs.readFileSync(configPath, 'utf8');
+				return yaml.safeLoad(data);
+			} catch(e){
+				if(e.code == "ENOENT") {
+					return {};
+				} else {
+					throw e;
+				}
+			}
 		},
 		"default" : join(WIKINOTE_PATH, ".app", "config.yaml")
 	})
@@ -63,7 +76,8 @@ var yargs = require("yargs")
 	.option("save", {
 		type : "boolean",
 		describe : "save option to file",
-	});
+	})
+	.argv;
 
 global.config = module.exports = Object.create({}, {
 	$load : {
@@ -78,7 +92,7 @@ global.config = module.exports = Object.create({}, {
 });
 function $init(){
 	var config = this.$load();
-	if(yargs.argv["save"]){
+	if(argv["save"]){
 		this.$save();
 	}
 	return config;
@@ -86,13 +100,13 @@ function $init(){
 
 function $load(){
 	var config = {
-		port : yargs.argv["port"],
-		wikiname : yargs.argv["name"],
-		autoBackup : yargs.argv["auto-backup"],
-		frontPage : yargs.argv["front-page"],
+		port : argv["port"],
+		wikiname : argv["name"],
+		autoBackup : argv["auto-backup"],
+		frontPage : argv["front-page"],
 		wikinotePath : WIKINOTE_PATH,
-		plugins: yargs.argv["plugins"],
-		security : yargs.argv["security"]
+		plugins: argv["plugins"] || [],
+		security : argv["security"]
 	};
 
 	overwrite(this, config);
@@ -100,11 +114,11 @@ function $load(){
 }
 
 function $save(){
-	var data = swig.renderFile(__dirname + "/config.template", yargs.argv);
-	mkdirp.sync(dirname(yargs.argv["config-file"]));
+	var data = swig.renderFile(__dirname + "/config.template", argv);
+	mkdirp.sync(dirname(argv["config-file"]));
 	console.log("overwrite config");
 	console.log(data);
-	fs.writeFileSync(yargs.argv["config-file"], data);
+	fs.writeFileSync(argv["config-file"], data);
 	return this;
 }
 
