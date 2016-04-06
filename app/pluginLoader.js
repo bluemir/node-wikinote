@@ -3,12 +3,10 @@ var express = require("express");
 var wikiFS = require("../app/wikiFS");
 var PREFIXS = ["", "../plugins/"];
 
-var plugins = config.plugins.map(load).filter(notNull);
-
 var loader = new Loader();
 
-plugins.forEach(function(plugin){
-	plugin(loader.Interface);
+var plugins = config.plugins.map(normalize).map(load).filter(notNull).forEach(function(plugin){
+	plugin.init(loader.Interface, plugin.config);
 });
 
 exports.menus = function(){
@@ -40,15 +38,27 @@ exports.assets = function(app){
 	}
 }
 
-function load(name){
+function normalize(config){
+	if(typeof config == "string") {
+		return {name : config};
+	}
+
+	return config;
+}
+function load(config){
 	for(var i = 0; i < PREFIXS.length; i++){
 		try {
-			return require(PREFIXS[i] + name);
+			return {
+				init : require(PREFIXS[i] + config.name),
+				name : config.name,
+				config : config
+			};
 		} catch(e) {
 			continue;
 		}
 	}
-	console.error("cannot find plugin ", name);
+	console.error("cannot find plugin ", config.name);
+	return null;
 }
 function notNull(e){
 	return e !== null;

@@ -2,7 +2,7 @@ var express = require("express");
 var swig = require("swig");
 var path = require("path");
 
-module.exports = function(wikinote){
+module.exports = function(wikinote, config){
 
 	var app = express();
 
