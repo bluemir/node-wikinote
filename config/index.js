@@ -25,14 +25,14 @@ var argv = yargs
 	.help("h").alias("h", "help")
 	.option("wikinote-path",{
 		type : "string",
-		describe : "wikinote data path",
+		describe : " Location of wikinote data",
 		nargs : 1,
 		"default" : WIKINOTE_PATH
 	})
 	.option("c", {
 		type : "string",
 		alias : "config-file",
-		describe : "config file path",
+		describe : "Location of config file",
 		config : true,
 		nargs : 1,
 		configParser : function(configPath){
@@ -51,7 +51,7 @@ var argv = yargs
 	})
 	.option("p", {
 		alias : "port",
-		describe :"port number",
+		describe :"Port number",
 		nargs : 1,
 		"default" : 3000
 	})
@@ -59,26 +59,26 @@ var argv = yargs
 		type : "string",
 		alias : ["name", "wikiname"],
 		nargs : 1,
-		describe : "wikinote name",
+		describe : "Set WikiNote name",
 		"default" : "WikiNote"
 	})
 	.option("f", {
 		alias : "front-page",
 		type : "string",
-		describe : "set front page name",
+		describe : "Front page name & url",
 		nargs : 1,
 		"default" : "front-page"
 	})
 	.option("b", {
 		type : "boolean",
 		alias : "auto-backup",
-		describe : "auto backup with git",
+		describe : "Automatic backup with git",
 		nargs : 1,
 		"default" : true
 	})
 	.option("save", {
 		type : "boolean",
-		describe : "save option to file",
+		describe : "Save option to config file",
 	})
 	.argv;
 
