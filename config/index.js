@@ -9,23 +9,26 @@ var resolve = require("path").resolve;
 var dirname = require("path").dirname;
 var swig = require("swig");
 
-var wikinotePathOption = {
-	type : "string",
-	describe : "wikinote data path",
-	nargs : 1,
-	"default" : join(env.HOME, "wiki")
-}
-
 var WIKINOTE_PATH = yargs
-	.option("wikinote-path", wikinotePathOption)
+	.option("wikinote-path",{
+		type : "string",
+		nargs : 1,
+		"default": join(env.HOME, "wiki")
+	})
 	.argv["wikinote-path"] || env.WIKINOTE_PATH;
+yargs.reset();
 
 var argv = yargs
 	.usage("Usage : $0 [options]")
 	.env("WIKINOTE")
 	.locale("en")
 	.help("h").alias("h", "help")
-	.option("wikinote-path", wikinotePathOption)
+	.option("wikinote-path",{
+		type : "string",
+		describe : "wikinote data path",
+		nargs : 1,
+		"default" : WIKINOTE_PATH
+	})
 	.option("c", {
 		type : "string",
 		alias : "config-file",
