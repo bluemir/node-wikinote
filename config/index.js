@@ -114,10 +114,9 @@ function $load(){
 }
 
 function $save(){
-	var data = swig.renderFile(__dirname + "/config.template", argv);
+	var data = yaml.safeDump(this);
 	mkdirp.sync(dirname(argv["config-file"]));
-	console.log("overwrite config");
-	console.log(data);
+	console.log("overwrite config to " + argv["config-file"]);
 	fs.writeFileSync(argv["config-file"], data);
 	return this;
 }
@@ -137,3 +136,4 @@ function overwrite(dest, src){
 	}
 	return dest;
 }
+
