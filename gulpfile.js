@@ -18,7 +18,7 @@ gulp.task('serve', ['less'], function(){
 
 	server.start();
 
-	gulp.watch(['wikinote.js', 'routes/**/*.js', 'test/**/*.js', 'app/**/*.js', 'config/**/*.js', 'views/**/*.html'], function(){
+	gulp.watch(['wikinote.js', 'routes/**/*.js', 'test/**/*.js', 'app/**/*.js', 'config/**/*.js', 'views/**/*.html', "plugins/**/*.js"], function(){
 		server.start.bind(server)();
 	});
 
