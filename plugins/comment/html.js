@@ -1,13 +1,12 @@
-var config = require("./config");
 var moment = require("moment");
 
-module.exports = function(comments, user){
+module.exports = function(comments, user, config){
 	return '<section id="comment">' +
 	'<style>@import url("/!plugins/comment/comment.css")</style>' +
 	'<header>' + comments.length + ' Comments</header>' +
 	'<form action="?comment" method="post">' +
 		'<textarea name="contents" placeholder="leave a comment"></textarea>' +
-		(config.requestToUser || !user.isLogin() ? captcha() : "") +
+		(config.requestToUser || !user.isLogin() ? captcha(config) : "") +
 		'<div id="comment-buttons">' +
 		(user.isLogin() ? "" :'<input name="author" type="text" placeholder="name" maxlength="20"/>') +
 		'<input type="submit" value="comment"/>' +
@@ -29,7 +28,7 @@ function buildTime(time) {
 function concatComments(pre, curr){
 	return pre + curr;
 }
-function captcha(){
+function captcha(config){
 	if(!config.recaptcha) {
 		return "";
 	}

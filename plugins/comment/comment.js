@@ -1,11 +1,15 @@
 var https = require('https');
-var config = require("./config");
 var html = require("./html");
 
 var wikinote;
+var config;
 
-exports.init = function(note){
+exports.init = function(note, c){
 	wikinote = note;
+	config = {
+		recaptcha : c.recaptcha,
+		requestToUser : c.requestToUser || true
+	}
 }
 
 exports.render = function(wikipath, user, callback){
@@ -18,7 +22,7 @@ exports.render = function(wikipath, user, callback){
 		data = data || "";
 		var comments = parseData(data);
 
-		callback(null, html(comments, user));
+		callback(null, html(comments, user, config));
 	});
 }
 
