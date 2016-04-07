@@ -1,7 +1,8 @@
 var Q = require("q");
 var express = require("express");
 var wikiFS = require("../app/wikiFS");
-var PREFIXS = ["", "../plugins/"];
+var join = require("path").join;
+var PREFIXS = ["", "wikinote-", join(config.wikinotePath, ".app/plugins"), "../plugins/"];
 
 var loader = new Loader();
 
