@@ -34,12 +34,12 @@ function captcha(config){
 	}
 
 	return '<script src="https://www.google.com/recaptcha/api.js" async defer></script>' +
-		'<div id="captcha" class="g-recaptcha" data-sitekey="'+ config.recaptcha.publicKey+'"></div>' +
+		'<div id="captcha" class="g-recaptcha" data-sitekey="'+ config.recaptcha.siteKey+'"></div>' +
 		'<noscript>'+
 			'<div style="width: 302px; height: 352px;">' +
 				'<div style="width: 302px; height: 352px; position: relative;">'+
 					'<div style="width: 302px; height: 352px; position: absolute;">'+
-						'<iframe src="https://www.google.com/recaptcha/api/fallback?k='+config.recaptcha.publicKey+'" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;">'+
+						'<iframe src="https://www.google.com/recaptcha/api/fallback?k='+config.recaptcha.siteKey+'" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;">'+
 						'</iframe>'+
 					'</div>'+
 					'<div style="width: 250px; height: 80px; position: absolute; border-style: none; '+
