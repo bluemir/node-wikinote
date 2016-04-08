@@ -1,7 +1,7 @@
 var path = require("path");
 var fs = require("fs");
 
-module.exports = function(wikinote){
+module.exports = function(wikinote, config){
 
 	var html = fs.readFileSync(path.join(__dirname, "remark.html"), "utf8");
 

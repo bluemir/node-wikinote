@@ -9,27 +9,30 @@ var resolve = require("path").resolve;
 var dirname = require("path").dirname;
 var swig = require("swig");
 
-var wikinotePathOption = {
-	type : "string",
-	describe : "wikinote data path",
-	nargs : 1,
-	"default" : join(env.HOME, "wiki")
-}
-
 var WIKINOTE_PATH = yargs
-	.option("wikinote-path", wikinotePathOption)
+	.option("wikinote-path",{
+		type : "string",
+		nargs : 1,
+		"default": join(env.HOME, "wiki")
+	})
 	.argv["wikinote-path"] || env.WIKINOTE_PATH;
+yargs.reset();
 
 var argv = yargs
 	.usage("Usage : $0 [options]")
 	.env("WIKINOTE")
 	.locale("en")
 	.help("h").alias("h", "help")
-	.option("wikinote-path", wikinotePathOption)
+	.option("wikinote-path",{
+		type : "string",
+		describe : " Location of wikinote data",
+		nargs : 1,
+		"default" : WIKINOTE_PATH
+	})
 	.option("c", {
 		type : "string",
 		alias : "config-file",
-		describe : "config file path",
+		describe : "Location of config file",
 		config : true,
 		nargs : 1,
 		configParser : function(configPath){
@@ -48,7 +51,7 @@ var argv = yargs
 	})
 	.option("p", {
 		alias : "port",
-		describe :"port number",
+		describe :"Port number",
 		nargs : 1,
 		"default" : 3000
 	})
@@ -56,26 +59,26 @@ var argv = yargs
 		type : "string",
 		alias : ["name", "wikiname"],
 		nargs : 1,
-		describe : "wikinote name",
+		describe : "Set WikiNote name",
 		"default" : "WikiNote"
 	})
 	.option("f", {
 		alias : "front-page",
 		type : "string",
-		describe : "set front page name",
+		describe : "Front page name & url",
 		nargs : 1,
 		"default" : "front-page"
 	})
 	.option("b", {
 		type : "boolean",
 		alias : "auto-backup",
-		describe : "auto backup with git",
+		describe : "Automatic backup with git",
 		nargs : 1,
 		"default" : true
 	})
 	.option("save", {
 		type : "boolean",
-		describe : "save option to file",
+		describe : "Save option to config file",
 	})
 	.argv;
 
@@ -114,10 +117,9 @@ function $load(){
 }
 
 function $save(){
-	var data = swig.renderFile(__dirname + "/config.template", argv);
+	var data = yaml.safeDump(this);
 	mkdirp.sync(dirname(argv["config-file"]));
-	console.log("overwrite config");
-	console.log(data);
+	console.log("overwrite config to " + argv["config-file"]);
 	fs.writeFileSync(argv["config-file"], data);
 	return this;
 }
@@ -137,3 +139,4 @@ function overwrite(dest, src){
 	}
 	return dest;
 }
+
