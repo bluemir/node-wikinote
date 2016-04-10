@@ -25,6 +25,7 @@ plugins :
 ## Plugin 설정
 
 Plugin의 이름은 두가지 방법으로 지정할수 있습니다.
+
 1. 이름 바로 넣기
 	* plugin에 다른 config정보를 전달하지 못합니다.
 2. 객체의 name 에 지정하기
