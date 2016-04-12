@@ -41,7 +41,7 @@
     "url": "git+https://github.com/bluemir/wikinote.git"
   },
   "engines": {
-    "node": ">= 3.x"
+    "node": ">=4.0 <5.0"
   },
   "bugs": {
     "url": "https://github.com/bluemir/wikinote/issues"
