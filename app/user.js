@@ -1,7 +1,5 @@
 var Q = require("q");
-var config = require("../config");
 var crypto = require('crypto');
-var Datastore = require("nedb");
 var db = require("./db");
 
 module.exports = User;

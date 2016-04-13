@@ -1,32 +1,24 @@
-FROM fedora:latest
+FROM node:4
 MAINTAINER BlueMir <bluemir@bluemir.me>
 
-#Run Upgrade
-RUN yum -y update
+#Make wikinote storage
+RUN mkdir /wikinote
+RUN mkdir /wikinote/data
 
-#Install Tools
-RUN yum -y groupinstall 'Development Tools'
-RUN yum -y install git wget tar gcc-c++
-
-#make user
-RUN useradd wikinote
-USER wikinote
-WORKDIR /home/wikinote
-
-#Install NVM
-RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.25.1/install.sh | sh
-RUN ["/bin/bash", "--login", "-c", "nvm install iojs && nvm alias default iojs && nvm use iojs"]
+WORKDIR /wikinote
 
 #Clone source file
-RUN git clone https://github.com/bluemir/wikinote.git
+RUN git clone --depth 1 https://github.com/bluemir/wikinote.git src && rm -rf src/.git
 
-#Make wikinote storage
-RUN mkdir /home/wikinote/wiki
-
+WORKDIR /wikinote/src
 #RUN
-WORKDIR /home/wikinote
-RUN ["/bin/bash", "--login", "-c", "npm install"]
+RUN npm install
+
+##configuration
+COPY entry.sh /wikinote/src/
+
+VOLUME ["/wikinote/data"]
 
 EXPOSE 4000
-CMD ["/bin/bash", "--login", "-c", "node wikinote.js"]
+CMD ["./entry.sh"]
 

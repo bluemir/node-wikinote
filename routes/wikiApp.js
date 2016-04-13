@@ -3,7 +3,6 @@ var wikiFS = require("../app/wikiFS");
 var markdown = require("../app/markdown");
 var WikiPath = require("../app/wikipath");
 var loader = require("../app/pluginLoader");
-var config = require("../config");
 var userApp = require("./userApp");
 
 var wikiApp = {};

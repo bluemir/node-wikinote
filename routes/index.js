@@ -6,7 +6,6 @@ var loader = require("../app/pluginLoader");
 var user = require("./userApp");
 var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
-var config = require("../config");
 var ParamRouter = require("./paramRouter");
 var LayoutManager = require("./layoutManager");
 
@@ -30,7 +29,7 @@ exports.init = function(app){
 		app.post("/!users/:userId", specialPage, user.saveProfile);
 	}
 
-	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikiDir, {
+	app.use(user.checkPermission(user.PERMISSION.READ), express.static(config.wikinotePath, {
 		dotfiles: 'ignore',
 		index: false,
 		redirect: false

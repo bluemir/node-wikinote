@@ -2,7 +2,6 @@ var wikiFS = require("../app/wikiFS");
 var user = require("../app/user");
 var WikiPath = require("../app/wikipath");
 
-var config = require("../config");
 var userApp = require("./userApp");
 
 exports.save = function(req, res){
