@@ -1,40 +1,75 @@
-var marked = require("marked");
+var MarkdownIt = require("markdown-it");
 
-var externalLinksRenderer = new marked.Renderer();
-var protocolRegexp = /^https?:\/\/.+$/;
-externalLinksRenderer.link = function(href, title, text){
-	var external = protocolRegexp.test(href);
-	return "<a href=\"" + href + "\"" +
-		(external ? " target=\"_blank\"" : "")+
-		(title ? " title=\"" + title + "\"" : "") +
-		">" + text + "</a>";
+var plugins = {
+	footnote : require("markdown-it-footnote"),
+	defineList : require('markdown-it-deflist'),
+	externalLink : externalLink
 }
 
-marked.setOptions({
-	gfm: true,
-	tables: true,
-	breaks: false,
-	pedantic: false,
-	sanitize: false,
-	smartLists: true,
-	footnotes : true,
-	renderer : externalLinksRenderer
-});
+var md = new MarkdownIt({
+		html: true,
+		linkify: true,
+	})
+	.use(plugins.footnote)
+	.use(plugins.defineList)
+	.use(externalLink)
+
+var protocolRegexp = /^https?:\/\/.+$/;
+function externalLink(md, option){
+	var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+		return self.renderToken(tokens, idx, options);
+	};
+
+	md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+		var token = tokens[idx];
+		var hrefIndex = token.attrIndex('href');
+
+		if (hrefIndex >= 0) {
+			var url = token.attrs[hrefIndex][1];
+			var isExternal = protocolRegexp.test(url);
+
+			if(isExternal){
+				// If you are sure other plugins can't add `target` - drop check below
+				var aIndex = tokens[idx].attrIndex('target');
+
+				if (aIndex < 0) {
+					tokens[idx].attrPush(['target', '_blank']); // add new attribute
+				} else {
+					tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
+				}
+			}
+		}
+
+		// pass token to default renderer.
+		return defaultRender(tokens, idx, options, env, self);
+	};
+}
 
 exports.html = function(data){
-	return marked(data);
+	return md.render(data);
 }
 
-var backlinksRenderer = new marked.Renderer();
-
 exports.links = function(data){
-	var links = [];
-	backlinksRenderer.link = function(href, title, text) {
-		if(!protocolRegexp.test(href)){
-			links.push(href);
+	var paresed_data = md.parse(data, {});
+	return paresed_data.reduce(findlink, []);
+
+	function findlink(result, curr){
+		if(curr.children && curr.children instanceof Array){
+			result = result.concat(curr.children.reduce(findlink, []));
 		}
-		return marked.Renderer.prototype.link.apply(backlinksRenderer, arguments);
-	};
-	marked(data, {renderer : backlinksRenderer});
-	return links;
+
+		if(curr.type == "link_open") {
+			var token = curr;
+			var hrefIndex = token.attrIndex('href');
+
+			if (hrefIndex >= 0) {
+				var url = token.attrs[hrefIndex][1];
+
+				if(!protocolRegexp.test(url)){
+					result = result.concat(url);
+				}
+			}
+		}
+		return result;
+	}
 }
