@@ -112,30 +112,33 @@
 	});
 	getFileList();
 
-	var externalLinksRenderer = new marked.Renderer();
-	var protocolRegexp = /^https?:\/\/.+$/;
-	externalLinksRenderer.link = function(href, title, text){
-		var external = protocolRegexp.test(href);
-		return "<a href=\"" + href + "\"" +
-			(external ? " target=\"_blank\"" : "")+
-			(title ? " title=\"" + title + "\"" : "") +
-			">" + text + "</a>";
-	}
+	var md = window.markdownit()
+		.use(window.markdownitFootnote)
+		.use(window.markdownitDeflist)
+		.use(externalLink)
 
-	marked.setOptions({
-		gfm: true,
-		tables: true,
-		breaks: false,
-		pedantic: false,
-		sanitize: false,
-		smartLists: true,
-		footnotes : true,
-		renderer : externalLinksRenderer
-	});
+	function externalLink(md, option) {
+		var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+			return self.renderToken(tokens, idx, options);
+		};
+
+		md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+			var aIndex = tokens[idx].attrIndex('target');
+
+			if (aIndex < 0) {
+				tokens[idx].attrPush(['target', '_blank']); // add new attribute
+			} else {
+				tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
+			}
+
+			// pass token to default renderer.
+			return defaultRender(tokens, idx, options, env, self);
+		};
+	}
 
 	function updatePreview(value){
 		var $preview = $("article.preview");
-		$preview.innerHTML = marked(value);
+		$preview.innerHTML = md.render(value);
 	}
 
 	$("article.tab-header li a[href='#']").on("click", function(){

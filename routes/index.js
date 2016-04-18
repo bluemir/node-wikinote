@@ -1,5 +1,6 @@
 var express = require("express");
 var path = require("path");
+
 var WikiPath = require("../app/wikipath");
 var loader = require("../app/pluginLoader");
 
@@ -8,8 +9,19 @@ var wikiApp = require("./wikiApp");
 var wikiApi = require("./wikiApi");
 var ParamRouter = require("./paramRouter");
 var LayoutManager = require("./layoutManager");
+var share = require("./share");
 
 exports.init = function(app){
+	app.use("/!public", express.static(__dirname + "/../public"));
+	app.use("/!public/lib/share", express.static(share.static));
+
+	servelib(app, "markdown-it", "dist");
+	servelib(app, "markdown-it-footnote", "dist");
+	servelib(app, "markdown-it-deflist", "dist");
+	servelib(app, "font-awesome");
+
+	app.use("/!public/lib", share.middleware);
+
 	loader.assets(app);
 
 	app.use(preModule);
@@ -85,4 +97,7 @@ function specialPage(req, res, next){
 	res.locals.layoutManager.setSpecialPage();
 	next();
 }
-
+function servelib(app, name, append){
+	var join = require("path").join;
+	app.use("/!public/lib/" + name, express.static(join(__dirname, "/../node_modules/",  name, append || "")));
+}

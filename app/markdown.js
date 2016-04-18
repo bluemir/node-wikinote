@@ -1,40 +1,74 @@
-var marked = require("marked");
+var MarkdownIt = require("markdown-it");
 
-var externalLinksRenderer = new marked.Renderer();
-var protocolRegexp = /^https?:\/\/.+$/;
-externalLinksRenderer.link = function(href, title, text){
-	var external = protocolRegexp.test(href);
-	return "<a href=\"" + href + "\"" +
-		(external ? " target=\"_blank\"" : "")+
-		(title ? " title=\"" + title + "\"" : "") +
-		">" + text + "</a>";
+var plugins = {
+	footnote : require("markdown-it-footnote"),
+	defineList : require('markdown-it-deflist'),
+	externalLink : externalLink
 }
 
-marked.setOptions({
-	gfm: true,
-	tables: true,
-	breaks: false,
-	pedantic: false,
-	sanitize: false,
-	smartLists: true,
-	footnotes : true,
-	renderer : externalLinksRenderer
-});
+var md = new MarkdownIt({
+		html: true,
+		linkify: true,
+	})
+	.use(plugins.footnote)
+	.use(plugins.defineList)
+	.use(externalLink)
 
 exports.html = function(data){
-	return marked(data);
+	return md.render(data);
 }
 
-var backlinksRenderer = new marked.Renderer();
-
 exports.links = function(data){
-	var links = [];
-	backlinksRenderer.link = function(href, title, text) {
-		if(!protocolRegexp.test(href)){
-			links.push(href);
+	var paresed_data = md.parse(data, {});
+	return paresed_data.reduce(findlink, []);
+
+	function findlink(result, curr){
+		if(curr.children && curr.children instanceof Array){
+			result = result.concat(curr.children.reduce(findlink, []));
 		}
-		return marked.Renderer.prototype.link.apply(backlinksRenderer, arguments);
+
+		if(curr.type == "link_open") {
+			var url = getUrl(curr);
+			if(!isExternalURL(url)){
+				result = result.concat(url);
+			}
+		}
+		return result;
+	}
+}
+
+function externalLink(md, option){
+	var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+		return self.renderToken(tokens, idx, options);
 	};
-	marked(data, {renderer : backlinksRenderer});
-	return links;
+
+	md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+		var url = getUrl(tokens[idx]);
+
+		if(isExternalURL(url)){
+			var aIndex = tokens[idx].attrIndex('target');
+
+			if (aIndex < 0) {
+				tokens[idx].attrPush(['target', '_blank']); // add new attribute
+			} else {
+				tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
+			}
+		}
+
+		// pass token to default renderer.
+		return defaultRender(tokens, idx, options, env, self);
+	};
+}
+function getUrl(token){
+	var hrefIndex = token.attrIndex('href');
+
+	if (hrefIndex >= 0) {
+		return token.attrs[hrefIndex][1];
+	}
+	return ""; //null object
+}
+
+var protocolRegexp = /^https?:\/\/.+$/;
+function isExternalURL(url){
+	return protocolRegexp.test(url);
 }
