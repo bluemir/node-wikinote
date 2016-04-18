@@ -20,7 +20,6 @@
     "markdown-it": "^6.0.1",
     "markdown-it-deflist": "^2.0.1",
     "markdown-it-footnote": "^2.0.0",
-    "marked": "github:prashaantt/marked#feature-footnotes",
     "mkdirp": "~0.3.5",
     "moment": "~2.8.3",
     "nedb": "~0.10.7",
