@@ -14,37 +14,6 @@ var md = new MarkdownIt({
 	.use(plugins.defineList)
 	.use(externalLink)
 
-var protocolRegexp = /^https?:\/\/.+$/;
-function externalLink(md, option){
-	var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
-		return self.renderToken(tokens, idx, options);
-	};
-
-	md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-		var token = tokens[idx];
-		var hrefIndex = token.attrIndex('href');
-
-		if (hrefIndex >= 0) {
-			var url = token.attrs[hrefIndex][1];
-			var isExternal = protocolRegexp.test(url);
-
-			if(isExternal){
-				// If you are sure other plugins can't add `target` - drop check below
-				var aIndex = tokens[idx].attrIndex('target');
-
-				if (aIndex < 0) {
-					tokens[idx].attrPush(['target', '_blank']); // add new attribute
-				} else {
-					tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
-				}
-			}
-		}
-
-		// pass token to default renderer.
-		return defaultRender(tokens, idx, options, env, self);
-	};
-}
-
 exports.html = function(data){
 	return md.render(data);
 }
@@ -59,17 +28,47 @@ exports.links = function(data){
 		}
 
 		if(curr.type == "link_open") {
-			var token = curr;
-			var hrefIndex = token.attrIndex('href');
-
-			if (hrefIndex >= 0) {
-				var url = token.attrs[hrefIndex][1];
-
-				if(!protocolRegexp.test(url)){
-					result = result.concat(url);
-				}
+			var url = getUrl(curr);
+			if(!isExternalURL(url)){
+				result = result.concat(url);
 			}
 		}
 		return result;
 	}
+}
+
+function externalLink(md, option){
+	var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+		return self.renderToken(tokens, idx, options);
+	};
+
+	md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+		var url = getUrl(tokens[idx]);
+
+		if(isExternalURL(url)){
+			var aIndex = tokens[idx].attrIndex('target');
+
+			if (aIndex < 0) {
+				tokens[idx].attrPush(['target', '_blank']); // add new attribute
+			} else {
+				tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
+			}
+		}
+
+		// pass token to default renderer.
+		return defaultRender(tokens, idx, options, env, self);
+	};
+}
+function getUrl(token){
+	var hrefIndex = token.attrIndex('href');
+
+	if (hrefIndex >= 0) {
+		return token.attrs[hrefIndex][1];
+	}
+	return ""; //null object
+}
+
+var protocolRegexp = /^https?:\/\/.+$/;
+function isExternalURL(url){
+	return protocolRegexp.test(url);
 }
