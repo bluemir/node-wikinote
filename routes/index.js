@@ -14,8 +14,11 @@ var share = require("./share");
 exports.init = function(app){
 	app.use("/!public", express.static(__dirname + "/../public"));
 	app.use("/!public/lib/share", express.static(share.static));
-	app.use("/!public/lib/marked.min.js", express.static(__dirname + "/../node_modules/marked/marked.min.js"));
-	app.use("/!public/lib/font-awesome", express.static(__dirname + "/../node_modules/font-awesome"));
+
+	servelib(app, "markdown-it", "dist");
+	servelib(app, "markdown-it-footnote", "dist");
+	servelib(app, "markdown-it-deflist", "dist");
+	servelib(app, "font-awesome");
 
 	app.use("/!public/lib", share.middleware);
 
@@ -94,4 +97,7 @@ function specialPage(req, res, next){
 	res.locals.layoutManager.setSpecialPage();
 	next();
 }
-
+function servelib(app, name, append){
+	var join = require("path").join;
+	app.use("/!public/lib/" + name, express.static(join(__dirname, "/../node_modules/",  name, append || "")));
+}
