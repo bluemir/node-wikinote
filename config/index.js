@@ -25,7 +25,7 @@ var argv = yargs
 	.help("h").alias("h", "help")
 	.option("wikinote-path",{
 		type : "string",
-		describe : " Location of wikinote data",
+		describe : "Location of wikinote data",
 		nargs : 1,
 		"default" : WIKINOTE_PATH
 	})
