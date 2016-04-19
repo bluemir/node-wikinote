@@ -14,11 +14,10 @@ var session = require('express-session');
 var errorHandler = require('errorhandler');
 var swig = require("swig");
 
-var share = require("./routes/share");
-
 var routes = require('./routes');
 
 var app = express();
+
 app.engine("html", swig.renderFile)
 
 app.set('port', config.port);
@@ -32,13 +31,6 @@ app.use(cookieParser());
 app.use(session({ secret: 'wikinote', resave : true, saveUninitialized : true}));
 app.use(flash());
 
-app.use("/!public", express.static(__dirname + "/public"));
-app.use("/!public/lib/share", express.static(share.static));
-app.use("/!public/lib/marked.min.js", express.static("node_modules/marked/marked.min.js"));
-app.use("/!public/lib/font-awesome", express.static("node_modules/font-awesome"));
-
-app.use("/!public/lib", share.middleware);
-
 routes.init(app);
 
 if ('development' == process.env.NODE_ENV || 'development') {
@@ -48,4 +40,6 @@ if ('development' == process.env.NODE_ENV || 'development') {
 http.createServer(app).listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
 });
+
+module.exports = app;
 
