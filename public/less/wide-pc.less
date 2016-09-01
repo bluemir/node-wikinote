@@ -38,6 +38,18 @@ html, body {
 		&:hover {
 			text-decoration : underline;
 		}
+		&[href^="http:"], &[href^="https:"] {
+			position : relative;
+			padding-right : 10px;
+			&:after {
+				position : absolute;
+				top:3px;
+				display : inline-block;
+				font : normal normal normal 14px/1 FontAwesome;
+				font-size : 5px;
+				content : "\f08e";
+			}
+		}
 	}
 	sup.footnote-ref a {
 		padding-top : 70px;
