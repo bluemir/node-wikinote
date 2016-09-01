@@ -1,0 +1,44 @@
+#alert {
+	p.msg-warn {
+		margin : 10px;
+		padding : 10px;
+		border-radius : 10px;
+		background : #f2dede;
+		color : #b94a48;
+		border-color : #eed3d7;
+	}
+	p.msg-info {
+		margin : 10px;
+		padding : 10px;
+		border-radius : 10px;
+		background : #d9edf7;
+		color : #3a87ad;
+		border-color : #bce8f1;
+	}
+	p.msg-dynamic {
+		position : fixed;
+		top : 50%;
+		left : 50%;
+		width : 12em;
+		margin-left : -6em;
+		text-align : center;
+		padding : 10px;
+		border-radius : 10px;
+		background : #d9edf7;
+		color : #3a87ad;
+		border-color : #bce8f1;
+		z-index : 10;
+
+		animation-delay : 2s;
+		animation-duration: 1s;
+		animation-name: fadeout;
+	}
+
+	p.msg-dynamic.warn {
+		width : 30em;
+		margin-left : -15em;
+		background : #f2dede;
+		color : #b94a48;
+		border-color : #eed3d7;
+	}
+}
