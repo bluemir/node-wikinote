@@ -75,7 +75,7 @@ wikiApp.staticFiles = function(req, res){
 }
 
 wikiApp.search = function(req, res){
-	var word = req.query.q;
+	var word = req.query.q.trim();
 	var c = req.query.case || false;
 	var flags = "";
 	flags += req.query.case ?  "" : "i";
