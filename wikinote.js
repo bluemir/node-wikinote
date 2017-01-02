@@ -12,7 +12,7 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var errorHandler = require('errorhandler');
-var swig = require("swig");
+var swig = require("swig-templates");
 
 var routes = require('./routes');
 
