@@ -1,0 +1,107 @@
+blockquote {
+	font-style : italic;
+	margin-left : 0px;
+	padding-top : 20px;
+	overflow : hidden;
+	line-height : 100%;
+	color : #454545;
+
+	&:before {
+		display : block;
+		float : left;
+		content : open-quote;
+		color : #bababa;
+		font-size : 100px;
+		margin : 10px 15px 0px 0px;
+		text-shadow : 0 1px 1px #909090;
+	}
+	&:after {
+		display : block;
+		float : right;
+		content : close-quote;
+		color : #bababa;
+		font-size : 100px;
+		margin : 10px 15px 0px 0px;
+		text-shadow : 0 1px 1px #909090;
+	}
+	:first-child {
+		margin-top : 0px;
+	}
+	:last-child {
+		margin-bottom : 0px;
+	}
+	* {
+		margin-left : 100px;
+		margin-right : 80px;
+	}
+}
+table {
+	border-collapse : collapse;
+
+	th, td {
+		border : 1px solid gray;
+		padding : 5px;
+	}
+
+}
+
+pre>code, xmp {
+	display : block;
+	background : black;
+	color : white;
+	padding : 10px;
+	border : 1px solid gray;
+	border-radius : 3px;
+	word-wrap : break-word;
+
+	&:before {
+		content : "code";
+		display : block;
+		color : green;
+		margin-bottom : 10px;
+		border-bottom : 1px solid green;
+		padding : 2px;
+	}
+	&.lang-pic {
+		background : white;
+		color : black;
+		padding : 0px;
+		border : none;
+		display : inline;
+		font-size : 1.1em;
+	}
+	&.lang-pic:before, &.lang-not-code:before {
+		content : none;
+		display : none;
+	}
+}
+p, li{
+	line-height : 1.2em;
+}
+.right {
+	text-align : right;
+}
+.center {
+	text-align : center;
+}
+ol.footnotes {
+	&:before {
+		display : block;
+		background : #ccc;
+		content : "";
+		height : 2px;
+		margin-bottom : 5px;
+		margin-left : -20px;
+		width : 100px;
+		margin-left : -2em;
+	}
+
+	margin : 0px;
+	padding-left : 2em;
+	font-size : 0.8em;
+
+	p {
+		margin : 0px;
+	}
+}
+

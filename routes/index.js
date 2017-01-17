@@ -13,19 +13,20 @@ var share = require("./share");
 
 exports.init = function(app){
 	app.use("/!public", express.static(__dirname + "/../public"));
-	app.use("/!public/lib/share", express.static(share.static));
 
 	servelib(app, "markdown-it", "dist");
 	servelib(app, "markdown-it-footnote", "dist");
 	servelib(app, "markdown-it-deflist", "dist");
 	servelib(app, "font-awesome");
 
-	app.use("/!public/lib", share.middleware);
-
 	loader.assets(app);
+
+	app.get("/!public/lib/sharedb/client.js", share.static);
+	app.ws("/!public/lib/sharedb/ws/*", share.ws);
 
 	app.use(preModule);
 	app.use(user.middleware);
+
 
 	app.get("/", redirectToFront);
 	app.get("/!logout", specialPage,  user.logout);

@@ -58,7 +58,7 @@ exports.commit = function(wikipath, message, auth) {
 	nodegit.Repository.open(config.wikinotePath).then(function(r){
 		repo = r;
 	}).then(function(){
-		return repo.openIndex();
+		return repo.refreshIndex();
 	}).then(function(index){
 		index.addByPath(filepath)
 		return index;
