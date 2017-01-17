@@ -1,83 +1,81 @@
-var Duplex = require('stream').Duplex;
-var sharejs = require('share');
-var browserChannel = require('browserchannel').server;
-var livedb = require('livedb');
+var ShareDB = require('sharedb');
+var ottext = require('ot-text');
 
-var backend = livedb.client(livedb.memory());
-var share = sharejs.server.createClient({backend: backend});
+var wikiFS = require("../app/wikiFS");
+var WikiPath = require("../app/wikipath");
 
-var users = {};
-var noop = function(){};
+ShareDB.types.register(ottext.type);
 
-function attech(name, id){
-	if(!users[name]){
-		users[name] = {};
-	}
-
-	users[name][id] = 1;
-}
-function detech(name, id){
-	if(users[name]){
-		delete users[name][id];
-	}
-}
-function isThere(name){
-	return users[name] && Object.keys(users[name]).length != 0;
-}
-
-exports.static = sharejs.scriptsDir;
-exports.middleware = browserChannel(function (client) {
-	var stream = new Duplex({objectMode: true});
-	var docName = null;
-	var agent = null;
-
-	stream._write = function (chunk, encoding, callback) {
-		if (client.state !== 'closed') {
-			client.send(chunk);
-		}
-		callback();
-	};
-	stream._read = function () {
-	};
-	stream.headers = client.headers;
-	stream.remoteAddress = stream.address;
-
-	stream.on('error', function (msg) {
-		client.stop();
-	});
-
-	client.on('message', function (data) {
-		stream.push(data);
-		if(data.a == "sub"){
-			docName = data.d;
-		}
-	});
-
-	client.on('close', function(reason) {
-		agent.trigger("disconnect", "wiki", docName, noop);
-		stream.push(null);
-		stream.emit('close');
-	});
-
-	stream.on('end', function() {
-		client.close();
-	});
-	return agent = share.listen(stream);
+var share = new ShareDB({
+	//db: ShareDB.MemoryDB,
+	//pubsub: ShareDB.MemoryPubSub
 });
 
-share.use(function (req, next){
-	switch(req.action) {
-		case "subscribe" :
-			//console.log("subscribe", req.docName, req.agent.sessionId);
-			attech(req.docName, req.agent.sessionId);
-			break;
-		case "disconnect":
-			//console.log("disconnect", req.docName, req.agent.sessionId);
-			detech(req.docName, req.agent.sessionId);
-			if(!isThere(req.docName)){
-				req.agent.submit(req.collection, req.docName, {del : true}, noop);
-			}
-			break;
-	}
-	next();
+var WebSocketJSONStream = require('websocket-json-stream');
+
+var browserify = require('browserify');
+var b = browserify();
+
+b.require("sharedb/lib/client", {expose: "share"});
+b.require("ot-text");
+
+// make browerify buffer
+exports.static = function(req, res) {
+	b.bundle().pipe(res);
+}
+
+exports.ws = function(ws, req) {
+	var path = req.params[0];
+
+	var conn = share.connect();
+	var doc = conn.get("wiki", path);
+
+	var stream = new WebSocketJSONStream(ws);
+	doc.fetch(function(err) {
+		if (err) throw err;
+		if (doc.type === null) {
+			var wikipath = WikiPath.decode("/" + path)
+			wikiFS.readWiki(wikipath).then(function(data){
+				doc.create(data, 'text', function(){
+					console.log("created : ", doc.id);
+					setTimer(doc.id);
+					share.listen(stream);
+				});
+			}).fail(function(err){
+				console.error(err)
+			});
+		} else {
+			console.log("ready : ", doc.id);
+			share.listen(stream);
+		}
+	});
+}
+
+// timeout...
+var timers = {};
+function setTimer(docName){
+	console.log("set timer for " + docName);
+	clearTimeout(timers[docName]);
+	timers[docName] = setTimeout(function(){
+		console.log("timeout!");
+		var conn = share.connect();
+		var doc = conn.get("wiki", docName);
+		doc.fetch(function(){
+			doc.del(function(){
+				console.log(docName + " Deleted!", arguments);
+			});
+		});
+	//TODO config for timeout
+	}, 10 * 60 * 1000); // 10m
+}
+
+share.use("receive", function(req, cb){
+	console.log(req.agent.subscribedDocs);
+	if(req.agent.subscribedDocs.wiki)
+		Object.keys(req.agent.subscribedDocs.wiki).forEach(setTimer);
+	cb();
 });
+
+
+
+

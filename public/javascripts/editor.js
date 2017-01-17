@@ -1,4 +1,12 @@
 (function(){
+	var ShareDB = require("share");
+	var ottext = require("ot-text");
+	ShareDB.types.register(ottext.type);
+
+	var socket = new WebSocket("ws://"+ document.location.host+ "/!public/lib/sharedb/ws" + note.path);
+	var connection = new ShareDB.Connection(socket);
+	var doc = connection.get("wiki", note.path.substr(1));
+
 	var cm = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
 		mode:  "markdown",
 		lineNumbers: true,
@@ -12,8 +20,79 @@
 		indentWithTabs : true,
 		profile: "html",
 		lineWrapping: true,
-		readOnly : "nocursor"
 	});
+
+	doc.subscribe(function(err){
+		if (err) {
+			console.log(err);
+		}
+	});
+
+	// suppress change event cause by shareDB
+	var suppress = false;
+
+	// remote to local
+	doc.on("load", function(){
+		suppress = true;
+		cm.setValue(doc.data);
+		suppress = false;
+	})
+	doc.on("op", function(op, isLocalEcho){
+		if (isLocalEcho) {
+			return;
+		}
+		suppress = true;
+		var pos = 0;
+		op.forEach(function(e){
+			switch(typeof e){
+				case "number":
+					pos += e;
+					// skip charter
+					break;
+				case "string":
+					cm.replaceRange(e, cm.posFromIndex(pos));
+					pos += e.length;
+					// insert text
+					break;
+				case "object":
+					cm.remove
+					var from = cm.posFromIndex(pos);
+					var to = cm.posFromIndex(pos + e.d);
+					cm.replaceRange('', from, to);
+					// remove text
+					break;
+			}
+		});
+		suppress = false;
+	})
+	// local to remote
+	cm.on('change', function(cm, change){
+		if (suppress) {
+			return;
+		}
+		var startPos = 0;
+		for(var i=0;  i < change.from.line ;i ++){
+			startPos +=cm.lineInfo(i).text.length + 1;
+		}
+		startPos += change.from.ch;
+
+		if (change.to.line == change.from.line && change.to.ch == change.from.ch) {
+			// nothing was removed.
+		} else {
+			// delete.removed contains an array of removed lines as strings, so this adds
+			// all the lengths. Later change.removed.length - 1 is added for the \n-chars
+			// (-1 because the linebreak on the last line won't get deleted)
+
+			var delLen = change.removed.reduce(function(p, c){ return p + c.length;}, 0) + change.removed.length - 1;
+			doc.submitOp([startPos, {d:delLen}]);
+		}
+		if (change.text) {
+			console.log(startPos);
+			doc.submitOp([startPos, change.text.join('\n')]);
+		}
+	});
+
+
 	function saveDocument(){
 		var data = "data=" + encodeURIComponent(cm.doc.getValue());
 		var options = {
@@ -31,43 +110,8 @@
 		});
 	}
 	function save(){
+		$("#text").submit();
 	}
-	emmetPlugin.clearKeymap();
-	emmetPlugin.setKeymap({
-		'Ctrl-Enter': 'expand_abbreviation'
-	});
-
-	var timer = null;
-
-	cm.on("change", function(){
-		clearTimeout(timer);
-		timer = setTimeout(function(){
-			socket.close();
-			doc.destroy();
-			cm.setOption("readOnly", "nocursor");
-		}, 15 * 60 * 1000);
-		updatePreview(cm.getValue());
-		cm.save();
-	});
-	cm.on("mousedown", function(){
-		if(cm.getOption("readOnly") == "nocursor"){
-			wikinote.common.alert.warn("Connection lost. please <a href='"+location.href+"'>reload this page</a>");
-		}
-	})
-
-	var socket = new BCSocket("/!public/lib/channel", {reconnect: true});
-	var sjs = new window.sharejs.Connection(socket);
-	var doc = sjs.get('wiki', note.path);
-
-	doc.subscribe();
-	doc.whenReady(function () {
-		if (!doc.type) doc.create('text', cm.getValue());
-		if (doc.type && doc.type.name === 'text') {
-			doc.attachCodeMirror(cm);
-		}
-
-		cm.setOption("readOnly", false);
-	});
 
 	// TODO : refactor
 	function getSaveApiUrl(){
