@@ -3,7 +3,7 @@
 require("./config").$init();
 
 var express = require('express')
-var http = require('http')
+var expressws = require('express-ws');
 var path = require('path');
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
@@ -12,11 +12,12 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var errorHandler = require('errorhandler');
-var swig = require("swig");
+var swig = require("swig-templates");
 
 var routes = require('./routes');
 
 var app = express();
+expressws(app);
 
 app.engine("html", swig.renderFile)
 
@@ -37,7 +38,7 @@ if ('development' == process.env.NODE_ENV || 'development') {
 	app.use(errorHandler());
 }
 
-http.createServer(app).listen(app.get('port'), function(){
+app.listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
 });
 

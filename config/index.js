@@ -7,7 +7,6 @@ var mkdirp = require("mkdirp");
 var join = require("path").join;
 var resolve = require("path").resolve;
 var dirname = require("path").dirname;
-var swig = require("swig");
 
 var WIKINOTE_PATH = yargs
 	.option("wikinote-path",{
