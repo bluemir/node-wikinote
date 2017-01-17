@@ -70,7 +70,6 @@ function setTimer(docName){
 }
 
 share.use("receive", function(req, cb){
-	console.log(req.agent.subscribedDocs);
 	if(req.agent.subscribedDocs.wiki)
 		Object.keys(req.agent.subscribedDocs.wiki).forEach(setTimer);
 	cb();

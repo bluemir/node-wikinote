@@ -87,7 +87,6 @@
 			doc.submitOp([startPos, {d:delLen}]);
 		}
 		if (change.text) {
-			console.log(startPos);
 			doc.submitOp([startPos, change.text.join('\n')]);
 		}
 	});
