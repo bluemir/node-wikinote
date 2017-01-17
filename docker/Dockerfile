@@ -1,4 +1,4 @@
-FROM node:4
+FROM node:6
 MAINTAINER BlueMir <bluemir@bluemir.me>
 
 #Make wikinote storage
@@ -13,6 +13,7 @@ RUN git clone --depth 1 https://github.com/bluemir/wikinote.git src && rm -rf sr
 WORKDIR /wikinote/src
 #RUN
 RUN npm install
+RUN npm install -g gulp && gulp less
 
 ##configuration
 COPY entry.sh /wikinote/src/
