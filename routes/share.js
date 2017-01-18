@@ -14,10 +14,10 @@ var share = new ShareDB({
 var WebSocketJSONStream = require('websocket-json-stream');
 
 var browserify = require('browserify');
-var b = browserify();
+var b = browserify({basedir: __dirname});
 
 b.require("sharedb/lib/client", {expose: "share"});
-b.require("ot-text", {expose:"ot-text"});
+b.require("ot-text");
 
 // make browerify buffer
 exports.static = function(req, res) {
