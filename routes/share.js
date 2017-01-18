@@ -17,7 +17,7 @@ var browserify = require('browserify');
 var b = browserify();
 
 b.require("sharedb/lib/client", {expose: "share"});
-b.require("ot-text");
+b.require("ot-text", {expose:"ot-text"});
 
 // make browerify buffer
 exports.static = function(req, res) {
