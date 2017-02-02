@@ -21,6 +21,7 @@ b.require("ot-text");
 
 // make browerify buffer
 exports.static = function(req, res) {
+	res.set('Content-Type', 'application/javascript');
 	b.bundle().pipe(res);
 }
 
