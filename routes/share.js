@@ -21,6 +21,7 @@ b.require("ot-text");
 
 // make browerify buffer
 exports.static = function(req, res) {
+	res.set('Content-Type', 'application/javascript');
 	b.bundle().pipe(res);
 }
 
@@ -43,6 +44,12 @@ exports.ws = function(ws, req) {
 				});
 			}).fail(function(err){
 				console.error(err)
+				doc.create('', 'text', function(){
+					console.log("create empty doc", doc.id);
+					setTimer(doc.id);
+					share.listen(stream);
+				});
+				// TODO if file not found create empty documents
 			});
 		} else {
 			console.log("ready : ", doc.id);
