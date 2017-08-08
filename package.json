@@ -1,6 +1,6 @@
 {
   "name": "wikinote",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "scripts": {
     "start": "node wikinote",
     "test": "mocha"
@@ -42,13 +42,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bluemir/wikinote.git"
+    "url": "git+https://github.com/bluemir/node-wikinote.git"
   },
   "engines": {
     "node": ">=4.0 <5.0"
   },
   "bugs": {
-    "url": "https://github.com/bluemir/wikinote/issues"
+    "url": "https://github.com/bluemir/node-wikinote/issues"
   },
   "bin": {
     "wikinote": "./wikinote.js"

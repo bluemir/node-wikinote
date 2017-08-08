@@ -3,7 +3,9 @@
 	var ottext = require("ot-text");
 	ShareDB.types.register(ottext.type);
 
-	var socket = new WebSocket("ws://"+ document.location.host+ "/!public/lib/sharedb/ws" + note.path);
+
+	var protocal = document.location.protocol == "https:" ? "wss" : "ws";
+	var socket = new WebSocket(protocal + "://"+ document.location.host+ "/!public/lib/sharedb/ws" + note.path);
 	var connection = new ShareDB.Connection(socket);
 	var doc = connection.get("wiki", note.path.substr(1));
 
