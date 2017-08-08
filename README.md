@@ -2,7 +2,7 @@
 
 This project will no longer be maintained or supported.
 Please do not file issues or pull-requests against this repo.
-you can use [go version](https://github.com/bluemir/node-wikinote)
+you can use [go version](https://github.com/bluemir/wikinote)
 
 
 wiki-like contents manager system using markdown syntax
